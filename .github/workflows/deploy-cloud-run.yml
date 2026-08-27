@@ -1,0 +1,104 @@
+name: Deploy to Google Cloud Run
+
+on:
+  push:
+    branches:
+      - claude/burch-platform-q4nf5k
+      - main
+  workflow_dispatch:
+
+env:
+  GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  GCP_REGION: us-central1
+  SERVICE_NAME: burch-platform
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for GCR
+        run: |
+          gcloud auth configure-docker gcr.io
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            -t gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.SERVICE_NAME }}:${{ github.sha }} \
+            -t gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.SERVICE_NAME }}:latest \
+            .
+
+      - name: Push image to Google Container Registry
+        run: |
+          docker push gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.SERVICE_NAME }}:${{ github.sha }}
+          docker push gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.SERVICE_NAME }}:latest
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy ${{ env.SERVICE_NAME }} \
+            --image gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.SERVICE_NAME }}:${{ github.sha }} \
+            --platform managed \
+            --region ${{ env.GCP_REGION }} \
+            --allow-unauthenticated \
+            --set-env-vars \
+            DATABASE_URL=${{ secrets.GCP_DATABASE_URL }},\
+            NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }},\
+            NEXTAUTH_URL=${{ secrets.GCP_NEXTAUTH_URL }},\
+            RESEND_API_KEY=${{ secrets.RESEND_API_KEY }},\
+            ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }},\
+            MPESA_CONSUMER_KEY=${{ secrets.MPESA_CONSUMER_KEY }},\
+            MPESA_CONSUMER_SECRET=${{ secrets.MPESA_CONSUMER_SECRET }},\
+            MPESA_PASSKEY=${{ secrets.MPESA_PASSKEY }},\
+            MPESA_SHORTCODE=${{ secrets.MPESA_SHORTCODE }},\
+            FLUTTERWAVE_SECRET_KEY=${{ secrets.FLUTTERWAVE_SECRET_KEY }},\
+            FLUTTERWAVE_SECRET_HASH=${{ secrets.FLUTTERWAVE_SECRET_HASH }} \
+            --add-cloudsql-instances ${{ secrets.GCP_CLOUDSQL_CONNECTION }}
+
+      - name: Get Cloud Run URL
+        run: |
+          SERVICE_URL=$(gcloud run services describe ${{ env.SERVICE_NAME }} \
+            --region ${{ env.GCP_REGION }} \
+            --format='value(status.url)')
+          echo "DEPLOYMENT_URL=$SERVICE_URL" >> $GITHUB_ENV
+
+      - name: Comment on PR/Commit
+        uses: actions/github-script@v7
+        if: github.event_name == 'pull_request'
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `✅ Deployed to Google Cloud Run!\n\n🔗 [View Deployment](${process.env.DEPLOYMENT_URL})`
+            })
+
+      - name: Create Deployment
+        uses: actions/github-script@v7
+        if: github.event_name == 'push'
+        with:
+          script: |
+            github.rest.repos.createDeployment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: context.ref,
+              environment: 'production',
+              description: 'Google Cloud Run Deployment',
+              auto_merge: false,
+              required_contexts: [],
+              production_environment: true
+            });
