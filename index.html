@@ -6,6 +6,8 @@
     <title>Lilita Keper - Luxury Safari Agent Portal</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lora:wght@400;500;600&family=Poppins:wght@300;400;500;600&display=swap');
+
         * {
             margin: 0;
             padding: 0;
@@ -13,51 +15,83 @@
         }
 
         :root {
-            --baby-brown: #C9A876;
-            --dark-brown: #8B6F47;
-            --cream: #F5F1E8;
-            --dark: #2C2C2C;
+            --baby-brown: #D4A574;
+            --dark-brown: #6F5C47;
+            --cream: #FAF8F3;
+            --dark: #3D3D3D;
             --gold: #D4AF37;
-            --success: #4CAF50;
-            --error: #f44336;
-            --warning: #FFA500;
+            --warm-gold: #E8C547;
+            --sage: #7A9B8E;
+            --success: #5CBC60;
+            --error: #E74C3C;
+            --warning: #F39C12;
+            --light-gray: #F0EDE5;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Lora', serif;
             color: var(--dark);
-            line-height: 1.6;
+            line-height: 1.7;
+            background: var(--cream);
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        button, input, select {
+            font-family: 'Poppins', sans-serif;
         }
 
         /* ===== LANDING PAGE ===== */
         .landing-page {
-            background: linear-gradient(135deg, #C9A876 0%, #8B6F47 100%);
+            background: linear-gradient(135deg, #D4A574 0%, #6F5C47 100%);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .landing-page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at top right, rgba(232, 197, 71, 0.1) 0%, transparent 70%);
+            pointer-events: none;
         }
 
         .landing-header {
-            background: rgba(0,0,0,0.1);
-            padding: 1.5rem 2rem;
+            background: rgba(0,0,0,0.08);
+            padding: 1.8rem 3rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            backdrop-filter: blur(8px);
+            position: relative;
+            z-index: 10;
         }
 
         .landing-logo {
-            font-size: 1.5rem;
-            font-weight: bold;
+            font-size: 1.6rem;
+            font-weight: 600;
             color: white;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.7rem;
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 1px;
         }
 
         .landing-nav {
             display: flex;
-            gap: 2rem;
+            gap: 2.5rem;
         }
 
         .landing-nav a, .landing-nav button {
@@ -67,13 +101,17 @@
             background: none;
             border: none;
             font-size: 1rem;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            transition: background 0.3s;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            position: relative;
         }
 
-        .landing-nav button:hover {
-            background: rgba(255,255,255,0.2);
+        .landing-nav button:hover, .landing-nav a:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-2px);
         }
 
         .landing-hero {
@@ -84,20 +122,26 @@
             align-items: center;
             color: white;
             text-align: center;
-            padding: 2rem;
+            padding: 3rem 2rem;
+            position: relative;
+            z-index: 5;
         }
 
         .landing-hero h1 {
-            font-size: 3.5rem;
+            font-size: 4rem;
             margin-bottom: 1rem;
-            font-weight: 300;
-            letter-spacing: 2px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
 
         .landing-hero p {
-            font-size: 1.3rem;
-            margin-bottom: 2rem;
-            opacity: 0.95;
+            font-size: 1.25rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.98;
+            font-family: 'Lora', serif;
+            max-width: 600px;
+            line-height: 1.8;
             max-width: 600px;
         }
 
@@ -220,40 +264,49 @@
             font-weight: 500;
         }
 
-        .form-group input {
+        .form-group input, .form-group select, .form-group textarea {
             width: 100%;
-            padding: 0.75rem;
-            border: 2px solid #e0e0e0;
-            border-radius: 6px;
+            padding: 0.9rem 1rem;
+            border: 2px solid #E8DFD5;
+            border-radius: 8px;
             font-size: 1rem;
-            transition: border 0.3s;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            background: #FFFBF7;
         }
 
-        .form-group input:focus {
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
             outline: none;
-            border-color: var(--baby-brown);
+            border-color: #D4A574;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(212, 165, 116, 0.1);
         }
 
         .auth-button {
             width: 100%;
-            padding: 0.75rem;
-            background: linear-gradient(135deg, #C9A876 0%, #8B6F47 100%);
+            padding: 1rem;
+            background: linear-gradient(135deg, #D4A574 0%, #A0845D 100%);
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 1rem;
             font-weight: 600;
+            font-family: 'Poppins', sans-serif;
             cursor: pointer;
-            transition: transform 0.3s;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(212, 165, 116, 0.3);
+            letter-spacing: 0.5px;
         }
 
         .auth-button:hover {
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(212, 165, 116, 0.4);
+            background: linear-gradient(135deg, #E0B380 0%, #B39070 100%);
         }
 
         /* ===== PORTAL PAGE ===== */
         .portal-page {
-            background: linear-gradient(135deg, rgba(27, 77, 62, 0.9) 0%, rgba(61, 40, 23, 0.9) 50%, rgba(20, 20, 20, 0.95) 100%);
+            background: linear-gradient(135deg, #F9F6F1 0%, #F5F1E8 50%, #EFE8E0 100%);
             background-attachment: fixed;
             min-height: 100vh;
             display: flex;
@@ -261,10 +314,10 @@
 
         .sidebar {
             width: 280px;
-            background: linear-gradient(135deg, #1B4D3E 0%, #2D6A58 100%);
+            background: linear-gradient(135deg, #6F5C47 0%, #8B7355 100%);
             padding: 2rem 1.5rem;
             color: white;
-            box-shadow: 2px 0 8px rgba(0,0,0,0.2);
+            box-shadow: 4px 0 20px rgba(0,0,0,0.15);
             overflow-y: auto;
             height: 100vh;
             position: fixed;
@@ -380,54 +433,79 @@
 
         .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 2.5rem;
         }
 
         .stat-card {
-            background: rgba(255,255,255,0.95);
-            padding: 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background: white;
+            padding: 2rem;
+            border-radius: 14px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            border: 1px solid #E8DFD5;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #D4A574 0%, #E8C547 100%);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
         }
 
         .stat-card h3 {
-            color: #666;
-            font-size: 0.9rem;
+            color: #8B7355;
+            font-size: 0.85rem;
             text-transform: uppercase;
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            letter-spacing: 1px;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
         }
 
         .stat-card .number {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: var(--baby-brown);
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #D4A574;
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 0.5px;
         }
 
         /* ===== TENTS/ROOMS ===== */
         .tents-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
         }
 
         .tent-card {
-            background: rgba(255,255,255,0.95);
-            border-radius: 12px;
+            background: white;
+            border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 1px solid #E8DFD5;
         }
 
         .tent-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            transform: translateY(-8px);
+            box-shadow: 0 14px 40px rgba(212, 165, 116, 0.25);
         }
 
         .tent-image {
             width: 100%;
-            height: 200px;
+            height: 220px;
             background: linear-gradient(135deg, var(--baby-brown) 0%, var(--dark-brown) 100%);
             display: flex;
             align-items: center;
@@ -472,32 +550,45 @@
 
         .book-btn {
             width: 100%;
-            padding: 0.75rem;
-            background: linear-gradient(135deg, var(--baby-brown) 0%, var(--dark-brown) 100%);
+            padding: 1rem 1.5rem;
+            background: linear-gradient(135deg, #D4A574 0%, #8B7355 100%);
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
-            transition: transform 0.3s;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(212, 165, 116, 0.3);
+            font-size: 1rem;
+            letter-spacing: 0.5px;
         }
 
         .book-btn:hover {
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(212, 165, 116, 0.4);
+            background: linear-gradient(135deg, #E0B380 0%, #9B8367 100%);
+        }
+
+        .book-btn:active {
+            transform: translateY(-1px);
         }
 
         /* ===== FORM STYLES ===== */
         .form-container {
-            background: rgba(255,255,255,0.95);
-            padding: 2rem;
-            border-radius: 12px;
+            background: rgba(255,255,255,0.97);
+            padding: 2.5rem;
+            border-radius: 16px;
             max-width: 600px;
             margin: 0 auto;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+            border: 1px solid rgba(212, 165, 116, 0.2);
         }
 
         .form-container h2 {
             color: var(--dark-brown);
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
+            font-size: 1.8rem;
         }
 
         .form-row {
@@ -583,29 +674,42 @@
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 1rem;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
 
         .contacts-table th {
-            background: var(--baby-brown);
+            background: linear-gradient(135deg, #D4A574 0%, #A0845D 100%);
             color: white;
-            padding: 1rem;
+            padding: 1.2rem;
             text-align: left;
             font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
         }
 
         .contacts-table td {
-            padding: 1rem;
-            border-bottom: 1px solid #e0e0e0;
+            padding: 1rem 1.2rem;
+            border-bottom: 1px solid #E8DFD5;
+            color: #3D3D3D;
         }
 
-        .contacts-table tr:hover {
-            background: #f5f5f5;
+        .contacts-table tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        .contacts-table tbody tr:hover {
+            background: #FBF9F5;
+            box-shadow: inset 0 0 0 1px #E8DFD5;
         }
 
         .checkbox {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             cursor: pointer;
+            accent-color: #D4A574;
         }
 
         .template-editor {
