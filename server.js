@@ -5,17 +5,27 @@ const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT || 8080;
 
+// Determine which public directory to use
+let publicDir;
+const productionPath = path.join(__dirname, 'public');
+const developmentPath = path.join(__dirname, 'apps', 'web', 'public');
+
+if (fs.existsSync(productionPath)) {
+    publicDir = productionPath;
+} else if (fs.existsSync(developmentPath)) {
+    publicDir = developmentPath;
+} else {
+    console.warn('Warning: Neither public directory found. Using production path as fallback.');
+    publicDir = productionPath;
+}
+
+console.log(`📁 Serving static files from: ${publicDir}`);
+
 // Serve static files from root directory
 app.use(express.static(path.join(__dirname)));
 
-// Serve public assets - check both locations for dev and production
-const publicPath = path.join(__dirname, 'public');
-if (fs.existsSync(publicPath)) {
-    app.use(express.static(publicPath));
-} else {
-    // Dev mode: serve from apps/web/public
-    app.use(express.static(path.join(__dirname, 'apps', 'web', 'public')));
-}
+// Serve public assets (logos, images, etc)
+app.use(express.static(publicDir));
 
 app.get('/health', (req, res) => {
     res.json({ status: 'healthy', service: 'Lilita Keper Portal' });
