@@ -1,0 +1,536 @@
+<title>Lilita Keper Agent Portal - Process Structure A→Z</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  :root {
+    --bg: #F9F6F3;
+    --text-primary: #3D2817;
+    --text-secondary: #6B5D54;
+    --accent-brown: #8B7355;
+    --accent-green: #2D5A3D;
+    --user-bg: #F5EBE0;
+    --agent-bg: #E8F0E8;
+    --border: #D9CDBE;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #2A2420;
+      --text-primary: #F5EBE0;
+      --text-secondary: #C9BFBA;
+      --accent-brown: #C5A882;
+      --accent-green: #7FA580;
+      --user-bg: #3D3228;
+      --agent-bg: #2D4033;
+      --border: #4A3F35;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #2A2420;
+    --text-primary: #F5EBE0;
+    --text-secondary: #C9BFBA;
+    --accent-brown: #C5A882;
+    --accent-green: #7FA580;
+    --user-bg: #3D3228;
+    --agent-bg: #2D4033;
+    --border: #4A3F35;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    padding: 40px 20px;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  header {
+    margin-bottom: 50px;
+  }
+
+  h1 {
+    font-family: Georgia, serif;
+    font-size: 48px;
+    color: var(--accent-brown);
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-size: 18px;
+    color: var(--text-secondary);
+    font-weight: 400;
+  }
+
+  .phase-section {
+    margin-bottom: 60px;
+  }
+
+  .phase-header {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--accent-green);
+  }
+
+  .phase-header h2 {
+    font-family: Georgia, serif;
+    font-size: 28px;
+    color: var(--accent-green);
+    font-weight: 600;
+  }
+
+  .phase-meta {
+    font-size: 13px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 16px;
+  }
+
+  .step {
+    padding: 20px;
+    border-radius: 6px;
+    border-left: 4px solid;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .step-user {
+    background: var(--user-bg);
+    border-left-color: var(--accent-brown);
+  }
+
+  .step-agent {
+    background: var(--agent-bg);
+    border-left-color: var(--accent-green);
+  }
+
+  .step-letter {
+    font-family: Georgia, serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--accent-brown);
+  }
+
+  .step-agent .step-letter {
+    color: var(--accent-green);
+  }
+
+  .step-type {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+    color: var(--accent-brown);
+  }
+
+  .step-agent .step-type {
+    color: var(--accent-green);
+  }
+
+  .step-title {
+    font-family: Georgia, serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .step-desc {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+  }
+
+  .badge {
+    display: inline-block;
+    background: var(--accent-green);
+    color: var(--bg);
+    padding: 2px 6px;
+    border-radius: 2px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-top: 8px;
+  }
+
+  .legend {
+    display: flex;
+    gap: 30px;
+    margin-top: 60px;
+    padding: 30px;
+    background: var(--user-bg);
+    border-radius: 6px;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .legend-swatch {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+  }
+
+  .swatch-user {
+    background: var(--accent-brown);
+  }
+
+  .swatch-agent {
+    background: var(--accent-green);
+  }
+
+  .legend-text {
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 50px;
+  }
+
+  .stat-box {
+    padding: 20px;
+    background: var(--accent-brown);
+    color: var(--bg);
+    border-radius: 6px;
+    text-align: center;
+  }
+
+  .stat-number {
+    font-family: Georgia, serif;
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    opacity: 0.9;
+  }
+
+  @media (max-width: 768px) {
+    h1 {
+      font-size: 36px;
+    }
+
+    .phase-header {
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .steps-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .legend {
+      flex-direction: column;
+      gap: 16px;
+    }
+  }
+</style>
+
+<div class="container">
+  <header>
+    <h1>🦁 Lilita Keper Agent Portal</h1>
+    <p class="subtitle">Complete Process Structure A→Z</p>
+  </header>
+
+  <div class="overview">
+    <div class="stat-box">
+      <div class="stat-number">26</div>
+      <div class="stat-label">Total Steps</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-number">7</div>
+      <div class="stat-label">Phases</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-number">19</div>
+      <div class="stat-label">Autonomous</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-number">7</div>
+      <div class="stat-label">User Actions</div>
+    </div>
+  </div>
+
+  <!-- Phase 1 -->
+  <div class="phase-section">
+    <div class="phase-header">
+      <h2>Phase 1: Booking Entry</h2>
+      <div class="phase-meta">0–5 seconds</div>
+    </div>
+    <div class="steps-grid">
+      <div class="step step-user">
+        <div class="step-letter">A</div>
+        <div class="step-type">User Action</div>
+        <div class="step-title">Guest Inquiry</div>
+        <div class="step-desc">Sales agent receives booking request (guest name, dates, room type, special requests)</div>
+      </div>
+      <div class="step step-user">
+        <div class="step-letter">B</div>
+        <div class="step-type">User Action</div>
+        <div class="step-title">Submit Form</div>
+        <div class="step-desc">Agent fills and submits booking form with all guest details</div>
+      </div>
+      <div class="step step-agent">
+        <div class="step-letter">C</div>
+        <div class="step-type">Autonomous</div>
+        <div class="step-title">Generate Reservation #</div>
+        <div class="step-desc">System creates unique ID (WB00001) automatically</div>
+      </div>
+      <div class="step step-agent">
+        <div class="step-letter">D</div>
+        <div class="step-type">Autonomous</div>
+        <div class="step-title">Generate PDFs</div>
+        <div class="step-desc">Two PDFs created: guest version (no pricing) & admin version (full details)</div>
+      </div>
+      <div class="step step-agent">
+        <div class="step-letter">E</div>
+        <div class="step-type">Autonomous</div>
+        <div class="step-title">Send Payment Email</div>
+        <div class="step-desc">Personalized payment request with deposit amount sent to team</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase 2 -->
+  <div class="phase-section">
+    <div class="phase-header">
+      <h2>Phase 2: Payment Hold</h2>
+      <div class="phase-meta">0–24 hours</div>
+    </div>
+    <div class="steps-grid">
+      <div class="step step-agent">
+        <div class="step-letter">F</div>
+        <div class="step-type">Autonomous</div>
+        <div class="step-title">Start Countdown</div>
+        <div class="step-desc">24-hour countdown timer begins automatically, no manual tracking</div>
+      </div>
+      <div class="step step-user">
+        <div class="step-letter">G</div>
+        <div class="step-type">User Action</div>
+        <div class="step-title">View Status</div>
+        <div class="step-desc">Agent views real-time countdown in portal ("23h 45m remaining")</div>
+      </div>
+      <div class="step step-user">
+        <div class="step-letter">H</div>
+        <div class="step-type">User Action</div>
+        <div class="step-title">Request Extension</div>
+        <div class="step-desc">If needed, agent clicks "Extend" for more time (optional)</div>
+      </div>
+      <div class="step step-agent">
+        <div class="step-letter">I</div>
+        <div class="step-type">Autonomous</div>
+        <div class="step-title">Handle Expiration</div>
+        <div class="step-desc">If unpaid after 24h: auto-cancel, block dates, prevent double-booking</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase 3 -->
+  <div class="phase-section">
+    <div class="phase-header">
+      <h2>Phase 3: Payment Confirmation</h2>
+      <div class="phase-meta">Upon payment receipt</div>
+    </div>
+    <div class="steps-grid">
+      <div class="step step-user">
+        <div class="step-letter">J</div>
+        <div class="step-type">User Action</div>
+        <div class="step-title">Confirm Payment</div>
+        <div class="step-desc">Agent clicks "Confirm Payment" when funds received</div>
+      </div>
+      <div class="step step-agent">
+        <div class="step-letter">K</div>
+        <div class="step-type">Autonomous</div>
+        <div class="step-title">Update Status</div>
+        <div class="step-desc">Booking status changes to CONFIRMED automatically</div>
+      </div>
+      <div class="step step-agent">
+        <div class="step-letter">L</div>
+        <div class="step-type">Autonomous</div>
+        <div class="step-title">Generate Final Record</div>
+        <div class="step-desc">Final booking PDF created with all confirmed details and payment status</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase 4 -->
+  <div class="phase-section">
+    <div class="phase-header">
+      <h2>Phase 4: Calendar Sync</h2>
+      <div class="phase-meta">Instant</div>
+    </div>
+    <div class="steps-grid">
+      <div class="step step-agent">
+        <div class="step-letter">M</div>
+        <div class="step-type">Autonomous</div>
+        <div class="step-title">Block Dates</div>
+        <div class="step-desc">Calendar dates marked BOOKED automatically, no manual entry</div>
+      </div>
+      <div class="step step-agent">
+        <div class="step-letter">N</div>
+        <div class="step-type">Autonomous</div>
+        <div class="step-title">Update Occupancy</div>
+        <div class="step-desc">Monthly occupancy percentage recalculated and displayed live</div>
+      </div>
+      <div class="step step-agent">
+        <div class="step-letter">O</div>
+        <div class="step-type">Autonomous</div>
+        <div class="step-title">Multi-Room Sync</div>
+        <div class="step-desc">All room type calendars updated in parallel automatically</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase 5 -->
+  <div class="phase-section">
+    <div class="phase-header">
+      <h2>Phase 5: Contact Management</h2>
+      <div class="phase-meta">Setup</div>
+    </div>
+    <div class="steps-grid">
+      <div class="step step-user">
+        <div class="step-letter">P</div>
+        <div class="step-type">User Action</div>
+        <div class="step-title">Upload CSV</div>
+        <div class="step-desc">Agent uploads contact list from any source (Gmail, spreadsheet, export)</div>
+      </div>
+      <div class="step step-agent">
+        <div class="step-letter">Q</div>
+        <div class="step-type">Autonomous</div>
+        <div class="step-title">Parse CSV</div>
+        <div class="step-desc">System detects columns automatically (email, firstName, company, website)</div>
+      </div>
+      <div class="step step-agent">
+        <div class="step-letter">R</div>
+        <div class="step-type">Autonomous</div>
+        <div class="step-title">Validate & Store</div>
+        <div class="step-desc">Duplicates removed, invalid emails filtered, all clean records stored</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase 6 -->
+  <div class="phase-section">
+    <div class="phase-header">
+      <h2>Phase 6: Campaign Build</h2>
+      <div class="phase-meta">Campaign setup</div>
+    </div>
+    <div class="steps-grid">
+      <div class="step step-user">
+        <div class="step-letter">S</div>
+        <div class="step-type">User Action</div>
+        <div class="step-title">Write Template</div>
+        <div class="step-desc">Agent writes one email using {FirstName}, {Company}, {Email} variables</div>
+      </div>
+      <div class="step step-agent">
+        <div class="step-letter">T</div>
+        <div class="step-type">Autonomous</div>
+        <div class="step-title">Generate Previews</div>
+        <div class="step-desc">System shows 3–5 sample personalized emails for review before sending</div>
+      </div>
+      <div class="step step-user">
+        <div class="step-letter">U</div>
+        <div class="step-type">User Action</div>
+        <div class="step-title">Select Recipients</div>
+        <div class="step-desc">Agent chooses "Send All" or picks specific contacts to target</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase 7 -->
+  <div class="phase-section">
+    <div class="phase-header">
+      <h2>Phase 7: Email Delivery</h2>
+      <div class="phase-meta">On demand</div>
+    </div>
+    <div class="steps-grid">
+      <div class="step step-user">
+        <div class="step-letter">V</div>
+        <div class="step-type">User Action</div>
+        <div class="step-title">Send Campaign</div>
+        <div class="step-desc">Agent clicks "Send" button to execute campaign</div>
+      </div>
+      <div class="step step-agent">
+        <div class="step-letter">W</div>
+        <div class="step-type">Autonomous</div>
+        <div class="step-title">Replace Variables</div>
+        <div class="step-desc">System personalizes 100+ emails in seconds, zero copy-paste errors</div>
+      </div>
+      <div class="step step-agent">
+        <div class="step-letter">X</div>
+        <div class="step-type">Autonomous</div>
+        <div class="step-title">Send via API</div>
+        <div class="step-desc">All emails dispatched via Resend API, real-time status updates</div>
+      </div>
+      <div class="step step-agent">
+        <div class="step-letter">Y</div>
+        <div class="step-type">Autonomous</div>
+        <div class="step-title">Track Delivery</div>
+        <div class="step-desc">System logs all recipients, timestamps, delivery confirmation for audit</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase 8 -->
+  <div class="phase-section">
+    <div class="phase-header">
+      <h2>Phase 8: System Monitoring</h2>
+      <div class="phase-meta">Continuous</div>
+    </div>
+    <div class="steps-grid">
+      <div class="step step-agent">
+        <div class="step-letter">Z</div>
+        <div class="step-type">Autonomous</div>
+        <div class="step-title">Monitor & Log</div>
+        <div class="step-desc">System tracks all bookings, timers, emails, failures in Cloud Console. Always ready for next booking.
+        <div class="badge">Continuous</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item">
+      <div class="legend-swatch swatch-user"></div>
+      <div class="legend-text">User Action (7 total)</div>
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch swatch-agent"></div>
+      <div class="legend-text">Autonomous Agent Action (19 total)</div>
+    </div>
+  </div>
+</div>
