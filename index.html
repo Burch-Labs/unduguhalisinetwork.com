@@ -123,7 +123,7 @@
         .auth-page {
             background: linear-gradient(135deg, #C9A876 0%, #8B6F47 100%);
             min-height: 100vh;
-            display: flex !important;
+            display: flex;
             justify-content: center;
             align-items: center;
             padding: 2rem;
@@ -135,10 +135,16 @@
             z-index: 1000;
         }
 
-        .auth-page[style*="display: none"] {
+        .auth-page.hidden {
             display: none !important;
-            position: absolute;
             z-index: -1;
+            visibility: hidden;
+        }
+
+        .landing-page.hidden,
+        .portal-page.hidden {
+            display: none !important;
+            visibility: hidden;
         }
 
         .auth-container {
@@ -1109,8 +1115,9 @@ function showSection(section) {
 }
 
 function showPortal() {
-    document.getElementById('landing-page').style.display = 'none';
-    document.getElementById('auth-page').style.display = 'none';
+    document.getElementById('landing-page').classList.add('hidden');
+    document.getElementById('auth-page').classList.add('hidden');
+    document.getElementById('portal-page').classList.remove('hidden');
     document.getElementById('portal-page').style.display = 'flex';
     switchTab('dashboard');
 }
