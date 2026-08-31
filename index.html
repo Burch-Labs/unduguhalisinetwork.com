@@ -33,16 +33,33 @@
             color: var(--dark);
             line-height: 1.7;
             background: var(--cream);
+            scroll-behavior: smooth;
         }
 
         h1, h2, h3, h4, h5, h6 {
             font-family: 'Playfair Display', serif;
             font-weight: 600;
             letter-spacing: 0.5px;
+            color: #4A4A4A;
         }
 
         button, input, select {
             font-family: 'Poppins', sans-serif;
+        }
+
+        /* Smooth transitions everywhere */
+        * {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        a {
+            color: #D4A574;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        a:hover {
+            color: #E8C547;
         }
 
         /* ===== LANDING PAGE ===== */
@@ -128,20 +145,20 @@
         }
 
         .landing-hero h1 {
-            font-size: 4rem;
+            font-size: 4.2rem;
             margin-bottom: 1rem;
-            font-weight: 600;
-            letter-spacing: 1px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.25);
         }
 
         .landing-hero p {
-            font-size: 1.25rem;
+            font-size: 1.35rem;
             margin-bottom: 2.5rem;
-            opacity: 0.98;
+            opacity: 0.96;
             font-family: 'Lora', serif;
             max-width: 600px;
-            line-height: 1.8;
+            line-height: 1.9;
             max-width: 600px;
         }
 
@@ -288,20 +305,25 @@
             background: linear-gradient(135deg, #D4A574 0%, #A0845D 100%);
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 1rem;
             font-weight: 600;
             font-family: 'Poppins', sans-serif;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(212, 165, 116, 0.3);
+            box-shadow: 0 4px 15px rgba(212, 165, 116, 0.3), inset 0 1px 0 rgba(255,255,255,0.2);
             letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
         }
 
         .auth-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(212, 165, 116, 0.4);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(212, 165, 116, 0.4), inset 0 1px 0 rgba(255,255,255,0.3);
             background: linear-gradient(135deg, #E0B380 0%, #B39070 100%);
+        }
+
+        .auth-button:active {
+            transform: translateY(-2px);
         }
 
         /* ===== PORTAL PAGE ===== */
@@ -317,7 +339,7 @@
             background: linear-gradient(135deg, #6F5C47 0%, #8B7355 100%);
             padding: 2rem 1.5rem;
             color: white;
-            box-shadow: 4px 0 20px rgba(0,0,0,0.15);
+            box-shadow: 6px 0 30px rgba(0,0,0,0.2);
             overflow-y: auto;
             height: 100vh;
             position: fixed;
@@ -328,21 +350,22 @@
             display: flex;
             align-items: center;
             gap: 1rem;
-            margin-bottom: 2rem;
-            color: var(--gold);
+            margin-bottom: 2.5rem;
+            color: #E8C547;
         }
 
         .logo-circle {
-            width: 50px;
-            height: 50px;
-            background: var(--gold);
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, #E8C547 0%, #D4AF37 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.8rem;
             font-weight: bold;
-            color: #1B4D3E;
+            color: #5A4A3A;
+            box-shadow: 0 4px 15px rgba(232, 197, 71, 0.4);
         }
 
         .brand-text h2 {
@@ -431,6 +454,22 @@
             to { opacity: 1; }
         }
 
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(232, 197, 71, 0.1); }
+            50% { box-shadow: 0 0 30px rgba(232, 197, 71, 0.2); }
+        }
+
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -439,12 +478,12 @@
         }
 
         .stat-card {
-            background: white;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
             padding: 2rem;
-            border-radius: 14px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-            border: 1px solid #E8DFD5;
-            transition: all 0.3s ease;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1), inset 0 1px 1px rgba(255,255,255,0.6);
+            border: 1px solid rgba(212, 165, 116, 0.2);
             position: relative;
             overflow: hidden;
         }
@@ -455,13 +494,16 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #D4A574 0%, #E8C547 100%);
+            height: 5px;
+            background: linear-gradient(90deg, #D4A574 0%, #E8C547 50%, #D4A574 100%);
+            box-shadow: 0 2px 8px rgba(232, 197, 71, 0.3);
         }
 
         .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+            transform: translateY(-8px);
+            box-shadow: 0 16px 40px rgba(212, 165, 116, 0.2), inset 0 1px 1px rgba(255,255,255,0.6);
+            background: rgba(255, 255, 255, 0.95);
+            border-color: rgba(212, 165, 116, 0.4);
         }
 
         .stat-card h3 {
@@ -491,16 +533,16 @@
 
         .tent-card {
             background: white;
-            border-radius: 16px;
+            border-radius: 18px;
             overflow: hidden;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-            border: 1px solid #E8DFD5;
+            box-shadow: 0 10px 32px rgba(0,0,0,0.12), 0 1px 0 rgba(255,255,255,1);
+            border: 1px solid rgba(212, 165, 116, 0.15);
         }
 
         .tent-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 14px 40px rgba(212, 165, 116, 0.25);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 50px rgba(212, 165, 116, 0.3), 0 1px 0 rgba(255,255,255,1);
+            border-color: rgba(212, 165, 116, 0.3);
         }
 
         .tent-image {
@@ -554,41 +596,56 @@
             background: linear-gradient(135deg, #D4A574 0%, #8B7355 100%);
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
             font-weight: 600;
             font-family: 'Poppins', sans-serif;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(212, 165, 116, 0.3);
             font-size: 1rem;
             letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(212, 165, 116, 0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .book-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            transform: translate(-50%, -50%);
         }
 
         .book-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(212, 165, 116, 0.4);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(212, 165, 116, 0.5), inset 0 1px 0 rgba(255,255,255,0.3);
             background: linear-gradient(135deg, #E0B380 0%, #9B8367 100%);
         }
 
         .book-btn:active {
-            transform: translateY(-1px);
+            transform: translateY(-2px);
         }
 
         /* ===== FORM STYLES ===== */
         .form-container {
-            background: rgba(255,255,255,0.97);
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(12px);
             padding: 2.5rem;
-            border-radius: 16px;
+            border-radius: 18px;
             max-width: 600px;
             margin: 0 auto;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
-            border: 1px solid rgba(212, 165, 116, 0.2);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.6);
+            border: 1px solid rgba(212, 165, 116, 0.25);
         }
 
         .form-container h2 {
-            color: var(--dark-brown);
+            color: #5A4A3A;
             margin-bottom: 2rem;
             font-size: 1.8rem;
+            font-weight: 700;
         }
 
         .form-row {
