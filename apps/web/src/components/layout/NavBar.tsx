@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import Link from "next/link";
 import { SignOutButton } from "./SignOutButton";
+import { LililaLogo } from "./LililaLogo";
 
 const ROLE_BADGE: Record<string, string> = {
   ADMIN:    "bg-purple-100 text-purple-700",
@@ -23,13 +24,8 @@ export async function NavBar() {
     <header className="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-[0_1px_3px_0_rgba(30,21,16,0.06)]">
       <div className="max-w-6xl mx-auto px-6 py-3.5 flex items-center justify-between gap-4">
         <div className="flex items-center gap-7">
-          {/* Brand logotype in display font */}
-          <Link
-            href="/"
-            className="font-display text-xl font-semibold text-orange-600 flex-shrink-0 tracking-wide"
-          >
-            Burch
-          </Link>
+          {/* Lilita Logo */}
+          <LililaLogo size="sm" />
           <nav className="hidden md:flex items-center gap-0.5">
             {NAV_LINKS.map(({ href, label }) => (
               <Link

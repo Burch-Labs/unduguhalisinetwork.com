@@ -22,8 +22,8 @@ const playfair = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Burch Platform",
-  description: "Africa's AI-Powered Experience Platform",
+  title: "Lilita Keper Agent Portal",
+  description: "Autonomous Booking Management for Luxury Lodges - Google Gemini AI Powered",
 };
 
 export default function RootLayout({
