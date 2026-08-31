@@ -28,6 +28,14 @@ app.get('/agent-dashboard.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'lilita-agent-dashboard.html'));
 });
 
+app.get('/agent-portal-v2', (req, res) => {
+    res.sendFile(path.join(__dirname, 'lilita-agent-portal-v2.html'));
+});
+
+app.get('/agent-portal-v2.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'lilita-agent-portal-v2.html'));
+});
+
 // Health check endpoint
 app.get('/health', (req, res) => {
     res.status(200).json({
