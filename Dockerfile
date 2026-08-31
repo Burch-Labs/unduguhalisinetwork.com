@@ -10,7 +10,7 @@ RUN npm install --legacy-peer-deps
 
 # Copy application files
 COPY server.js .
-COPY lilita-*.html .
+COPY *.html .
 
 # Set environment
 ENV NODE_ENV=production
