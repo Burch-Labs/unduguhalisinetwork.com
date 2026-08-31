@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lilita Keper - Agent Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold: #D4AF37;
+            --dark-green: #1B4D3E;
+            --cream: #F5F1E8;
+            --dark-brown: #3D2817;
+            --light-gray: #F0F0F0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-gray);
+            color: #333;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            background: var(--dark-green);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .nav-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--gold);
+        }
+
+        .nav-user {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-user button {
+            background: var(--gold);
+            color: var(--dark-green);
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .nav-user button:hover {
+            background: #C19A6B;
+            transform: translateY(-2px);
+        }
+
+        /* Layout */
+        .dashboard {
+            display: flex;
+            min-height: calc(100vh - 60px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: white;
+            border-right: 1px solid #E0E0E0;
+            padding: 1rem 0;
+            position: sticky;
+            top: 60px;
+            overflow-y: auto;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin: 0;
+        }
+
+        .sidebar-menu a {
+            display: block;
+            padding: 1rem 1.5rem;
+            color: #333;
+            text-decoration: none;
+            border-left: 3px solid transparent;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .sidebar-menu a:hover {
+            background: var(--cream);
+            border-left-color: var(--gold);
+            color: var(--dark-green);
+        }
+
+        .sidebar-menu a.active {
+            background: var(--cream);
+            border-left-color: var(--gold);
+            color: var(--dark-green);
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            color: var(--dark-green);
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+        }
+
+        .page-header p {
+            color: #666;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card h2 {
+            color: var(--dark-green);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 0.5rem;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--dark-green) 0%, #2D6A58 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-card .number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: var(--gold);
+        }
+
+        .stat-card .label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Pricing Table */
+        .pricing-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+
+        .pricing-table thead {
+            background: var(--dark-green);
+            color: white;
+        }
+
+        .pricing-table th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid var(--gold);
+        }
+
+        .pricing-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #E0E0E0;
+        }
+
+        .pricing-table tbody tr:hover {
+            background: var(--cream);
+        }
+
+        .price-amount {
+            color: var(--gold);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .season-badge {
+            display: inline-block;
+            padding: 0.3rem 0.7rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .season-peak {
+            background: #FFE5E5;
+            color: #C92A2A;
+        }
+
+        .season-shoulder {
+            background: #FFF3BF;
+            color: #C77B00;
+        }
+
+        .season-green {
+            background: #E5F8F0;
+            color: #1B5E20;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #E0E0E0;
+        }
+
+        .tab {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: #666;
+            font-weight: 500;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab:hover {
+            color: var(--dark-green);
+        }
+
+        .tab.active {
+            color: var(--dark-green);
+            border-bottom-color: var(--gold);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.3rem;
+            color: var(--dark-green);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.7rem;
+            border: 1px solid #E0E0E0;
+            border-radius: 4px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: var(--gold);
+            color: var(--dark-green);
+        }
+
+        .btn-primary:hover {
+            background: #C19A6B;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--dark-green);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #145846;
+        }
+
+        /* Contact Info */
+        .contact-box {
+            background: var(--cream);
+            border-left: 4px solid var(--gold);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .contact-box h3 {
+            color: var(--dark-green);
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-box p {
+            margin-bottom: 0.3rem;
+            color: #666;
+        }
+
+        .contact-box a {
+            color: var(--gold);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .contact-box a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                position: static;
+                border-right: none;
+                border-bottom: 1px solid #E0E0E0;
+                padding: 0;
+            }
+
+            .sidebar-menu {
+                display: flex;
+                overflow-x: auto;
+            }
+
+            .sidebar-menu a {
+                border-left: none;
+                border-bottom: 3px solid transparent;
+                white-space: nowrap;
+                padding: 1rem;
+            }
+
+            .sidebar-menu a.active {
+                border-left: none;
+                border-bottom-color: var(--gold);
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .pricing-table {
+                font-size: 0.85rem;
+            }
+
+            .pricing-table th,
+            .pricing-table td {
+                padding: 0.75rem 0.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <div class="top-nav">
+        <div class="nav-brand">🦁 LILITA KEPER Agent Portal</div>
+        <div class="nav-user">
+            <span id="userEmail">agent@lilitakeper.com</span>
+            <button onclick="handleLogout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="dashboard">
+        <!-- Sidebar Menu -->
+        <div class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a class="menu-link active" onclick="showTab('overview')">📊 Dashboard</a></li>
+                <li><a class="menu-link" onclick="showTab('pricing')">💰 Pricing & Rates</a></li>
+                <li><a class="menu-link" onclick="showTab('reservations')">📅 Reservations</a></li>
+                <li><a class="menu-link" onclick="showTab('contacts')">📞 Contacts</a></li>
+                <li><a class="menu-link" onclick="showTab('documents')">📄 Documents</a></li>
+                <li><a class="menu-link" onclick="showTab('settings')">⚙️ Settings</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Overview Tab -->
+            <div id="overview" class="tab-content active">
+                <div class="page-header">
+                    <h1>Welcome Back!</h1>
+                    <p>Lilita Keper Agent Portal - 2026 & 2027 Seasons</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="number">47</div>
+                        <div class="label">Bookings This Year</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number">$98.5K</div>
+                        <div class="label">Revenue Generated</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number">152</div>
+                        <div class="label">Total Guests Hosted</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number">4.9⭐</div>
+                        <div class="label">Average Rating</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>Quick Access</h2>
+                    <p style="margin-bottom: 1rem; color: #666;">Use the sidebar menu to access pricing, manage reservations, view contacts, and download documents.</p>
+                    <button class="btn btn-primary" onclick="showTab('pricing')">View Pricing →</button>
+                    <button class="btn btn-secondary" style="margin-left: 0.5rem;" onclick="showTab('reservations')">Manage Bookings →</button>
+                </div>
+            </div>
+
+            <!-- Pricing Tab -->
+            <div id="pricing" class="tab-content">
+                <div class="page-header">
+                    <h1>2026-2027 B2B Rates</h1>
+                    <p>STO (Special Tour Operator) and Rack Rates</p>
+                </div>
+
+                <div class="card">
+                    <h2>Game Package (All Inclusive)</h2>
+                    <table class="pricing-table">
+                        <thead>
+                            <tr>
+                                <th>Season</th>
+                                <th>Dates</th>
+                                <th>STO Double</th>
+                                <th>STO Single</th>
+                                <th>Rack Double</th>
+                                <th>Rack Single</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="season-badge season-peak">Peak</span></td>
+                                <td>01 Jul – 30 Sep & 21 Dec – 03 Jan</td>
+                                <td class="price-amount">USD 676</td>
+                                <td class="price-amount">USD 972</td>
+                                <td class="price-amount">USD 845</td>
+                                <td class="price-amount">USD 1,215</td>
+                            </tr>
+                            <tr>
+                                <td><span class="season-badge season-shoulder">Shoulder</span></td>
+                                <td>04 Jan – 31 Mar, 01 Jun – 30 Jun, 01 Oct – 20 Dec</td>
+                                <td class="price-amount">USD 524</td>
+                                <td class="price-amount">USD 724</td>
+                                <td class="price-amount">USD 655</td>
+                                <td class="price-amount">USD 905</td>
+                            </tr>
+                            <tr>
+                                <td><span class="season-badge season-green">Green/Low</span></td>
+                                <td>01 Apr – 31 May</td>
+                                <td class="price-amount">USD 452</td>
+                                <td class="price-amount">USD 596</td>
+                                <td class="price-amount">USD 565</td>
+                                <td class="price-amount">USD 745</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p style="color: #666; font-size: 0.9rem; margin-top: 1rem;">
+                        <strong>Inclusions:</strong> Accommodation, all meals, daily game drives, night drives (3+ nights), premium beverages, transfers, sundowners, laundry, Wi-Fi, and more.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h2>Full Board Package (AP)</h2>
+                    <table class="pricing-table">
+                        <thead>
+                            <tr>
+                                <th>Season</th>
+                                <th>STO Double</th>
+                                <th>STO Single</th>
+                                <th>Rack Double</th>
+                                <th>Rack Single</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="season-badge season-peak">Peak</span></td>
+                                <td class="price-amount">USD 492</td>
+                                <td class="price-amount">USD 756</td>
+                                <td class="price-amount">USD 615</td>
+                                <td class="price-amount">USD 945</td>
+                            </tr>
+                            <tr>
+                                <td><span class="season-badge season-shoulder">Shoulder</span></td>
+                                <td class="price-amount">USD 316</td>
+                                <td class="price-amount">USD 516</td>
+                                <td class="price-amount">USD 395</td>
+                                <td class="price-amount">USD 645</td>
+                            </tr>
+                            <tr>
+                                <td><span class="season-badge season-green">Green/Low</span></td>
+                                <td class="price-amount">USD 236</td>
+                                <td class="price-amount">USD 380</td>
+                                <td class="price-amount">USD 295</td>
+                                <td class="price-amount">USD 475</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h2>Key Terms</h2>
+                    <ul style="margin-left: 1.5rem; color: #666;">
+                        <li><strong>Child Policy:</strong> Under 6 free; 6–11.99 yrs at 50%; 12–17.99 yrs at 70%</li>
+                        <li><strong>Deposit:</strong> 30% confirmation; balance 45 days prior</li>
+                        <li><strong>Cancellation:</strong> 45+ days: full refund; 44-31 days: 50% fee; 30 days or less: 100% fee</li>
+                        <li><strong>Check-in/out:</strong> 12:00 hrs / 10:00 hrs</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Reservations Tab -->
+            <div id="reservations" class="tab-content">
+                <div class="page-header">
+                    <h1>Manage Reservations</h1>
+                    <p>Create and track guest bookings</p>
+                </div>
+
+                <div class="card">
+                    <h2>New Booking</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                        <div class="form-group">
+                            <label>Guest Name *</label>
+                            <input type="text" placeholder="Full name">
+                        </div>
+                        <div class="form-group">
+                            <label>Email *</label>
+                            <input type="email" placeholder="guest@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Phone *</label>
+                            <input type="tel" placeholder="+254...">
+                        </div>
+                        <div class="form-group">
+                            <label>Check-in Date *</label>
+                            <input type="date">
+                        </div>
+                        <div class="form-group">
+                            <label>Check-out Date *</label>
+                            <input type="date">
+                        </div>
+                        <div class="form-group">
+                            <label>Room Type *</label>
+                            <select>
+                                <option>Select room type...</option>
+                                <option>Illochoreta Jacuzzi Villa</option>
+                                <option>Olmarei Family Villa</option>
+                                <option>Enkaji Grand Villa</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Number of Guests *</label>
+                            <input type="number" min="1" value="2">
+                        </div>
+                        <div class="form-group">
+                            <label>Special Requests</label>
+                            <textarea placeholder="Any special requirements..." style="resize: vertical; min-height: 100px;"></textarea>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="alert('Booking created successfully!')">Create Booking</button>
+                </div>
+
+                <div class="card">
+                    <h2>Recent Bookings</h2>
+                    <p style="color: #666; margin-bottom: 1rem;">No current bookings. Create a new booking to get started.</p>
+                </div>
+            </div>
+
+            <!-- Contacts Tab -->
+            <div id="contacts" class="tab-content">
+                <div class="page-header">
+                    <h1>Contact Information</h1>
+                    <p>Lilita Keper Operations & Support</p>
+                </div>
+
+                <div class="card">
+                    <h2>Primary Contacts</h2>
+                    <div style="display: grid; gap: 1rem;">
+                        <div class="contact-box">
+                            <h3>📱 Phone Support (24/7)</h3>
+                            <p><a href="tel:+254180044355">+254 180 044 355</a></p>
+                            <p><a href="tel:+254101070095">+254 101 070 095</a></p>
+                        </div>
+
+                        <div class="contact-box">
+                            <h3>📧 Email</h3>
+                            <p><strong>Reservations:</strong> <a href="mailto:sales@lilitakeper.com">sales@lilitakeper.com</a></p>
+                            <p><strong>Executive:</strong> <a href="mailto:ceo@maasaimaratravels.com">ceo@maasaimaratravels.com</a></p>
+                        </div>
+
+                        <div class="contact-box">
+                            <h3>📍 Location</h3>
+                            <p>Enonkishu Conservancy<br>Maasai Mara, Kenya</p>
+                        </div>
+
+                        <div class="contact-box">
+                            <h3>🌐 Web</h3>
+                            <p><a href="https://lilitakeper.com" target="_blank">www.lilitakeper.com</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Documents Tab -->
+            <div id="documents" class="tab-content">
+                <div class="page-header">
+                    <h1>Documentation</h1>
+                    <p>Access contracts and reference materials</p>
+                </div>
+
+                <div class="card">
+                    <h2>Available Documents</h2>
+                    <div style="display: grid; gap: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--cream); border-radius: 6px;">
+                            <div>
+                                <h3 style="color: var(--dark-green); margin-bottom: 0.2rem;">📄 B2B Rates & Contract 2026-2027</h3>
+                                <p style="color: #666; font-size: 0.9rem;">Official PDF with pricing, terms, and conditions</p>
+                            </div>
+                            <button class="btn btn-primary" onclick="alert('Downloading: Lilita_Keper_B2B_Rates_2026-2027.pdf')">Download</button>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--cream); border-radius: 6px;">
+                            <div>
+                                <h3 style="color: var(--dark-green); margin-bottom: 0.2rem;">📊 Rate Sheet (Google Docs)</h3>
+                                <p style="color: #666; font-size: 0.9rem;">Editable version for internal reference</p>
+                            </div>
+                            <button class="btn btn-primary" onclick="alert('Opening: Lilita Keper Tariff Sheet (Google Docs)')">View</button>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--cream); border-radius: 6px;">
+                            <div>
+                                <h3 style="color: var(--dark-green); margin-bottom: 0.2rem;">🦁 Logo & Brand Assets</h3>
+                                <p style="color: #666; font-size: 0.9rem;">High-resolution transparent PNG and brand guidelines</p>
+                            </div>
+                            <button class="btn btn-primary" onclick="alert('Downloading: Lilita_Keper_Brand_Assets.zip')">Download</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settings" class="tab-content">
+                <div class="page-header">
+                    <h1>Account Settings</h1>
+                    <p>Manage your profile and preferences</p>
+                </div>
+
+                <div class="card">
+                    <h2>Profile</h2>
+                    <div style="display: grid; gap: 1rem; max-width: 500px;">
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" value="agent@lilitakeper.com" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label>Company Name</label>
+                            <input type="text" placeholder="Your travel company">
+                        </div>
+                        <div class="form-group">
+                            <label>Phone</label>
+                            <input type="tel" placeholder="+254...">
+                        </div>
+                        <button class="btn btn-primary" onclick="alert('Settings saved successfully!')">Save Changes</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>Password</h2>
+                    <div style="display: grid; gap: 1rem; max-width: 500px;">
+                        <div class="form-group">
+                            <label>Current Password</label>
+                            <input type="password">
+                        </div>
+                        <div class="form-group">
+                            <label>New Password</label>
+                            <input type="password">
+                        </div>
+                        <div class="form-group">
+                            <label>Confirm Password</label>
+                            <input type="password">
+                        </div>
+                        <button class="btn btn-primary" onclick="alert('Password changed successfully!')">Change Password</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Hide all tabs
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Remove active class from all menu links
+            const menuLinks = document.querySelectorAll('.menu-link');
+            menuLinks.forEach(link => link.classList.remove('active'));
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+
+            // Add active class to clicked menu link
+            event.target.classList.add('active');
+        }
+
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('agentEmail');
+                window.location.href = '/lilita-agent-login.html';
+            }
+        }
+
+        // Load user email from localStorage
+        window.addEventListener('load', () => {
+            const savedEmail = localStorage.getItem('agentEmail');
+            if (savedEmail) {
+                document.getElementById('userEmail').textContent = savedEmail;
+            }
+        });
+    </script>
+</body>
+</html>
