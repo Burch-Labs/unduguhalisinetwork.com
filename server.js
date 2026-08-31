@@ -9,27 +9,10 @@ const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Routes FIRST - Serve main portal
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'lilita-agent-portal-v2.html'));
-});
-
-app.get('/agent-portal', (req, res) => {
-    res.sendFile(path.join(__dirname, 'lilita-agent-portal-v2.html'));
-});
-
-app.get('/agent-portal-v2', (req, res) => {
-    res.sendFile(path.join(__dirname, 'lilita-agent-portal-v2.html'));
-});
-
-app.get('/agent-portal-v2.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'lilita-agent-portal-v2.html'));
-});
-
-// Serve static files (after routes)
+// Serve static files (index.html will be served at /)
 app.use(express.static(path.join(__dirname)));
 
-// Email sending endpoint (bulk mail-merge)
+// Email sending endpoint
 app.post('/api/send-bulk-email', async (req, res) => {
     try {
         const { recipients, subject, template, campaignName } = req.body;
@@ -49,7 +32,6 @@ app.post('/api/send-bulk-email', async (req, res) => {
             });
         }
 
-        // Send emails via Resend
         const sent = [];
         const failed = [];
 
@@ -104,18 +86,13 @@ app.post('/api/send-bulk-email', async (req, res) => {
     }
 });
 
-// Health check endpoint
+// Health check
 app.get('/health', (req, res) => {
     res.status(200).json({
         status: 'healthy',
         timestamp: new Date().toISOString(),
         service: 'Lilita Keper Portal'
     });
-});
-
-// 404 handler - serve portal
-app.use((req, res) => {
-    res.sendFile(path.join(__dirname, 'lilita-agent-portal-v2.html'));
 });
 
 // Start server
