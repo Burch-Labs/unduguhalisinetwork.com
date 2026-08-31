@@ -9,10 +9,7 @@ const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static files
-app.use(express.static(path.join(__dirname)));
-
-// Routes - Serve main portal
+// Routes FIRST - Serve main portal
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'lilita-agent-portal-v2.html'));
 });
@@ -28,6 +25,9 @@ app.get('/agent-portal-v2', (req, res) => {
 app.get('/agent-portal-v2.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'lilita-agent-portal-v2.html'));
 });
+
+// Serve static files (after routes)
+app.use(express.static(path.join(__dirname)));
 
 // Email sending endpoint (bulk mail-merge)
 app.post('/api/send-bulk-email', async (req, res) => {
