@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -7,8 +8,14 @@ const PORT = process.env.PORT || 8080;
 // Serve static files from root directory
 app.use(express.static(path.join(__dirname)));
 
-// Serve public assets (logos, images, etc)
-app.use(express.static(path.join(__dirname, 'public')));
+// Serve public assets - check both locations for dev and production
+const publicPath = path.join(__dirname, 'public');
+if (fs.existsSync(publicPath)) {
+    app.use(express.static(publicPath));
+} else {
+    // Dev mode: serve from apps/web/public
+    app.use(express.static(path.join(__dirname, 'apps', 'web', 'public')));
+}
 
 app.get('/health', (req, res) => {
     res.json({ status: 'healthy', service: 'Lilita Keper Portal' });
