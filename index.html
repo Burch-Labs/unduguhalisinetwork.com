@@ -1671,7 +1671,7 @@
 <div id="portal-page" class="portal-page" style="display: none;">
     <!-- SIDEBAR -->
     <div class="sidebar">
-        <div class="sidebar-brand">
+        <div class="sidebar-brand" onclick="goHome()" style="cursor: pointer;">
             <div class="logo-circle">🦁</div>
             <div class="brand-text">
                 <h2>LILITA KEPER</h2>
@@ -1680,14 +1680,14 @@
         </div>
 
         <div class="sidebar-menu">
-            <div class="menu-item active" onclick="switchTab('dashboard')">📊 Dashboard</div>
-            <div class="menu-item" onclick="switchTab('bookings')">📋 Book Now</div>
-            <div class="menu-item" onclick="switchTab('rates')">💰 Rates</div>
-            <div class="menu-item" onclick="switchTab('contracts')">📜 Contracts</div>
-            <div class="menu-item" onclick="switchTab('documents')">📄 Documents</div>
-            <div class="menu-item" onclick="switchTab('tents')">📅 Availability</div>
-            <div class="menu-item" onclick="switchTab('contacts')">👥 Contacts</div>
-            <div class="menu-item" onclick="switchTab('mailmerge')">✉️ Mail-Merge</div>
+            <div class="menu-item active" onclick="switchTab('dashboard'); closeSidebarMobile();">📊 Dashboard</div>
+            <div class="menu-item" onclick="switchTab('bookings'); closeSidebarMobile();">📋 Book Now</div>
+            <div class="menu-item" onclick="switchTab('rates'); closeSidebarMobile();">💰 Rates</div>
+            <div class="menu-item" onclick="switchTab('contracts'); closeSidebarMobile();">📜 Contracts</div>
+            <div class="menu-item" onclick="switchTab('documents'); closeSidebarMobile();">📄 Documents</div>
+            <div class="menu-item" onclick="switchTab('tents'); closeSidebarMobile();">📅 Availability</div>
+            <div class="menu-item" onclick="switchTab('contacts'); closeSidebarMobile();">👥 Contacts</div>
+            <div class="menu-item" onclick="switchTab('mailmerge'); closeSidebarMobile();">✉️ Mail-Merge</div>
         </div>
 
         <button class="logout-btn" onclick="handleLogout()" style="width: 100%; margin-top: auto;">Logout</button>
@@ -1695,6 +1695,9 @@
 
     <!-- MOBILE MENU TOGGLE -->
     <button class="menu-toggle" id="menu-toggle" onclick="toggleSidebarMobile()" style="display: none;">☰</button>
+
+    <!-- MOBILE BACKDROP -->
+    <div id="mobile-backdrop" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 900;" onclick="closeSidebarMobile()"></div>
 
     <!-- CONTENT AREA -->
     <div class="portal-content">
@@ -2221,37 +2224,58 @@ function switchTab(tab) {
 
     // Show selected section
     document.getElementById(tab).classList.add('active');
-    event.target.classList.add('active');
+
+    // Find and mark the clicked menu item as active
+    document.querySelectorAll('.menu-item').forEach(item => {
+        if (item.textContent.includes(tab === 'tents' ? 'Availability' :
+                                       tab === 'bookings' ? 'Book Now' :
+                                       tab === 'mailmerge' ? 'Mail-Merge' :
+                                       tab.charAt(0).toUpperCase() + tab.slice(1))) {
+            item.classList.add('active');
+        }
+    });
 
     // Update title
     const titles = {
         dashboard: 'Dashboard',
-        bookings: 'Bookings',
-        tents: 'Tents & Availability',
+        bookings: 'Book Now',
+        tents: 'Availability',
         contacts: 'Contacts',
-        mailmerge: 'Mail-Merge Campaigns',
-        documents: 'Documents'
+        mailmerge: 'Mail-Merge',
+        documents: 'Documents',
+        rates: 'Rates',
+        contracts: 'Contracts'
     };
-    document.getElementById('section-title').textContent = titles[tab];
+    document.getElementById('section-title').textContent = titles[tab] || tab;
 
     if (tab === 'mailmerge') {
         renderMailMergeContacts();
     }
 
-    // Close sidebar on mobile after selecting
-    if (window.innerWidth <= 768) {
-        closeSidebarMobile();
-    }
+    // ALWAYS close sidebar on mobile after selecting
+    closeSidebarMobile();
+
+    // Update browser history
+    window.history.pushState({tab: tab}, '', `#${tab}`);
 }
 
 function toggleSidebarMobile() {
     const sidebar = document.querySelector('.sidebar');
+    const backdrop = document.getElementById('mobile-backdrop');
     sidebar.classList.toggle('active');
+
+    if (sidebar.classList.contains('active')) {
+        backdrop.style.display = 'block';
+    } else {
+        backdrop.style.display = 'none';
+    }
 }
 
 function closeSidebarMobile() {
     const sidebar = document.querySelector('.sidebar');
+    const backdrop = document.getElementById('mobile-backdrop');
     sidebar.classList.remove('active');
+    backdrop.style.display = 'none';
 }
 
 function initializeMobileMenu() {
@@ -2265,6 +2289,18 @@ function initializeMobileMenu() {
 
 // Handle window resize
 window.addEventListener('resize', initializeMobileMenu);
+
+// Handle browser back/forward buttons
+window.addEventListener('popstate', (e) => {
+    if (e.state && e.state.tab) {
+        switchTab(e.state.tab);
+    }
+});
+
+// Logo click - return to dashboard
+function goHome() {
+    switchTab('dashboard');
+}
 
 // ===== TARIFF SHEET =====
 const tariff = {
