@@ -1023,19 +1023,62 @@
 
         /* ===== MOBILE RESPONSIVE ===== */
         @media (max-width: 768px) {
-            /* Sidebar - Hide on mobile, show as drawer */
+            /* Sidebar - Hidden on mobile, slides in as overlay */
             .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-                padding: 1rem;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-                overflow-y: visible;
+                position: fixed;
+                width: 280px;
+                height: 100vh;
+                top: 0;
+                left: -280px;
+                z-index: 1000;
+                transition: left 0.3s ease;
+                box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+                overflow-y: auto;
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            /* Overlay when sidebar is open */
+            .sidebar.active::before {
+                content: '';
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.5);
+                z-index: -1;
             }
 
             .main-content {
                 margin-left: 0 !important;
                 width: 100%;
+            }
+
+            /* Menu toggle button */
+            .menu-toggle {
+                display: flex !important;
+                position: fixed;
+                top: 1rem;
+                left: 1rem;
+                z-index: 950;
+                background: linear-gradient(135deg, #D4A574 0%, #A0845D 100%);
+                color: white;
+                border: none;
+                width: 50px;
+                height: 50px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 1.5rem;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 4px 12px rgba(212, 165, 116, 0.3);
+            }
+
+            .menu-toggle:active {
+                transform: scale(0.95);
             }
 
             /* Landing page responsive */
@@ -1261,6 +1304,11 @@
         @media (max-width: 480px) {
             body {
                 font-size: 14px;
+            }
+
+            /* Menu toggle button visible */
+            .menu-toggle {
+                display: flex !important;
             }
 
             .landing-hero h1 {
@@ -1644,6 +1692,9 @@
 
         <button class="logout-btn" onclick="handleLogout()" style="width: 100%; margin-top: auto;">Logout</button>
     </div>
+
+    <!-- MOBILE MENU TOGGLE -->
+    <button class="menu-toggle" id="menu-toggle" onclick="toggleSidebarMobile()" style="display: none;">☰</button>
 
     <!-- CONTENT AREA -->
     <div class="portal-content">
@@ -2056,6 +2107,7 @@ function init() {
     updateStats();
     renderTents();
     switchRateMode(false);  // Initialize with non-resident rates
+    initializeMobileMenu();  // Setup mobile navigation
 }
 
 window.addEventListener('load', init);
@@ -2185,7 +2237,34 @@ function switchTab(tab) {
     if (tab === 'mailmerge') {
         renderMailMergeContacts();
     }
+
+    // Close sidebar on mobile after selecting
+    if (window.innerWidth <= 768) {
+        closeSidebarMobile();
+    }
 }
+
+function toggleSidebarMobile() {
+    const sidebar = document.querySelector('.sidebar');
+    sidebar.classList.toggle('active');
+}
+
+function closeSidebarMobile() {
+    const sidebar = document.querySelector('.sidebar');
+    sidebar.classList.remove('active');
+}
+
+function initializeMobileMenu() {
+    const menuToggle = document.getElementById('menu-toggle');
+    if (window.innerWidth <= 768) {
+        menuToggle.style.display = 'flex';
+    } else {
+        menuToggle.style.display = 'none';
+    }
+}
+
+// Handle window resize
+window.addEventListener('resize', initializeMobileMenu);
 
 // ===== TARIFF SHEET =====
 const tariff = {
