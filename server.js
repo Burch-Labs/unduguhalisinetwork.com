@@ -12,25 +12,13 @@ app.use(express.urlencoded({ extended: true }));
 // Serve static files
 app.use(express.static(path.join(__dirname)));
 
-// Routes
+// Routes - Serve main portal
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'lilita-landing.html'));
+    res.sendFile(path.join(__dirname, 'lilita-agent-portal-v2.html'));
 });
 
-app.get('/login', (req, res) => {
-    res.sendFile(path.join(__dirname, 'lilita-agent-login.html'));
-});
-
-app.get('/dashboard', (req, res) => {
-    res.sendFile(path.join(__dirname, 'lilita-agent-dashboard.html'));
-});
-
-app.get('/agent-login.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'lilita-agent-login.html'));
-});
-
-app.get('/agent-dashboard.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'lilita-agent-dashboard.html'));
+app.get('/agent-portal', (req, res) => {
+    res.sendFile(path.join(__dirname, 'lilita-agent-portal-v2.html'));
 });
 
 app.get('/agent-portal-v2', (req, res) => {
@@ -125,9 +113,9 @@ app.get('/health', (req, res) => {
     });
 });
 
-// 404 handler
+// 404 handler - serve portal
 app.use((req, res) => {
-    res.status(404).sendFile(path.join(__dirname, 'lilita-landing.html'));
+    res.sendFile(path.join(__dirname, 'lilita-agent-portal-v2.html'));
 });
 
 // Start server
