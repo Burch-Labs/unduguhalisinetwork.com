@@ -1960,50 +1960,88 @@
         <!-- MAIL-MERGE SECTION -->
         <div id="mailmerge" class="section">
             <div class="form-container">
-                <h2>Email Campaign</h2>
-                <div class="form-row full">
-                    <label>Campaign Name</label>
-                    <input type="text" id="campaign-name" placeholder="Campaign Name">
-                </div>
-                <div class="form-row full">
-                    <label>Email Subject</label>
-                    <input type="text" id="campaign-subject" placeholder="Subject Line">
+                <h2>✉️ Advanced Email Campaign</h2>
+
+                <!-- Step 1: Add Emails -->
+                <div style="background: #F0F8FF; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; border-left: 4px solid #1976d2;">
+                    <h3 style="color: #1565c0; margin-top: 0;">Step 1: Add Email Recipients</h3>
+
+                    <!-- Paste Emails -->
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="font-weight: 600; color: #333;">📋 Paste Emails</label>
+                        <p style="font-size: 0.85rem; color: #666; margin: 0.5rem 0;">Paste emails in any format: john@example.com, John Smith <john@example.com>, or john.smith@example.com</p>
+                        <textarea id="paste-emails" placeholder="Paste email addresses here (one per line or comma-separated)..." style="width: 100%; height: 120px; padding: 1rem; border: 2px solid #ddd; border-radius: 6px; font-family: 'Courier New', monospace; font-size: 0.9rem;" onkeyup="validatePastedEmails()"></textarea>
+                        <button class="book-btn" onclick="parseAndAddEmails()" style="margin-top: 0.75rem; background: #1976d2;">➕ Parse & Add Emails</button>
+                    </div>
+
+                    <!-- OR Upload CSV -->
+                    <div style="text-align: center; margin: 1.5rem 0; color: #999;">— OR —</div>
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="font-weight: 600; color: #333;">📁 Upload CSV File</label>
+                        <p style="font-size: 0.85rem; color: #666; margin: 0.5rem 0;">Upload CSV with columns: Email, FirstName, Company (optional)</p>
+                        <div style="display: flex; gap: 1rem; align-items: center;">
+                            <input type="file" id="csv-file-mailmerge" accept=".csv" onchange="handleCSVUploadMailMerge()" style="flex: 1; padding: 0.75rem; border: 2px solid #ddd; border-radius: 6px;">
+                            <button class="book-btn" onclick="document.getElementById('csv-file-mailmerge').click()" style="background: #1976d2;">📤 Upload</button>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="form-row full">
-                    <label>Select Recipients</label>
-                    <div style="margin-bottom: 1rem;">
-                        <button type="button" class="book-btn" onclick="selectAllContacts()" style="background: #1976d2; margin-bottom: 0.5rem;">Select All</button>
+                <!-- Step 2: Review Emails -->
+                <div style="background: #FFF8E1; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; border-left: 4px solid #FF9800;">
+                    <h3 style="color: #F57C00; margin-top: 0;">Step 2: Review Recipients</h3>
+                    <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1rem;">
+                        <span style="font-weight: 600; color: #333;">Emails Loaded: <span id="email-count" style="color: #FF9800; font-size: 1.2rem;">0</span></span>
+                        <button class="book-btn" onclick="browseEmails()" style="background: #FF9800; flex: 1;">👀 Browse & Edit</button>
+                        <button class="book-btn" onclick="clearAllEmails()" style="background: #d32f2f;">🗑️ Clear</button>
                     </div>
-                    <table class="contacts-table">
+                    <table class="contacts-table" id="email-review-table">
                         <thead>
                             <tr>
-                                <th style="width: 30px;"></th>
+                                <th style="width: 30px;"><input type="checkbox" id="select-all-emails" onchange="toggleSelectAllEmails(this)"></th>
                                 <th>Email</th>
-                                <th>Name</th>
+                                <th>First Name</th>
+                                <th>Company</th>
+                                <th style="width: 60px;">Action</th>
                             </tr>
                         </thead>
-                        <tbody id="mailmerge-contacts">
+                        <tbody id="email-list">
+                            <tr><td colspan="5" style="text-align: center; color: #999;">No emails added yet</td></tr>
                         </tbody>
                     </table>
                 </div>
 
-                <div class="form-row full">
-                    <label>Email Template</label>
-                    <div class="template-variables">
-                        <strong>Available variables:</strong> {FirstName} {Company} {Email}
+                <!-- Step 3: Campaign Settings -->
+                <div style="background: #E8F5E9; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; border-left: 4px solid #4CAF50;">
+                    <h3 style="color: #2E7D32; margin-top: 0;">Step 3: Campaign Details</h3>
+                    <div class="form-row full">
+                        <label>Campaign Name</label>
+                        <input type="text" id="campaign-name" placeholder="e.g., Q4 Safari Promo">
                     </div>
-                    <textarea class="template-editor" id="email-template" placeholder="Dear {FirstName},&#10;&#10;We have exclusive safari packages available...">Dear {FirstName},
+                    <div class="form-row full">
+                        <label>Email Subject</label>
+                        <input type="text" id="campaign-subject" placeholder="e.g., Exclusive Safari Package - Lilita Keper">
+                    </div>
+                    <div class="form-row full">
+                        <label>Email Template</label>
+                        <div class="template-variables">
+                            <strong>Variables:</strong> {FirstName} {Company} {Email} - Use these to personalize
+                        </div>
+                        <textarea class="template-editor" id="email-template" placeholder="Dear {FirstName},...">Dear {FirstName},
 
 Thank you for your interest in Lilita Keper, a luxury safari experience in the Maasai Mara.
 
-We offer exclusive packages at {Company} rates. Our 6 luxury tented suites provide an intimate window into the African wild.
+We offer exclusive packages tailored for {Company}. Our 6 luxury tented suites provide an intimate window into the African wild.
 
 Best regards,
 Lilita Keper Team</textarea>
+                    </div>
                 </div>
 
-                <button class="book-btn" onclick="showMailMergePreview()">Preview & Send Emails</button>
+                <!-- Step 4: Send -->
+                <div style="display: flex; gap: 1rem;">
+                    <button class="book-btn" onclick="reviewBeforeSend()" style="flex: 1; background: #4CAF50; font-size: 1.1rem; padding: 1rem;">✅ Review & Send</button>
+                    <button class="book-btn" onclick="downloadEmailList()" style="flex: 1; background: #1976d2;">📥 Download List</button>
+                </div>
                 <div id="campaign-status" class="status-message"></div>
             </div>
         </div>
@@ -2101,7 +2139,9 @@ const state = {
     bookings: [],
     campaigns: [],
     selectedContacts: new Set(),
-    isResident: false  // Track resident vs non-resident rates
+    isResident: false,  // Track resident vs non-resident rates
+    mailMergeEmails: [],  // Advanced mail-merge emails
+    selectedMailMergeEmails: new Set()  // Selected for sending
 };
 
 // ===== INITIALIZATION =====
@@ -2111,6 +2151,7 @@ function init() {
     renderTents();
     switchRateMode(false);  // Initialize with non-resident rates
     initializeMobileMenu();  // Setup mobile navigation
+    loadMailMergeEmails();  // Load saved mail-merge emails
 }
 
 window.addEventListener('load', init);
@@ -2776,6 +2817,257 @@ function selectAllContacts() {
         state.contacts.forEach((_, idx) => state.selectedContacts.add(idx));
     }
     renderMailMergeContacts();
+}
+
+// ===== ADVANCED MAIL-MERGE FUNCTIONS =====
+function parseAndAddEmails() {
+    const text = document.getElementById('paste-emails').value.trim();
+    if (!text) {
+        showStatus('campaign-status', 'Please paste email addresses', 'error');
+        return;
+    }
+
+    const emailRegex = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/gi;
+    const matches = text.match(emailRegex) || [];
+    const newEmails = new Set();
+
+    matches.forEach(email => {
+        // Extract name from various formats
+        let name = '';
+        const nameRegex = new RegExp(`(.+?)\\s*<${email}>|${email}\\s*(.+?)|([A-Z][a-z]+)\\s+([A-Z][a-z]+)`, 'i');
+        const nameMatch = text.match(nameRegex);
+
+        if (nameMatch) {
+            name = (nameMatch[1] || nameMatch[2] || nameMatch[3] + ' ' + nameMatch[4] || email.split('@')[0]).trim();
+        } else {
+            name = email.split('@')[0].replace(/[._-]/g, ' ').trim();
+        }
+
+        const firstName = name.split(' ')[0];
+        newEmails.add(JSON.stringify({email, firstName, company: ''}));
+    });
+
+    newEmails.forEach(emailStr => {
+        const emailObj = JSON.parse(emailStr);
+        if (!state.mailMergeEmails.find(e => e.email === emailObj.email)) {
+            state.mailMergeEmails.push(emailObj);
+        }
+    });
+
+    document.getElementById('paste-emails').value = '';
+    updateEmailReviewTable();
+    showStatus('campaign-status', `✅ Added ${newEmails.size} emails successfully`, 'success');
+    localStorage.setItem('mailMergeEmails', JSON.stringify(state.mailMergeEmails));
+}
+
+function handleCSVUploadMailMerge() {
+    const file = document.getElementById('csv-file-mailmerge').files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const csv = e.target.result;
+        const lines = csv.split('\n');
+        let headerRow = lines[0].toLowerCase();
+        let emailCol = 0, nameCol = 1, companyCol = 2;
+
+        // Smart column detection
+        if (headerRow.includes('email')) emailCol = headerRow.split(',').findIndex(h => h.includes('email'));
+        if (headerRow.includes('name') || headerRow.includes('first')) nameCol = headerRow.split(',').findIndex(h => h.includes('name') || h.includes('first'));
+        if (headerRow.includes('company')) companyCol = headerRow.split(',').findIndex(h => h.includes('company'));
+
+        for (let i = 1; i < lines.length; i++) {
+            if (!lines[i].trim()) continue;
+            const cols = lines[i].split(',').map(c => c.trim());
+            const email = cols[emailCol];
+            const firstName = cols[nameCol] || email.split('@')[0];
+            const company = cols[companyCol] || '';
+
+            if (email && email.includes('@')) {
+                if (!state.mailMergeEmails.find(e => e.email === email)) {
+                    state.mailMergeEmails.push({email, firstName, company});
+                }
+            }
+        }
+
+        updateEmailReviewTable();
+        showStatus('campaign-status', `✅ Imported ${state.mailMergeEmails.length} emails from CSV`, 'success');
+        localStorage.setItem('mailMergeEmails', JSON.stringify(state.mailMergeEmails));
+    };
+    reader.readAsText(file);
+}
+
+function updateEmailReviewTable() {
+    document.getElementById('email-count').textContent = state.mailMergeEmails.length;
+
+    if (state.mailMergeEmails.length === 0) {
+        document.getElementById('email-list').innerHTML = '<tr><td colspan="5" style="text-align: center; color: #999;">No emails added yet</td></tr>';
+        return;
+    }
+
+    let html = '';
+    state.mailMergeEmails.forEach((email, idx) => {
+        html += `
+            <tr>
+                <td style="text-align: center;"><input type="checkbox" class="email-checkbox" data-idx="${idx}" onchange="toggleEmailSelection(${idx})"></td>
+                <td>${email.email}</td>
+                <td><input type="text" value="${email.firstName}" onchange="state.mailMergeEmails[${idx}].firstName=this.value; saveMailMergeState();" style="width: 100%; padding: 0.4rem; border: 1px solid #ddd; border-radius: 4px;"></td>
+                <td><input type="text" value="${email.company}" onchange="state.mailMergeEmails[${idx}].company=this.value; saveMailMergeState();" style="width: 100%; padding: 0.4rem; border: 1px solid #ddd; border-radius: 4px;"></td>
+                <td style="text-align: center;"><button class="book-btn" onclick="removeEmail(${idx})" style="background: #d32f2f; padding: 0.4rem 0.8rem; font-size: 0.8rem;">Remove</button></td>
+            </tr>
+        `;
+    });
+    document.getElementById('email-list').innerHTML = html;
+}
+
+function toggleEmailSelection(idx) {
+    if (state.selectedMailMergeEmails.has(idx)) {
+        state.selectedMailMergeEmails.delete(idx);
+    } else {
+        state.selectedMailMergeEmails.add(idx);
+    }
+}
+
+function toggleSelectAllEmails(checkbox) {
+    if (checkbox.checked) {
+        state.mailMergeEmails.forEach((_, idx) => state.selectedMailMergeEmails.add(idx));
+    } else {
+        state.selectedMailMergeEmails.clear();
+    }
+    document.querySelectorAll('.email-checkbox').forEach(cb => cb.checked = checkbox.checked);
+}
+
+function removeEmail(idx) {
+    state.mailMergeEmails.splice(idx, 1);
+    updateEmailReviewTable();
+    saveMailMergeState();
+}
+
+function clearAllEmails() {
+    if (confirm('Clear all emails? This cannot be undone.')) {
+        state.mailMergeEmails = [];
+        state.selectedMailMergeEmails.clear();
+        updateEmailReviewTable();
+        localStorage.removeItem('mailMergeEmails');
+        showStatus('campaign-status', 'All emails cleared', 'info');
+    }
+}
+
+function browseEmails() {
+    if (state.mailMergeEmails.length === 0) {
+        showStatus('campaign-status', 'No emails to browse', 'error');
+        return;
+    }
+    alert(`Browse: You have ${state.mailMergeEmails.length} emails ready.\n\nPreview:\n${state.mailMergeEmails.slice(0, 5).map(e => `${e.firstName} (${e.email})`).join('\n')}${state.mailMergeEmails.length > 5 ? `\n... and ${state.mailMergeEmails.length - 5} more` : ''}`);
+}
+
+function downloadEmailList() {
+    if (state.mailMergeEmails.length === 0) {
+        showStatus('campaign-status', 'No emails to download', 'error');
+        return;
+    }
+
+    let csv = 'Email,FirstName,Company\n';
+    state.mailMergeEmails.forEach(e => {
+        csv += `"${e.email}","${e.firstName}","${e.company}"\n`;
+    });
+
+    const blob = new Blob([csv], {type: 'text/csv'});
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `lilita-emails-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    showStatus('campaign-status', '✅ Email list downloaded', 'success');
+}
+
+function validatePastedEmails() {
+    const text = document.getElementById('paste-emails').value;
+    const emailCount = (text.match(/[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+/gi) || []).length;
+    if (emailCount > 0) {
+        const validateBtn = event.target.nextElementSibling;
+        if (validateBtn) validateBtn.textContent = `✅ Found ${emailCount} emails - Parse & Add`;
+    }
+}
+
+function reviewBeforeSend() {
+    const campaign = document.getElementById('campaign-name').value.trim();
+    const subject = document.getElementById('campaign-subject').value.trim();
+    const template = document.getElementById('email-template').value.trim();
+
+    if (!campaign || !subject || !template) {
+        showStatus('campaign-status', 'Please fill in campaign name, subject, and template', 'error');
+        return;
+    }
+
+    if (state.mailMergeEmails.length === 0) {
+        showStatus('campaign-status', 'Please add emails first', 'error');
+        return;
+    }
+
+    const toSend = state.selectedMailMergeEmails.size > 0
+        ? Array.from(state.selectedMailMergeEmails).map(idx => state.mailMergeEmails[idx])
+        : state.mailMergeEmails;
+
+    const preview = toSend.slice(0, 3).map((e, i) => {
+        let body = template
+            .replace(/{FirstName}/g, e.firstName)
+            .replace(/{Company}/g, e.company)
+            .replace(/{Email}/g, e.email);
+        return `\nEmail ${i+1} to ${e.firstName} <${e.email}>:\n${body.substring(0, 100)}...`;
+    }).join('\n');
+
+    const confirmMsg = `Send campaign "${campaign}" to ${toSend.length} emails?\n${preview}\n\nClick OK to confirm.`;
+
+    if (confirm(confirmMsg)) {
+        sendMailMergeCampaign(campaign, subject, template, toSend);
+    }
+}
+
+function sendMailMergeCampaign(campaign, subject, template, recipients) {
+    showStatus('campaign-status', '📤 Sending emails...', 'info');
+
+    fetch('/api/send-bulk-email', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            recipients: recipients.map(e => ({
+                email: e.email,
+                firstName: e.firstName,
+                company: e.company
+            })),
+            subject,
+            template,
+            campaignName: campaign
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            showStatus('campaign-status', `✅ Campaign sent! ${data.sent} emails delivered.`, 'success');
+            state.mailMergeEmails = [];
+            state.selectedMailMergeEmails.clear();
+            updateEmailReviewTable();
+        } else {
+            showStatus('campaign-status', `❌ Error: ${data.error}`, 'error');
+        }
+    })
+    .catch(err => {
+        showStatus('campaign-status', `❌ Error sending campaign: ${err.message}`, 'error');
+    });
+}
+
+function saveMailMergeState() {
+    localStorage.setItem('mailMergeEmails', JSON.stringify(state.mailMergeEmails));
+}
+
+// Load saved emails on init
+function loadMailMergeEmails() {
+    const saved = localStorage.getItem('mailMergeEmails');
+    if (saved) {
+        state.mailMergeEmails = JSON.parse(saved);
+        updateEmailReviewTable();
+    }
 }
 
 function showMailMergePreview() {
