@@ -1228,7 +1228,13 @@
         <!-- RATES SECTION -->
         <div id="rates" class="section">
             <div style="background: rgba(255,255,255,0.95); padding: 2rem; border-radius: 12px;">
-                <h2 style="color: var(--dark-brown); margin-bottom: 1.5rem;">💰 Tariff & Season Rates</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h2 style="color: var(--dark-brown); margin: 0;">💰 Tariff & Season Rates</h2>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="book-btn" id="non-resident-btn" onclick="switchRateMode(false)" style="background: linear-gradient(135deg, #D4A574 0%, #A0845D 100%); padding: 0.5rem 1rem;">Non-Resident</button>
+                        <button class="book-btn" id="resident-btn" onclick="switchRateMode(true)" style="background: #999; padding: 0.5rem 1rem;">Resident</button>
+                    </div>
+                </div>
 
                 <h3 style="color: var(--dark-brown); margin-bottom: 1rem;">2026-2027 Season Rates (All-Inclusive)</h3>
                 <p style="color: #666; margin-bottom: 1rem; font-size: 0.9rem;"><strong>All rates are per person per night</strong></p>
@@ -1242,32 +1248,21 @@
                             <th>Double Sharing</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>Green Season</strong></td>
-                            <td>Apr 1 - May 31, 2026</td>
-                            <td>$475</td>
-                            <td>$295</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Shoulder Season</strong></td>
-                            <td>Jan 4 - Mar 31, Jun 1-30, Oct 1 - Dec 20, Jan 4 - Mar 31, 2027</td>
-                            <td>$645</td>
-                            <td>$395</td>
-                        </tr>
-                        <tr style="background: #FFF3CD;">
-                            <td><strong>Peak & Festive Season</strong></td>
-                            <td>Jul 1 - Sep 30, Dec 21 - Jan 3, 2027</td>
-                            <td>$945</td>
-                            <td>$615</td>
-                        </tr>
+                    <tbody id="rates-table-body">
+                        <!-- Dynamically populated by switchRateMode() -->
                     </tbody>
                 </table>
 
                 <div style="margin-top: 1.5rem; padding: 1rem; background: #E8F5E9; border-radius: 6px; border-left: 4px solid #4CAF50;">
                     <h4 style="color: #2E7D32; margin-bottom: 0.5rem;">🎯 STO (Straight Ticketable Office) Rates</h4>
-                    <p style="color: #555; font-size: 0.9rem;">All rates listed above are <strong>Rack Rates</strong>. STO rates receive a <strong>20% discount</strong> on the rack rates shown.</p>
+                    <p style="color: #555; font-size: 0.9rem;">All rates listed above are <strong>Rack/Public Rates</strong>. STO rates receive a <strong>20% discount</strong> on the rates shown.</p>
                     <p style="color: #555; font-size: 0.9rem; margin-top: 0.5rem;"><strong>Example:</strong> If Shoulder Season Double is $395 (Rack), STO rate = $316/person/night</p>
+                </div>
+
+                <div style="margin-top: 2rem; padding: 1.5rem; background: #E3F2FD; border-radius: 6px; border-left: 4px solid #1976d2;">
+                    <h4 style="color: #1565c0; margin-top: 0;">🏠 Resident vs Non-Resident</h4>
+                    <p style="color: #555; margin: 0.5rem 0 0 0; font-size: 0.9rem;"><strong>Resident Rates:</strong> Special pricing for Kenyan residents (up to 40% discount)<br>
+                    <strong>Non-Resident Rates:</strong> Standard international/visitor rates</p>
                 </div>
             </div>
         </div>
@@ -1451,11 +1446,32 @@ Lilita Keper Team</textarea>
                         <p style="margin: 0.5rem 0 0 0; opacity: 0.9; font-size: 0.9rem;">Booking policy & STO terms<br>Click to view →</p>
                     </div>
 
+                    <div style="background: linear-gradient(135deg, #FF6B6B 0%, #C92A2A 100%); padding: 1.5rem; border-radius: 8px; color: white;">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎁</div>
+                        <h3 style="margin: 0; font-size: 1.1rem;">Premium Brochure 2026-27</h3>
+                        <p style="margin: 0.5rem 0 1rem 0; opacity: 0.9; font-size: 0.9rem;">Full property information</p>
+                        <a href="17a00a60-B2C_202627_Premium_Brochure.pdf" download style="display: inline-block; padding: 0.6rem 1rem; background: rgba(255,255,255,0.2); color: white; text-decoration: none; border-radius: 4px; font-weight: 600; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">📥 Download</a>
+                    </div>
+
                     <div style="background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%); padding: 1.5rem; border-radius: 8px; color: white;">
-                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">📥</div>
-                        <h3 style="margin: 0; font-size: 1.1rem;">Complete Rate Sheet</h3>
-                        <p style="margin: 0.5rem 0 1rem 0; opacity: 0.9; font-size: 0.9rem;">Official 2027 rates PDF</p>
-                        <a href="https://contacts-app-wheat.vercel.app/lilita-2027-agent-rates" target="_blank" style="display: inline-block; padding: 0.6rem 1rem; background: rgba(255,255,255,0.2); color: white; text-decoration: none; border-radius: 4px; font-weight: 600; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">Download PDF</a>
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎁</div>
+                        <h3 style="margin: 0; font-size: 1.1rem;">Premium Brochure 2027-28</h3>
+                        <p style="margin: 0.5rem 0 1rem 0; opacity: 0.9; font-size: 0.9rem;">Next season information</p>
+                        <a href="05634b60-B2C_202728_Premium_Brochure.pdf" download style="display: inline-block; padding: 0.6rem 1rem; background: rgba(255,255,255,0.2); color: white; text-decoration: none; border-radius: 4px; font-weight: 600; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">📥 Download</a>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, #7B68EE 0%, #4B0082 100%); padding: 1.5rem; border-radius: 8px; color: white;">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">🏠</div>
+                        <h3 style="margin: 0; font-size: 1.1rem;">Resident Rate Sheet</h3>
+                        <p style="margin: 0.5rem 0 1rem 0; opacity: 0.9; font-size: 0.9rem;">2026-27 resident pricing</p>
+                        <a href="d5dc4505-B2C_202627_Resident_Rate_EAC.pdf" download style="display: inline-block; padding: 0.6rem 1rem; background: rgba(255,255,255,0.2); color: white; text-decoration: none; border-radius: 4px; font-weight: 600; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">📥 Download</a>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, #FFB347 0%, #FF8C00 100%); padding: 1.5rem; border-radius: 8px; color: white;">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">🌐</div>
+                        <h3 style="margin: 0; font-size: 1.1rem;">Master Web Links</h3>
+                        <p style="margin: 0.5rem 0 1rem 0; opacity: 0.9; font-size: 0.9rem;">Digital directory & contacts</p>
+                        <a href="0d540f76-Lilita_Keper___Master_Web_Links__Digital_Directory_Official_PDF.pdf" download style="display: inline-block; padding: 0.6rem 1rem; background: rgba(255,255,255,0.2); color: white; text-decoration: none; border-radius: 4px; font-weight: 600; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">📥 Download</a>
                     </div>
                 </div>
 
@@ -1503,7 +1519,8 @@ const state = {
     contacts: [],
     bookings: [],
     campaigns: [],
-    selectedContacts: new Set()
+    selectedContacts: new Set(),
+    isResident: false  // Track resident vs non-resident rates
 };
 
 // ===== INITIALIZATION =====
@@ -1511,6 +1528,7 @@ function init() {
     loadFromStorage();
     updateStats();
     renderTents();
+    switchRateMode(false);  // Initialize with non-resident rates
 }
 
 window.addEventListener('load', init);
@@ -1646,29 +1664,47 @@ function switchTab(tab) {
 const tariff = {
     'Green Season': {
         dates: 'Apr 1 - May 31, 2026',
-        rates: {
+        nonResident: {
             singleAP: 475,
             doubleAP: 295,
             singleGP: 745,
             doubleGP: 565
+        },
+        resident: {
+            singleAP: 285,
+            doubleAP: 175,
+            singleGP: 445,
+            doubleGP: 335
         }
     },
     'Shoulder Season': {
         dates: 'Jan 4 - Mar 31 & Jun 1-30 & Oct 1 - Dec 20 & Jan 4 - Mar 31, 2027',
-        rates: {
+        nonResident: {
             singleAP: 645,
             doubleAP: 395,
             singleGP: 905,
             doubleGP: 655
+        },
+        resident: {
+            singleAP: 385,
+            doubleAP: 235,
+            singleGP: 545,
+            doubleGP: 395
         }
     },
     'Peak & Festive Season': {
         dates: 'Jul 1 - Sep 30 & Dec 21 - Jan 3, 2027',
-        rates: {
+        nonResident: {
             singleAP: 945,
             doubleAP: 615,
             singleGP: 1215,
             doubleGP: 845
+        },
+        resident: {
+            singleAP: 565,
+            doubleAP: 365,
+            singleGP: 735,
+            doubleGP: 505
         }
     }
 };
@@ -1694,7 +1730,48 @@ function getSeason(date) {
 function getRatePerPerson(date, occupancy = 'double') {
     const season = getSeason(date);
     const rateType = occupancy === 'single' ? 'doubleAP' : 'doubleAP'; // Using AP (All-Inclusive)
-    return tariff[season].rates[rateType];
+    const rateCategory = state.isResident ? 'resident' : 'nonResident';
+    return tariff[season][rateCategory][rateType];
+}
+
+function switchRateMode(isResident) {
+    state.isResident = isResident;
+
+    // Update button styles
+    document.getElementById('non-resident-btn').style.background = isResident
+        ? '#999'
+        : 'linear-gradient(135deg, #D4A574 0%, #A0845D 100%)';
+    document.getElementById('resident-btn').style.background = isResident
+        ? 'linear-gradient(135deg, #D4A574 0%, #A0845D 100%)'
+        : '#999';
+
+    // Render the rates table
+    const tbody = document.getElementById('rates-table-body');
+    if (!tbody) return;
+
+    let html = '';
+    const seasonOrder = ['Green Season', 'Shoulder Season', 'Peak & Festive Season'];
+    const peakStyle = "background: #FFF3CD;";
+
+    seasonOrder.forEach((seasonName, idx) => {
+        const season = tariff[seasonName];
+        const category = isResident ? 'resident' : 'nonResident';
+        const single = season[category].singleAP;
+        const double = season[category].doubleAP;
+        const style = idx === 2 ? peakStyle : '';
+
+        html += `
+            <tr style="${style}">
+                <td><strong>${seasonName}</strong></td>
+                <td>${season.dates}</td>
+                <td>$${single}</td>
+                <td>$${double}</td>
+            </tr>
+        `;
+    });
+
+    tbody.innerHTML = html;
+    renderTents();  // Update tent prices
 }
 
 // ===== TENTS =====
