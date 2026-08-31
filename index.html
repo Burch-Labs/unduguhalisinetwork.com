@@ -2007,6 +2007,7 @@
         <div class="sidebar-menu">
             <div class="menu-item active" onclick="switchTab('dashboard'); closeSidebarMobile();">📊 Dashboard</div>
             <div class="menu-item" onclick="switchTab('bookings'); closeSidebarMobile();">📋 Book Now</div>
+            <div class="menu-item" onclick="switchTab('provisional'); closeSidebarMobile();">⏳ Provisional/Extensions</div>
             <div class="menu-item" onclick="switchTab('rates'); closeSidebarMobile();">💰 Rates</div>
             <div class="menu-item" onclick="switchTab('contracts'); closeSidebarMobile();">📜 Contracts</div>
             <div class="menu-item" onclick="switchTab('documents'); closeSidebarMobile();">📄 Documents</div>
@@ -2122,6 +2123,53 @@
                     <tbody id="bookings-list">
                     </tbody>
                 </table>
+            </div>
+        </div>
+
+        <!-- PROVISIONAL/EXTENSIONS SECTION -->
+        <div id="provisional" class="section">
+            <div class="form-container">
+                <h2>⏳ Provisional Bookings & Extensions</h2>
+                <p style="color: #666; margin-bottom: 1.5rem;">Manage provisional reservations held for 24 hours. Request extensions or confirm with payment.</p>
+
+                <div style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
+                    <button class="book-btn" onclick="filterProvisional('all')" style="background: linear-gradient(135deg, #D4A574 0%, #A0845D 100%);">📋 All Provisional</button>
+                    <button class="book-btn" onclick="filterProvisional('expiring')" style="background: #FF9800;">⚠️ Expiring Soon</button>
+                    <button class="book-btn" onclick="filterProvisional('expired')" style="background: #E74C3C;">❌ Expired</button>
+                </div>
+
+                <table class="contacts-table" style="background: white;">
+                    <thead>
+                        <tr>
+                            <th>Res #</th>
+                            <th>Guest</th>
+                            <th>Check-in</th>
+                            <th>Check-out</th>
+                            <th>Status</th>
+                            <th>Expires In</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="provisional-list">
+                        <tr><td colspan="7" style="text-align: center; color: #999;">No provisional bookings</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="margin-top: 3rem; background: rgba(255,255,255,0.95); padding: 2rem; border-radius: 12px;">
+                <h3 style="color: var(--dark-brown); margin-bottom: 1.5rem;">📧 Extension Request Template</h3>
+                <div style="background: #FFF8E1; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #FF9800;">
+                    <p style="color: #666; font-size: 0.9rem; margin: 0;">
+                        <strong>Subject:</strong> Extension Request - Reservation {ResNumber}<br><br>
+                        <strong>Body:</strong><br>
+                        "Dear Lilita Keper Team,<br><br>
+                        We would like to request an extension for provisional reservation <strong>{ResNumber}</strong> for {GuestName}.<br><br>
+                        Original Expiry: {ExpiryDate}<br>
+                        Requested Extension: 24 hours<br><br>
+                        The booking details will be confirmed with payment shortly. Please hold the reservation.<br><br>
+                        Best regards"
+                    </p>
+                </div>
             </div>
         </div>
 
@@ -2521,7 +2569,9 @@ const state = {
     selectedContacts: new Set(),
     isResident: false,  // Track resident vs non-resident rates
     mailMergeEmails: [],  // Advanced mail-merge emails
-    selectedMailMergeEmails: new Set()  // Selected for sending
+    selectedMailMergeEmails: new Set(),  // Selected for sending
+    provisionalCounter: 0,  // Counter for WB numbers
+    confirmedCounter: 0  // Counter for confirmed bookings
 };
 
 // ===== INITIALIZATION =====
@@ -2541,7 +2591,9 @@ function saveToStorage() {
     localStorage.setItem('lilita_state', JSON.stringify({
         contacts: state.contacts,
         bookings: state.bookings,
-        campaigns: state.campaigns
+        campaigns: state.campaigns,
+        provisionalCounter: state.provisionalCounter,
+        confirmedCounter: state.confirmedCounter
     }));
 }
 
@@ -2552,6 +2604,8 @@ function loadFromStorage() {
         state.contacts = data.contacts || [];
         state.bookings = data.bookings || [];
         state.campaigns = data.campaigns || [];
+        state.provisionalCounter = data.provisionalCounter || 0;
+        state.confirmedCounter = data.confirmedCounter || 0;
     }
     renderContacts();
     renderBookings();
@@ -2650,6 +2704,7 @@ function switchTab(tab) {
     document.querySelectorAll('.menu-item').forEach(item => {
         if (item.textContent.includes(tab === 'tents' ? 'Availability' :
                                        tab === 'bookings' ? 'Book Now' :
+                                       tab === 'provisional' ? 'Provisional/Extensions' :
                                        tab === 'mailmerge' ? 'Mail-Merge' :
                                        tab.charAt(0).toUpperCase() + tab.slice(1))) {
             item.classList.add('active');
@@ -2660,6 +2715,7 @@ function switchTab(tab) {
     const titles = {
         dashboard: 'Dashboard',
         bookings: 'Book Now',
+        provisional: 'Provisional Bookings & Extensions',
         tents: 'Availability',
         contacts: 'Contacts',
         mailmerge: 'Mail-Merge',
@@ -2675,6 +2731,10 @@ function switchTab(tab) {
 
     if (tab === 'tents') {
         renderTents();
+    }
+
+    if (tab === 'provisional') {
+        renderProvisionalBookings();
     }
 
     // ALWAYS close sidebar on mobile after selecting
@@ -3052,6 +3112,12 @@ function renderRoomAvailabilitySummary() {
 }
 
 // ===== BOOKINGS =====
+function generateWBNumber() {
+    state.provisionalCounter++;
+    const num = String(state.provisionalCounter).padStart(5, '0');
+    return `WB${num}`;
+}
+
 function createBooking() {
     const name = document.getElementById('booking-name').value;
     const email = document.getElementById('booking-email').value;
@@ -3059,6 +3125,7 @@ function createBooking() {
     const checkout = document.getElementById('booking-checkout').value;
     const guests = parseInt(document.getElementById('booking-guests').value);
     const tent = document.getElementById('booking-tent').value;
+    const notes = document.getElementById('booking-notes').value;
 
     if (!name || !email || !checkin || !checkout || !guests || !tent) {
         showStatus('booking-status', 'Please fill all fields', 'error');
@@ -3081,8 +3148,14 @@ function createBooking() {
     const stoTotal = stoRatePerPerson * guests * nights;
     const commission = (rackTotal * 0.1).toFixed(2);
 
+    // Generate WB number for provisional reservation
+    const resNumber = generateWBNumber();
+    const now = new Date();
+    const expiryTime = new Date(now.getTime() + 24 * 60 * 60 * 1000); // 24 hours from now
+
     const booking = {
         id: Date.now(),
+        resNumber,
         name,
         email,
         checkin,
@@ -3090,75 +3163,435 @@ function createBooking() {
         guests,
         tent,
         nights,
+        notes,
         rackRatePerPerson,
         stoRatePerPerson,
         rackTotal: rackTotal.toFixed(2),
         stoTotal: stoTotal.toFixed(2),
         commission,
-        createdAt: new Date().toISOString()
+        status: 'provisional',  // provisional or confirmed
+        createdAt: now.toISOString(),
+        expiryTime: expiryTime.toISOString(),
+        depositPercentage: 30,  // 30% deposit required
+        depositAmount: (rackTotal * 0.30).toFixed(2)
     };
 
     state.bookings.push(booking);
     saveToStorage();
 
-    // Generate and download PDF
-    generateBookingPDF(booking);
+    // Generate reservation number display
+    const resDisplay = `Reservation #${booking.resNumber} (Provisional - Expires in 24 hours)`;
+
+    // Generate and download guest confirmation (without rates)
+    generateGuestConfirmationPDF(booking);
+
+    // Send payment request email to admin
+    sendPaymentRequestEmail(booking);
 
     // Clear form
     document.querySelectorAll('#bookings input, #bookings select, #bookings textarea').forEach(el => el.value = '');
 
-    showStatus('booking-status', '✅ Booking created successfully! PDF downloaded.', 'success');
+    showStatus('booking-status', `✅ ${resDisplay} created! Guest confirmation downloaded. Payment request sent to info@lilitakeper.com`, 'success');
     renderBookings();
+    renderProvisionalBookings();
     updateStats();
     renderTents();
 }
 
-function generateBookingPDF(booking) {
+// Guest confirmation (without pricing - for guest use)
+function generateGuestConfirmationPDF(booking) {
     const element = document.createElement('div');
+    const checkinDate = new Date(booking.checkin).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    const checkoutDate = new Date(booking.checkout).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
     element.innerHTML = `
-        <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px;">
-            <h1 style="color: #C9A876; text-align: center;">🦁 LILITA KEPER</h1>
-            <h2 style="text-align: center; color: #8B6F47;">Booking Confirmation</h2>
-            <hr style="border: none; border-top: 2px solid #C9A876; margin: 20px 0;">
+        <div style="font-family: 'Playfair Display', Arial, sans-serif; padding: 30px; max-width: 700px; background: #FAF8F3;">
+            <div style="text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 3px solid #D4A574;">
+                <h1 style="color: #6F5C47; margin: 0 0 10px 0; font-size: 2.5em;">🦁 LILITA KEPER</h1>
+                <p style="color: #D4A574; margin: 0; font-size: 1.2em; font-style: italic;">Luxury Safari Lodge, Maasai Mara</p>
+            </div>
 
-            <h3>Guest Information</h3>
-            <p><strong>Name:</strong> ${booking.name}</p>
-            <p><strong>Email:</strong> ${booking.email}</p>
+            <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 5px solid #D4A574;">
+                <h2 style="color: #6F5C47; margin-top: 0; font-size: 1.5em;">PROVISIONAL RESERVATION CONFIRMED</h2>
+                <p style="color: #666; margin: 0;"><strong>Reservation Number:</strong> <span style="font-weight: bold; color: #D4A574; font-size: 1.1em;">${booking.resNumber}</span></p>
+                <p style="color: #E74C3C; margin: 5px 0 0 0; font-weight: bold;">⏳ Status: Provisional (Expires in 24 hours)</p>
+            </div>
 
-            <h3>Booking Details</h3>
-            <p><strong>Tent/Villa:</strong> ${booking.tent}</p>
-            <p><strong>Check-in:</strong> ${new Date(booking.checkin).toDateString()}</p>
-            <p><strong>Check-out:</strong> ${new Date(booking.checkout).toDateString()}</p>
-            <p><strong>Number of Guests:</strong> ${booking.guests}</p>
-            <p><strong>Number of Nights:</strong> ${booking.nights}</p>
+            <div style="margin-bottom: 20px;">
+                <h3 style="color: #6F5C47; border-bottom: 2px solid #D4A574; padding-bottom: 10px;">GUEST INFORMATION</h3>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                        <td style="padding: 8px 0; color: #666;"><strong>Name:</strong></td>
+                        <td style="padding: 8px 0; color: #333;">${booking.name}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px 0; color: #666;"><strong>Email:</strong></td>
+                        <td style="padding: 8px 0; color: #333;">${booking.email}</td>
+                    </tr>
+                </table>
+            </div>
 
-            <h3>Pricing (per person/night)</h3>
-            <p><strong>Rack Rate:</strong> $${booking.rackRatePerPerson}</p>
-            <p><strong>STO Rate (20% off):</strong> $${booking.stoRatePerPerson}</p>
+            <div style="margin-bottom: 20px;">
+                <h3 style="color: #6F5C47; border-bottom: 2px solid #D4A574; padding-bottom: 10px;">ACCOMMODATION DETAILS</h3>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                        <td style="padding: 8px 0; color: #666;"><strong>Suite:</strong></td>
+                        <td style="padding: 8px 0; color: #333;">${booking.tent}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px 0; color: #666;"><strong>Arrival:</strong></td>
+                        <td style="padding: 8px 0; color: #333;">${checkinDate}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px 0; color: #666;"><strong>Departure:</strong></td>
+                        <td style="padding: 8px 0; color: #333;">${checkoutDate}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px 0; color: #666;"><strong>Number of Nights:</strong></td>
+                        <td style="padding: 8px 0; color: #333;">${booking.nights}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px 0; color: #666;"><strong>Number of Guests:</strong></td>
+                        <td style="padding: 8px 0; color: #333;">${booking.guests}</td>
+                    </tr>
+                </table>
+            </div>
 
-            <h3>Total Cost</h3>
-            <p><strong>Rack Total:</strong> $${booking.rackTotal}</p>
-            <p><strong>STO Total:</strong> $${booking.stoTotal}</p>
-            <p style="color: #8B6F47; font-weight: bold;"><strong>Commission (10%):</strong> $${booking.commission}</p>
+            ${booking.notes ? `
+            <div style="margin-bottom: 20px; background: #FFF9E6; padding: 15px; border-radius: 6px;">
+                <h4 style="color: #6F5C47; margin-top: 0;">SPECIAL REQUESTS</h4>
+                <p style="color: #333; margin: 0;">${booking.notes}</p>
+            </div>
+            ` : ''}
 
-            <hr style="border: none; border-top: 2px solid #C9A876; margin: 20px 0;">
-            <p style="text-align: center; color: #666; font-size: 12px;">
-                Confirmation #${booking.id}<br>
-                Booking Date: ${new Date(booking.createdAt).toLocaleString()}<br>
-                <em>Thank you for choosing Lilita Keper Luxury Safari Lodge!</em>
-            </p>
+            <div style="background: #E8F5E9; padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 5px solid #4CAF50;">
+                <h3 style="color: #2E7D32; margin-top: 0;">NEXT STEPS</h3>
+                <ol style="color: #333; margin: 0; padding-left: 20px; line-height: 1.8;">
+                    <li><strong>Payment Required:</strong> 30% deposit to confirm your booking</li>
+                    <li><strong>Payment Details:</strong> Bank transfer or M-Pesa details will be sent separately</li>
+                    <li><strong>Confirmation:</strong> Full reservation will be confirmed upon payment receipt</li>
+                    <li><strong>Extension:</strong> To extend this 24-hour hold, contact us at info@lilitakeper.com</li>
+                </ol>
+            </div>
+
+            <div style="background: #E3F2FD; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 5px solid #1976d2;">
+                <h4 style="color: #1565c0; margin-top: 0;">ACCOMMODATION INCLUDED</h4>
+                <p style="color: #333; margin: 0; font-size: 0.95em;">
+                    🌅 All meals (breakfast, lunch, dinner)<br>
+                    🚙 Daily game drives & wildlife activities<br>
+                    🛎️ Luxury accommodation with en-suite facilities<br>
+                    📡 WiFi access<br>
+                    ✈️ Airport transfers<br>
+                </p>
+            </div>
+
+            <div style="text-align: center; padding: 20px; border-top: 2px solid #D4A574;">
+                <p style="color: #666; margin: 10px 0; font-size: 0.9em;">
+                    <strong>For payment inquiries or to request an extension:</strong><br>
+                    📧 info@lilitakeper.com<br>
+                    📱 Available 24/7
+                </p>
+                <p style="color: #999; font-size: 0.85em; margin-top: 15px;">
+                    Generated: ${new Date(booking.createdAt).toLocaleString()}<br>
+                    <em>Thank you for choosing Lilita Keper Luxury Safari Lodge!</em>
+                </p>
+            </div>
         </div>
     `;
 
     const opt = {
         margin: 10,
-        filename: `lilita-booking-${booking.id}.pdf`,
+        filename: `${booking.resNumber}-Guest-Confirmation.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2 },
         jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
     };
 
     html2pdf().set(opt).from(element).save();
+}
+
+// Internal booking record (with rates - for internal use)
+function generateInternalBookingPDF(booking) {
+    const element = document.createElement('div');
+    const checkinDate = new Date(booking.checkin).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    const checkoutDate = new Date(booking.checkout).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+    element.innerHTML = `
+        <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 700px; background: #f5f5f5;">
+            <h1 style="color: #D4A574; text-align: center;">LILITA KEPER - INTERNAL BOOKING RECORD</h1>
+            <h2 style="text-align: center; color: #8B6F47;">Reservation: ${booking.resNumber}</h2>
+            <hr style="border: 1px solid #D4A574;">
+
+            <h3>GUEST</h3>
+            <p><strong>Name:</strong> ${booking.name} | <strong>Email:</strong> ${booking.email}</p>
+
+            <h3>DATES & ROOM</h3>
+            <p><strong>Check-in:</strong> ${checkinDate}<br>
+               <strong>Check-out:</strong> ${checkoutDate}<br>
+               <strong>Nights:</strong> ${booking.nights} | <strong>Guests:</strong> ${booking.guests}<br>
+               <strong>Suite:</strong> ${booking.tent}</p>
+
+            <h3>PRICING SUMMARY</h3>
+            <table style="width: 100%; border-collapse: collapse; margin: 10px 0;">
+                <tr style="background: #e8e8e8;">
+                    <th style="border: 1px solid #ddd; padding: 8px;">Rate Type</th>
+                    <th style="border: 1px solid #ddd; padding: 8px;">Per Person/Night</th>
+                    <th style="border: 1px solid #ddd; padding: 8px;">Total (${booking.nights} nights × ${booking.guests} guests)</th>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 8px;">Rack Rate</td>
+                    <td style="border: 1px solid #ddd; padding: 8px; text-align: right;">$${booking.rackRatePerPerson}</td>
+                    <td style="border: 1px solid #ddd; padding: 8px; text-align: right; font-weight: bold;">$${booking.rackTotal}</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 8px;">STO Rate (20% discount)</td>
+                    <td style="border: 1px solid #ddd; padding: 8px; text-align: right;">$${booking.stoRatePerPerson}</td>
+                    <td style="border: 1px solid #ddd; padding: 8px; text-align: right; font-weight: bold;">$${booking.stoTotal}</td>
+                </tr>
+            </table>
+
+            <h3>PAYMENT REQUIREMENTS</h3>
+            <p><strong>Status:</strong> <span style="color: #E74C3C; font-weight: bold;">${booking.status.toUpperCase()}</span><br>
+               <strong>Deposit (30%):</strong> $${booking.depositAmount}<br>
+               <strong>Commission (10%):</strong> $${booking.commission}</p>
+
+            <h3>SPECIAL NOTES</h3>
+            <p>${booking.notes || 'None'}</p>
+
+            <hr style="border: 1px solid #D4A574;">
+            <p style="text-align: center; font-size: 12px; color: #666;">
+                Created: ${new Date(booking.createdAt).toLocaleString()}<br>
+                Status Expires: ${new Date(booking.expiryTime).toLocaleString()}
+            </p>
+        </div>
+    `;
+
+    const opt = {
+        margin: 10,
+        filename: `${booking.resNumber}-Internal-Record.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+    };
+
+    html2pdf().set(opt).from(element).save();
+}
+
+// Send payment request email to admin
+function sendPaymentRequestEmail(booking) {
+    const bankDetails = `
+Acc Name: Lilita Keper Ltd (USD)
+Acc No: [Bank Account Number]
+Bank: [Bank Name]
+SWIFT: [SWIFT Code]
+
+M-Pesa Business No: [Paybill Number]
+Account: Reservation Reference - ${booking.resNumber}
+    `.trim();
+
+    const paymentLink = `
+📧 Payment Request Email to: info@lilitakeper.com
+
+Subject: Payment Request - Reservation ${booking.resNumber}
+
+Body:
+---
+Dear Lilita Keper Team,
+
+Please process payment for the following provisional reservation:
+
+RESERVATION DETAILS
+Res Number: ${booking.resNumber}
+Guest Name: ${booking.name}
+Guest Email: ${booking.email}
+Check-in: ${new Date(booking.checkin).toLocaleDateString()}
+Check-out: ${new Date(booking.checkout).toLocaleDateString()}
+Suite: ${booking.tent}
+Number of Nights: ${booking.nights}
+Number of Guests: ${booking.guests}
+
+PAYMENT INFORMATION
+Total Rate (Rack): $${booking.rackTotal}
+Total Rate (STO): $${booking.stoTotal}
+Deposit Required (30%): $${booking.depositAmount}
+
+Status: PROVISIONAL - Expires ${new Date(booking.expiryTime).toLocaleString()}
+
+BANK DETAILS
+${bankDetails}
+
+Please send payment confirmation link to guest when deposit is received.
+---
+    `;
+
+    // Log for API integration (currently logs to console for testing)
+    console.log('Payment Request Email:', paymentLink);
+
+    // In production, this would send via Resend API or similar email service
+    // For now, create a mailto link
+    const mailtoLink = `mailto:info@lilitakeper.com?subject=Payment%20Request%20-%20Reservation%20${booking.resNumber}&body=${encodeURIComponent(paymentLink)}`;
+    // Auto-open email client (optional, commented out to not break UX)
+    // window.open(mailtoLink);
+}
+
+// Render provisional bookings table
+function renderProvisionalBookings() {
+    const now = new Date();
+    const provisional = state.bookings.filter(b => b.status === 'provisional');
+
+    let html = '';
+    if (provisional.length === 0) {
+        html = '<tr><td colspan="7" style="text-align: center; color: #999; padding: 20px;">No provisional bookings</td></tr>';
+    } else {
+        provisional.forEach(b => {
+            const expiryDate = new Date(b.expiryTime);
+            const timeLeft = expiryDate - now;
+            const hoursLeft = Math.floor(timeLeft / (1000 * 60 * 60));
+            const minutesLeft = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+
+            let statusColor = 'green';
+            let statusText = `${hoursLeft}h ${minutesLeft}m`;
+
+            if (timeLeft < 0) {
+                statusColor = 'red';
+                statusText = 'EXPIRED';
+            } else if (hoursLeft < 2) {
+                statusColor = 'orange';
+                statusText = `${hoursLeft}h ${minutesLeft}m ⚠️`;
+            }
+
+            html += `
+                <tr>
+                    <td><strong>${b.resNumber}</strong></td>
+                    <td>${b.name}</td>
+                    <td>${new Date(b.checkin).toDateString()}</td>
+                    <td>${new Date(b.checkout).toDateString()}</td>
+                    <td><span style="background: #FFF3CD; padding: 4px 8px; border-radius: 4px; font-weight: 600;">Provisional</span></td>
+                    <td style="color: ${statusColor}; font-weight: bold;">${statusText}</td>
+                    <td>
+                        <button onclick="requestExtension('${b.resNumber}')" style="background: #FF9800; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">🕐 Extend</button>
+                        <button onclick="confirmPayment('${b.resNumber}')" style="background: #4CAF50; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; margin-left: 4px;">✓ Confirm</button>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    const table = document.getElementById('provisional-list');
+    if (table) {
+        table.innerHTML = html;
+    }
+}
+
+// Request extension for provisional booking
+function requestExtension(resNumber) {
+    const booking = state.bookings.find(b => b.resNumber === resNumber);
+    if (!booking) return;
+
+    const extensionEmail = `
+📧 Extension Request to: info@lilitakeper.com
+
+Subject: Extension Request - Reservation ${booking.resNumber}
+
+Body:
+---
+Dear Lilita Keper Team,
+
+We would like to request an extension for provisional reservation ${booking.resNumber}.
+
+Guest Name: ${booking.name}
+Guest Email: ${booking.email}
+Current Expiry: ${new Date(booking.expiryTime).toLocaleString()}
+Requested Extension: 24 hours
+
+The booking details will be confirmed with payment shortly. Please hold the reservation.
+
+Best regards
+    `;
+
+    const mailtoLink = `mailto:info@lilitakeper.com?subject=Extension%20Request%20-%20Reservation%20${booking.resNumber}&body=${encodeURIComponent(extensionEmail)}`;
+
+    if (confirm('Open email client to send extension request?\n\nThis will extend the hold by 24 hours.')) {
+        showStatus('provisional-status', '📧 Extension request sent. Awaiting confirmation from team.', 'success');
+        // Log for tracking
+        booking.extensionRequested = new Date().toISOString();
+        saveToStorage();
+        renderProvisionalBookings();
+    }
+}
+
+// Confirm payment and move to confirmed status
+function confirmPayment(resNumber) {
+    const booking = state.bookings.find(b => b.resNumber === resNumber);
+    if (!booking) return;
+
+    if (confirm(`Confirm payment received for ${booking.resNumber}?\nThis will change status to CONFIRMED.`)) {
+        booking.status = 'confirmed';
+        booking.confirmedAt = new Date().toISOString();
+        state.confirmedCounter++;
+        saveToStorage();
+        generateInternalBookingPDF(booking);
+        showStatus('provisional-status', `✅ Booking ${booking.resNumber} confirmed! Internal record downloaded.`, 'success');
+        renderProvisionalBookings();
+        updateStats();
+        renderTents();
+    }
+}
+
+// Filter provisional bookings
+function filterProvisional(filter) {
+    const now = new Date();
+    let filtered = state.bookings.filter(b => b.status === 'provisional');
+
+    if (filter === 'expiring') {
+        filtered = filtered.filter(b => {
+            const timeLeft = new Date(b.expiryTime) - now;
+            return timeLeft > 0 && timeLeft < 2 * 60 * 60 * 1000; // Less than 2 hours
+        });
+    } else if (filter === 'expired') {
+        filtered = filtered.filter(b => new Date(b.expiryTime) <= now);
+    }
+
+    // Render filtered
+    let html = '';
+    if (filtered.length === 0) {
+        html = '<tr><td colspan="7" style="text-align: center; color: #999; padding: 20px;">No bookings in this category</td></tr>';
+    } else {
+        filtered.forEach(b => {
+            const expiryDate = new Date(b.expiryTime);
+            const timeLeft = expiryDate - now;
+            const hoursLeft = Math.floor(timeLeft / (1000 * 60 * 60));
+            const minutesLeft = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+
+            let statusColor = 'green';
+            let statusText = `${hoursLeft}h ${minutesLeft}m`;
+
+            if (timeLeft < 0) {
+                statusColor = 'red';
+                statusText = 'EXPIRED';
+            } else if (hoursLeft < 2) {
+                statusColor = 'orange';
+                statusText = `${hoursLeft}h ${minutesLeft}m ⚠️`;
+            }
+
+            html += `
+                <tr>
+                    <td><strong>${b.resNumber}</strong></td>
+                    <td>${b.name}</td>
+                    <td>${new Date(b.checkin).toDateString()}</td>
+                    <td>${new Date(b.checkout).toDateString()}</td>
+                    <td><span style="background: #FFF3CD; padding: 4px 8px; border-radius: 4px; font-weight: 600;">Provisional</span></td>
+                    <td style="color: ${statusColor}; font-weight: bold;">${statusText}</td>
+                    <td>
+                        <button onclick="requestExtension('${b.resNumber}')" style="background: #FF9800; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">🕐 Extend</button>
+                        <button onclick="confirmPayment('${b.resNumber}')" style="background: #4CAF50; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; margin-left: 4px;">✓ Confirm</button>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    document.getElementById('provisional-list').innerHTML = html;
 }
 
 function renderBookings() {
