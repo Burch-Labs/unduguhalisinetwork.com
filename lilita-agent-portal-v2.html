@@ -152,9 +152,15 @@
             border-radius: 12px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             overflow: hidden;
-            max-width: 450px;
+            max-width: 900px;
             width: 100%;
             animation: slideUp 0.5s ease-out;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .login-header {
+            grid-column: 1 / -1;
         }
 
         @keyframes slideUp {
@@ -165,44 +171,46 @@
         .login-header {
             background: linear-gradient(135deg, var(--dark-green) 0%, #2D6A58 100%);
             color: white;
-            padding: 3rem 2rem;
+            padding: 2.5rem 2rem;
             text-align: center;
         }
 
         .login-logo {
-            width: 80px;
-            height: 80px;
-            background: var(--gold);
-            border-radius: 50%;
+            width: 70px;
+            height: 70px;
             margin: 0 auto 1rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 3rem;
-            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+            font-size: 3.5rem;
         }
 
         .login-header h1 {
-            font-size: 2rem;
-            margin-bottom: 0.3rem;
+            font-size: 1.8rem;
+            margin-bottom: 0.2rem;
             font-weight: 700;
             letter-spacing: 1px;
         }
 
         .login-header .tagline {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             opacity: 0.95;
-            margin-bottom: 0.5rem;
-        }
-
-        .location {
-            font-size: 0.8rem;
-            opacity: 0.85;
-            letter-spacing: 1px;
         }
 
         .login-form {
             padding: 2.5rem 2rem;
+        }
+
+        .login-form-section {
+            padding: 2.5rem 2rem;
+        }
+
+        .login-form-section h3 {
+            color: var(--dark-green);
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 0.5rem;
         }
 
         .form-group {
@@ -529,6 +537,16 @@
         }
 
         /* ===== RESPONSIVE ===== */
+        @media (max-width: 900px) {
+            .login-container {
+                grid-template-columns: 1fr;
+            }
+
+            .login-header {
+                grid-column: 1;
+            }
+        }
+
         @media (max-width: 768px) {
             nav {
                 flex-direction: column;
@@ -561,7 +579,7 @@
                 padding: 2rem 1.5rem;
             }
 
-            .login-form {
+            .login-form-section {
                 padding: 1.5rem;
             }
         }
@@ -594,14 +612,14 @@
             <div class="login-logo">🦁</div>
             <h1>LILITA KEPER</h1>
             <div class="tagline">Agent Portal</div>
-            <div class="location">Kileleoni Hills • Masai Mara</div>
         </div>
 
-        <div class="login-form">
+        <!-- LOGIN FORM SECTION -->
+        <div class="login-form-section">
+            <h3>Sign In</h3>
             <div class="message error-message" id="loginError"></div>
             <div class="message success-message" id="loginSuccess"></div>
 
-            <!-- LOGIN FORM -->
             <form id="loginForm" onsubmit="handleLogin(event)">
                 <div class="form-group">
                     <label for="loginEmail">Agent Work Email</label>
@@ -621,11 +639,16 @@
                     <a href="#" onclick="alert('Contact: support@lilitakeper.com')">Forgot Password?</a>
                 </div>
 
-                <button type="submit" class="btn">Sign In to Agent Portal</button>
+                <button type="submit" class="btn">Sign In</button>
             </form>
+        </div>
 
-            <!-- REGISTER FORM (Hidden by default) -->
-            <form id="registerForm" onsubmit="handleRegister(event)" style="display: none;">
+        <!-- REGISTER FORM SECTION -->
+        <div class="login-form-section">
+            <h3>Create Account</h3>
+            <div class="message error-message" id="regError"></div>
+
+            <form id="registerForm" onsubmit="handleRegister(event)">
                 <div class="form-group">
                     <label for="regName">Full Name</label>
                     <input type="text" id="regName" placeholder="Your Name" required>
@@ -653,11 +676,6 @@
 
                 <button type="submit" class="btn">Create Account</button>
             </form>
-
-            <!-- TOGGLE BETWEEN LOGIN & REGISTER -->
-            <div class="toggle-form">
-                <p>New Trade Partner? <a href="#" onclick="toggleForms()">Apply for STO Contract</a></p>
-            </div>
         </div>
     </div>
 </div>
@@ -1086,11 +1104,6 @@ function handleRegister(e) {
     document.getElementById('dashboardName').textContent = name;
 
     switchPage('dashboard');
-}
-
-function toggleForms() {
-    document.getElementById('loginForm').style.display = document.getElementById('loginForm').style.display === 'none' ? 'block' : 'none';
-    document.getElementById('registerForm').style.display = document.getElementById('registerForm').style.display === 'none' ? 'block' : 'none';
 }
 
 function logout() {
