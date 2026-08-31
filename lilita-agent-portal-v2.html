@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lilita Keper Agent Portal - Masai Mara Luxury Safari</title>
+    <title>Lilita Keper - Luxury Safari Agent Portal</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -12,48 +13,233 @@
         }
 
         :root {
-            --gold: #D4AF37;
-            --dark-green: #1B4D3E;
+            --baby-brown: #C9A876;
+            --dark-brown: #8B6F47;
             --cream: #F5F1E8;
-            --dark-brown: #3D2817;
-            --accent: #C19A6B;
-            --light-gold: #E8D9B8;
-            --text-dark: #2C2C2C;
+            --dark: #2C2C2C;
+            --gold: #D4AF37;
+            --success: #4CAF50;
+            --error: #f44336;
+            --warning: #FFA500;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #1a1a1a;
-            background-image:
-                linear-gradient(135deg, rgba(27, 77, 62, 0.9) 0%, rgba(61, 40, 23, 0.9) 50%, rgba(20, 20, 20, 0.95) 100%);
-            background-attachment: fixed;
-            color: var(--text-dark);
+            color: var(--dark);
             line-height: 1.6;
-            min-height: 100vh;
         }
 
-        /* ===== LAYOUT WITH SIDEBAR ===== */
-        .app-layout {
+        /* ===== LANDING PAGE ===== */
+        .landing-page {
+            background: linear-gradient(135deg, #C9A876 0%, #8B6F47 100%);
+            min-height: 100vh;
             display: flex;
-            min-height: 100vh;
+            flex-direction: column;
         }
 
-        /* ===== SIDEBAR NAVIGATION ===== */
+        .landing-header {
+            background: rgba(0,0,0,0.1);
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .landing-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .landing-nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .landing-nav a, .landing-nav button {
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        .landing-nav button:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .landing-hero {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .landing-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        .landing-hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+            max-width: 600px;
+        }
+
+        .landing-cta {
+            background: white;
+            color: var(--dark-brown);
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .landing-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        /* ===== LOGIN/REGISTER PAGE ===== */
+        .auth-page {
+            background: linear-gradient(135deg, #C9A876 0%, #8B6F47 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .auth-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 450px;
+            padding: 3rem;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-header h1 {
+            font-size: 2rem;
+            color: var(--dark-brown);
+            margin-bottom: 0.5rem;
+        }
+
+        .auth-header p {
+            color: #666;
+        }
+
+        .auth-toggle {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            background: #f0f0f0;
+            padding: 0.5rem;
+            border-radius: 8px;
+        }
+
+        .auth-toggle button {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: #999;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        .auth-toggle button.active {
+            background: white;
+            color: var(--dark-brown);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--baby-brown);
+        }
+
+        .auth-button {
+            width: 100%;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, #C9A876 0%, #8B6F47 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .auth-button:hover {
+            transform: translateY(-2px);
+        }
+
+        /* ===== PORTAL PAGE ===== */
+        .portal-page {
+            background: linear-gradient(135deg, rgba(27, 77, 62, 0.9) 0%, rgba(61, 40, 23, 0.9) 50%, rgba(20, 20, 20, 0.95) 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+        }
+
         .sidebar {
             width: 280px;
-            background: linear-gradient(135deg, var(--dark-green) 0%, #2D6A58 100%);
+            background: linear-gradient(135deg, #1B4D3E 0%, #2D6A58 100%);
             padding: 2rem 1.5rem;
-            display: none;
-            flex-direction: column;
-            box-shadow: 2px 0 8px rgba(0,0,0,0.15);
-            position: fixed;
-            height: 100vh;
+            color: white;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.2);
             overflow-y: auto;
+            height: 100vh;
+            position: fixed;
             z-index: 900;
-        }
-
-        .sidebar.active {
-            display: flex;
         }
 
         .sidebar-brand {
@@ -74,475 +260,215 @@
             justify-content: center;
             font-size: 1.8rem;
             font-weight: bold;
-            color: var(--dark-green);
-            box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
-            flex-shrink: 0;
+            color: #1B4D3E;
         }
 
         .brand-text h2 {
             font-size: 1.1rem;
             font-weight: 700;
             letter-spacing: 0.5px;
-            line-height: 1.2;
         }
 
         .brand-text p {
             font-size: 0.7rem;
             letter-spacing: 1px;
-            color: var(--light-gold);
+            color: var(--gold);
+            opacity: 0.8;
         }
 
         .sidebar-menu {
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
-            flex: 1;
+            margin-bottom: 2rem;
         }
 
-        .sidebar-link {
-            padding: 1rem 1.2rem;
-            color: var(--cream);
-            text-decoration: none;
+        .menu-item {
+            padding: 0.75rem 1rem;
             border-radius: 6px;
             cursor: pointer;
-            border: none;
-            background: none;
-            font-size: 0.95rem;
             transition: all 0.3s;
-            text-align: left;
             display: flex;
             align-items: center;
-            gap: 0.8rem;
-            width: 100%;
-        }
-
-        .sidebar-link:hover {
-            background: rgba(212, 175, 55, 0.2);
-            color: var(--gold);
-        }
-
-        .sidebar-link.active {
-            background: var(--gold);
-            color: var(--dark-green);
-            font-weight: 600;
-        }
-
-        .sidebar-footer {
-            margin-top: auto;
-            padding-top: 1.5rem;
-            border-top: 1px solid rgba(245, 241, 232, 0.2);
-        }
-
-        .agent-info {
-            color: var(--light-gold);
-            font-size: 0.85rem;
-            margin-bottom: 1rem;
-            padding: 0 0.5rem;
-        }
-
-        .agent-info p {
-            margin: 0.2rem 0;
-        }
-
-        .btn-logout {
-            width: 100%;
-            background: var(--gold);
-            color: var(--dark-green);
-            padding: 0.75rem 1.2rem;
-            border-radius: 6px;
-            font-weight: 600;
-            transition: all 0.3s;
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn-logout:hover {
-            background: var(--accent);
-            transform: translateY(-2px);
-        }
-
-        /* ===== MAIN CONTENT ===== */
-        .main-content {
-            flex: 1;
-            margin-left: 0;
-        }
-
-        .main-content.with-sidebar {
-            margin-left: 280px;
-        }
-
-        /* ===== CONTAINER ===== */
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        /* ===== PAGE SWITCHING ===== */
-        .page {
-            display: none;
-        }
-
-        .page.active {
-            display: block;
-            animation: fadeIn 0.3s ease-in;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ===== LOGIN PAGE ===== */
-        .login-page {
-            display: flex !important;
-            min-height: 100vh;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, var(--dark-green) 0%, var(--dark-brown) 100%);
-            padding: 2rem;
-        }
-
-        .login-page .app-layout {
-            display: none;
-        }
-
-        .login-container {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
-            max-width: 1000px;
-            width: 100%;
-            animation: slideUp 0.5s ease-out;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-        }
-
-        .login-header {
-            grid-column: 1 / -1;
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .login-header {
-            background: linear-gradient(135deg, var(--dark-green) 0%, #2D6A58 100%);
+            gap: 0.75rem;
+            background: rgba(255,255,255,0.1);
             color: white;
-            padding: 2.5rem 2rem;
-            text-align: center;
         }
 
-        .login-logo {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3.8rem;
+        .menu-item:hover, .menu-item.active {
+            background: var(--gold);
+            color: #1B4D3E;
+            transform: translateX(5px);
         }
 
-        .login-header h1 {
-            font-size: 2rem;
-            margin-bottom: 0.2rem;
-            font-weight: 700;
-            letter-spacing: 1.5px;
+        .portal-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 2rem;
+            overflow-y: auto;
         }
 
-        .login-header .tagline {
-            font-size: 0.9rem;
-            opacity: 0.95;
-            margin-top: 0.5rem;
-        }
-
-        .login-form {
-            padding: 2.5rem 2rem;
-        }
-
-        .login-form-section {
-            padding: 2.5rem 2rem;
-        }
-
-        .login-form-section h3 {
-            color: var(--dark-green);
-            margin-bottom: 1.5rem;
-            font-size: 1.2rem;
-            border-bottom: 2px solid var(--gold);
-            padding-bottom: 0.5rem;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.6rem;
-            color: var(--dark-green);
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-
-        input[type="email"],
-        input[type="password"],
-        input[type="text"] {
-            width: 100%;
-            padding: 0.9rem;
-            border: 2px solid #E0E0E0;
-            border-radius: 6px;
-            font-family: inherit;
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
-
-        input[type="email"]:focus,
-        input[type="password"]:focus,
-        input[type="text"]:focus {
-            outline: none;
-            border-color: var(--gold);
-            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
-        }
-
-        .remember-forgot {
+        .portal-header {
+            background: rgba(255,255,255,0.95);
+            padding: 1.5rem 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
-            font-size: 0.9rem;
-        }
-
-        .remember-me {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--text-dark);
-        }
-
-        .remember-me input {
-            cursor: pointer;
-        }
-
-        a {
-            color: var(--gold);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        a:hover {
-            color: var(--accent);
-            text-decoration: underline;
-        }
-
-        .btn {
-            width: 100%;
-            padding: 0.95rem;
-            background: linear-gradient(135deg, var(--gold) 0%, var(--accent) 100%);
-            color: var(--dark-green);
-            border: none;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .btn-secondary {
-            background: var(--dark-green);
-            color: white;
-            margin-top: 1rem;
-        }
-
-        .btn-secondary:hover {
-            background: #2D6A58;
-        }
-
-        .message {
-            padding: 0.75rem;
-            border-radius: 4px;
-            margin-bottom: 1rem;
-            display: none;
-        }
-
-        .error-message {
-            background: #FFE5E5;
-            border: 1px solid #FF6B6B;
-            color: #C92A2A;
-        }
-
-        .success-message {
-            background: #E5F8F0;
-            border: 1px solid #00D084;
-            color: #1B5E20;
-        }
-
-        .toggle-form {
-            text-align: center;
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid #E0E0E0;
-        }
-
-        /* ===== DASHBOARD ===== */
-        .dashboard-header {
-            background: linear-gradient(135deg, var(--dark-green) 0%, #2D6A58 100%);
-            color: white;
-            padding: 2rem;
-            border-radius: 8px;
-            margin-bottom: 2rem;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
-        .dashboard-header h2 {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
+        .portal-header h1 {
+            color: var(--dark-brown);
+            font-size: 1.8rem;
+        }
+
+        .logout-btn {
+            background: var(--error);
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* ===== CONTENT SECTIONS ===== */
+        .section {
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
 
         .stat-card {
-            background: white;
+            background: rgba(255,255,255,0.95);
             padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            border-left: 4px solid var(--gold);
-            text-align: center;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: var(--gold);
+        .stat-card h3 {
+            color: #666;
+            font-size: 0.9rem;
+            text-transform: uppercase;
             margin-bottom: 0.5rem;
         }
 
-        .stat-label {
-            color: var(--text-dark);
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+        .stat-card .number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--baby-brown);
         }
 
-        /* ===== TABS ===== */
-        .tabs {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            border-bottom: 2px solid #E0E0E0;
-            overflow-x: auto;
+        /* ===== TENTS/ROOMS ===== */
+        .tents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
         }
 
-        .tab-btn {
-            padding: 1rem 1.5rem;
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--text-dark);
-            font-size: 0.95rem;
-            font-weight: 500;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s;
-            white-space: nowrap;
+        .tent-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
         }
 
-        .tab-btn:hover {
-            color: var(--gold);
+        .tent-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
         }
 
-        .tab-btn.active {
-            color: var(--gold);
-            border-bottom-color: var(--gold);
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* ===== CONTENT CARDS ===== */
-        .section-title {
-            font-size: 1.5rem;
-            color: var(--dark-green);
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid var(--gold);
-        }
-
-        .card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            margin-bottom: 1.5rem;
-        }
-
-        .card h3 {
-            color: var(--dark-green);
-            margin-bottom: 1rem;
-            font-size: 1.2rem;
-        }
-
-        .file-upload {
-            border: 2px dashed var(--gold);
-            border-radius: 8px;
-            padding: 2rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            background: rgba(212, 175, 55, 0.05);
-        }
-
-        .file-upload:hover {
-            border-color: var(--accent);
-            background: rgba(212, 175, 55, 0.1);
-        }
-
-        .file-upload input {
-            display: none;
-        }
-
-        .pricing-table {
+        .tent-image {
             width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
-        }
-
-        .pricing-table th {
-            background: var(--dark-green);
+            height: 200px;
+            background: linear-gradient(135deg, var(--baby-brown) 0%, var(--dark-brown) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
             color: white;
-            padding: 1rem;
-            text-align: left;
+        }
+
+        .tent-info {
+            padding: 1.5rem;
+        }
+
+        .tent-info h3 {
+            color: var(--dark-brown);
+            margin-bottom: 0.5rem;
+        }
+
+        .tent-capacity {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .availability-badge {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
             font-weight: 600;
+            margin-bottom: 1rem;
         }
 
-        .pricing-table td {
-            padding: 1rem;
-            border-bottom: 1px solid #E0E0E0;
+        .available {
+            background: #e8f5e9;
+            color: var(--success);
         }
 
-        .pricing-table tr:hover {
-            background: var(--light-gold);
+        .unavailable {
+            background: #ffebee;
+            color: var(--error);
+        }
+
+        .book-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, var(--baby-brown) 0%, var(--dark-brown) 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.3s;
+        }
+
+        .book-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* ===== FORM STYLES ===== */
+        .form-container {
+            background: rgba(255,255,255,0.95);
+            padding: 2rem;
+            border-radius: 12px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-container h2 {
+            color: var(--dark-brown);
+            margin-bottom: 1.5rem;
         }
 
         .form-row {
@@ -552,1028 +478,1039 @@
             margin-bottom: 1rem;
         }
 
-        textarea {
+        .form-row.full {
+            grid-template-columns: 1fr;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            min-height: 120px;
-            padding: 0.9rem;
-            border: 2px solid #E0E0E0;
-            border-radius: 6px;
-            font-family: inherit;
-            font-size: 1rem;
-            resize: vertical;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
         }
 
-        textarea:focus {
-            outline: none;
-            border-color: var(--gold);
-            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        .modal.active {
+            display: flex;
         }
 
-        .contact-info {
-            background: var(--light-gold);
-            padding: 1.5rem;
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h2 {
+            color: var(--dark-brown);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close-btn:hover {
+            color: var(--dark);
+        }
+
+        /* ===== CONTACTS & MAIL-MERGE ===== */
+        .upload-area {
+            border: 2px dashed var(--baby-brown);
             border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            background: rgba(201, 168, 118, 0.05);
+            transition: all 0.3s;
+            margin-bottom: 1.5rem;
+        }
+
+        .upload-area:hover {
+            background: rgba(201, 168, 118, 0.1);
+            border-color: var(--dark-brown);
+        }
+
+        .contacts-table {
+            width: 100%;
+            border-collapse: collapse;
             margin-bottom: 1rem;
         }
 
-        .contact-info h4 {
-            color: var(--dark-green);
-            margin-bottom: 0.5rem;
-        }
-
-        .contact-info p {
-            margin-bottom: 0.3rem;
-            color: var(--text-dark);
-        }
-
-        .badge {
-            display: inline-block;
-            background: var(--gold);
-            color: var(--dark-green);
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
+        .contacts-table th {
+            background: var(--baby-brown);
+            color: white;
+            padding: 1rem;
+            text-align: left;
             font-weight: 600;
-            margin-right: 0.5rem;
+        }
+
+        .contacts-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .contacts-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .template-editor {
+            width: 100%;
+            min-height: 200px;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            resize: vertical;
+        }
+
+        .template-variables {
+            background: #f5f5f5;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .template-variables strong {
+            color: var(--baby-brown);
+        }
+
+        .status-message {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .status-message.show {
+            display: block;
+        }
+
+        .status-message.success {
+            background: #e8f5e9;
+            color: var(--success);
+            border-left: 4px solid var(--success);
+        }
+
+        .status-message.error {
+            background: #ffebee;
+            color: var(--error);
+            border-left: 4px solid var(--error);
+        }
+
+        .status-message.info {
+            background: #e3f2fd;
+            color: #1976d2;
+            border-left: 4px solid #1976d2;
         }
 
         /* ===== RESPONSIVE ===== */
-        @media (max-width: 900px) {
-            .login-container {
-                grid-template-columns: 1fr;
-            }
-
-            .login-header {
-                grid-column: 1;
-            }
-
-            .sidebar {
-                width: 250px;
-            }
-
-            .main-content.with-sidebar {
-                margin-left: 250px;
-            }
-        }
-
         @media (max-width: 768px) {
             .sidebar {
-                width: 100%;
-                position: relative;
-                height: auto;
-                padding: 1.5rem 1rem;
+                width: 0;
+                transform: translateX(-100%);
+                transition: transform 0.3s;
             }
 
-            .main-content.with-sidebar {
+            .sidebar.active {
+                width: 280px;
+                transform: translateX(0);
+            }
+
+            .portal-content {
                 margin-left: 0;
             }
 
-            .container {
-                padding: 1rem;
+            .landing-hero h1 {
+                font-size: 2rem;
             }
 
-            .dashboard-grid {
-                grid-template-columns: 1fr;
+            .auth-container {
+                max-width: 100%;
             }
 
             .form-row {
                 grid-template-columns: 1fr;
             }
 
-            .tabs {
-                flex-wrap: wrap;
+            .tents-grid {
+                grid-template-columns: 1fr;
             }
 
-            .login-container {
-                margin: auto 1rem;
-            }
-
-            .login-header {
-                padding: 1.5rem 1rem;
-            }
-
-            .login-form-section {
-                padding: 1.5rem 1rem;
-            }
-
-            .login-header h1 {
-                font-size: 1.5rem;
-            }
-
-            .pricing-table {
-                font-size: 0.9rem;
+            .dashboard-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
 
-<div class="app-layout">
-    <!-- ===== SIDEBAR NAVIGATION ===== -->
-    <div class="sidebar" id="sidebar">
+<!-- ===== LANDING PAGE ===== -->
+<div id="landing-page" class="landing-page" style="display: block;">
+    <div class="landing-header">
+        <div class="landing-logo">🦁 Lilita Keper</div>
+        <div class="landing-nav">
+            <a href="#" onclick="showSection('about'); return false;">About</a>
+            <button onclick="showAuth('login')">Agent Login</button>
+        </div>
+    </div>
+    <div class="landing-hero">
+        <h1>Lilita Keper</h1>
+        <p>A sanctuary where refined hospitality meets the raw spirit of the Maasai Mara. Six exclusive tented suites in the heart of the African wild.</p>
+        <button class="landing-cta" onclick="showAuth('login')">Agent Portal Access</button>
+    </div>
+</div>
+
+<!-- ===== AUTH PAGE ===== -->
+<div id="auth-page" class="auth-page" style="display: none;">
+    <div class="auth-container">
+        <div class="auth-header">
+            <h1>Lilita Keper</h1>
+            <p>Agent Portal</p>
+        </div>
+
+        <div class="auth-toggle">
+            <button class="active" onclick="toggleAuth('login')">Login</button>
+            <button onclick="toggleAuth('register')">Create Account</button>
+        </div>
+
+        <!-- LOGIN FORM -->
+        <div id="login-form" class="auth-form">
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="login-email" placeholder="agent@example.com">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="login-password" placeholder="••••••••">
+            </div>
+            <button class="auth-button" onclick="handleLogin()">Login</button>
+            <p style="text-align: center; margin-top: 1rem; color: #666; font-size: 0.9rem;">
+                Demo: email@example.com / password
+            </p>
+        </div>
+
+        <!-- REGISTER FORM -->
+        <div id="register-form" class="auth-form" style="display: none;">
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="register-name" placeholder="Your Name">
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="register-email" placeholder="agent@example.com">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="register-password" placeholder="••••••••">
+            </div>
+            <div class="form-group">
+                <label>Agency</label>
+                <input type="text" id="register-agency" placeholder="Your Agency Name">
+            </div>
+            <button class="auth-button" onclick="handleRegister()">Create Account</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== PORTAL PAGE ===== -->
+<div id="portal-page" class="portal-page" style="display: none;">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
         <div class="sidebar-brand">
             <div class="logo-circle">🦁</div>
             <div class="brand-text">
                 <h2>LILITA KEPER</h2>
-                <p>MASAI MARA</p>
+                <p>AGENT PORTAL</p>
             </div>
         </div>
 
         <div class="sidebar-menu">
-            <button class="sidebar-link" onclick="switchPage('dashboard')">
-                <span>📊</span> Dashboard
-            </button>
-            <button class="sidebar-link" onclick="switchPage('solutions')">
-                <span>📧</span> Mail-Merge
-            </button>
-            <button class="sidebar-link" onclick="switchPage('contacts')">
-                <span>📞</span> Contacts
-            </button>
-            <button class="sidebar-link" onclick="switchPage('documents')">
-                <span>📄</span> Documents
-            </button>
+            <div class="menu-item active" onclick="switchTab('dashboard')">📊 Dashboard</div>
+            <div class="menu-item" onclick="switchTab('bookings')">📅 Bookings</div>
+            <div class="menu-item" onclick="switchTab('tents')">🏕️ Tents & Availability</div>
+            <div class="menu-item" onclick="switchTab('contacts')">👥 Contacts</div>
+            <div class="menu-item" onclick="switchTab('mailmerge')">📧 Mail-Merge</div>
+            <div class="menu-item" onclick="switchTab('documents')">📄 Documents</div>
         </div>
 
-        <div class="sidebar-footer">
-            <div class="agent-info">
-                <p style="font-size: 0.7rem; opacity: 0.8;">Logged in as</p>
-                <p id="agentName" style="font-weight: 600; margin-top: 0.2rem;">Agent</p>
-            </div>
-            <button class="btn-logout" onclick="logout()">Logout</button>
-        </div>
+        <button class="logout-btn" onclick="handleLogout()" style="width: 100%; margin-top: auto;">Logout</button>
     </div>
 
-    <!-- ===== MAIN CONTENT ===== -->
-    <div class="main-content" id="mainContent">
-        <!-- ===== LOGIN PAGE ===== -->
-        <div id="loginPage" class="page login-page active">
-    <div class="login-container">
-        <div class="login-header">
-            <div class="login-logo">🦁</div>
-            <h1>LILITA KEPER</h1>
-            <div class="tagline">Agent Portal</div>
+    <!-- CONTENT AREA -->
+    <div class="portal-content">
+        <div class="portal-header">
+            <h1 id="section-title">Dashboard</h1>
+            <button class="logout-btn" onclick="handleLogout()">Logout</button>
         </div>
 
-        <!-- LOGIN FORM SECTION -->
-        <div class="login-form-section">
-            <h3>Sign In</h3>
-            <div class="message error-message" id="loginError"></div>
-            <div class="message success-message" id="loginSuccess"></div>
-
-            <form id="loginForm" onsubmit="handleLogin(event)">
-                <div class="form-group">
-                    <label for="loginEmail">Agent Work Email</label>
-                    <input type="email" id="loginEmail" placeholder="agent@lilitakeper.com" required>
+        <!-- DASHBOARD SECTION -->
+        <div id="dashboard" class="section active">
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <h3>Total Bookings</h3>
+                    <div class="number" id="total-bookings">0</div>
                 </div>
-
-                <div class="form-group">
-                    <label for="loginPassword">Password</label>
-                    <input type="password" id="loginPassword" placeholder="••••••••" required>
+                <div class="stat-card">
+                    <h3>Contacts</h3>
+                    <div class="number" id="total-contacts">0</div>
                 </div>
-
-                <div class="remember-forgot">
-                    <label class="remember-me">
-                        <input type="checkbox" id="rememberMe">
-                        Remember me
-                    </label>
-                    <a href="#" onclick="alert('Contact: support@lilitakeper.com')">Forgot Password?</a>
+                <div class="stat-card">
+                    <h3>Campaigns Sent</h3>
+                    <div class="number" id="total-campaigns">0</div>
                 </div>
-
-                <button type="submit" class="btn">Sign In</button>
-            </form>
-        </div>
-
-        <!-- REGISTER FORM SECTION -->
-        <div class="login-form-section">
-            <h3>Create Account</h3>
-            <div class="message error-message" id="regError"></div>
-
-            <form id="registerForm" onsubmit="handleRegister(event)">
-                <div class="form-group">
-                    <label for="regName">Full Name</label>
-                    <input type="text" id="regName" placeholder="Your Name" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="regEmail">Agent Work Email</label>
-                    <input type="email" id="regEmail" placeholder="agent@company.com" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="regCompany">Company / Travel Agency</label>
-                    <input type="text" id="regCompany" placeholder="Agency Name" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="regPhone">Phone Number</label>
-                    <input type="text" id="regPhone" placeholder="+254 (XXX) XXX-XXXX" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="regPassword">Create Password</label>
-                    <input type="password" id="regPassword" placeholder="••••••••" required>
-                </div>
-
-                <button type="submit" class="btn">Create Account</button>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- ===== DASHBOARD PAGE ===== -->
-<div id="dashboardPage" class="page">
-    <div class="dashboard-header">
-        <h2>Welcome Back, <span id="dashboardName">Agent</span>! 👋</h2>
-        <p>Enonkishu Conservancy • Maasai Mara, Kenya</p>
-    </div>
-
-    <div class="dashboard-grid">
-        <div class="stat-card">
-            <div class="stat-number">12</div>
-            <div class="stat-label">Bookings</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number">$45.2K</div>
-            <div class="stat-label">Revenue</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number">28</div>
-            <div class="stat-label">Guests</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number">4.8★</div>
-            <div class="stat-label">Rating</div>
-        </div>
-    </div>
-
-    <!-- TABS -->
-    <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('overview')">📊 Overview</button>
-        <button class="tab-btn" onclick="switchTab('booking')">📋 Book Now</button>
-        <button class="tab-btn" onclick="switchTab('contracts')">📄 Documents</button>
-        <button class="tab-btn" onclick="switchTab('calendar')">📅 Availability</button>
-    </div>
-
-    <!-- TAB: OVERVIEW -->
-    <div id="overview" class="tab-content active">
-        <h3 class="section-title">Quick Actions</h3>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-            <div class="card">
-                <h3>📋 New Booking</h3>
-                <p>Create a new guest booking with instant confirmation.</p>
-                <button class="btn" onclick="switchTab('booking')">Start Booking</button>
-            </div>
-            <div class="card">
-                <h3>📧 Send Bulk Email</h3>
-                <p>Mail-merge with your contacts and Gmail integration.</p>
-                <button class="btn" onclick="switchPage('solutions')">Access Mail-Merge</button>
-            </div>
-            <div class="card">
-                <h3>📄 Upload Contracts</h3>
-                <p>Store and manage contracts with digital signatures.</p>
-                <button class="btn" onclick="switchTab('contracts')">Manage Contracts</button>
-            </div>
-            <div class="card">
-                <h3>📞 Contact Directory</h3>
-                <p>Organize and export all Lilita Keper contacts.</p>
-                <button class="btn" onclick="switchPage('contacts')">View Contacts</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- TAB: BOOKING -->
-    <div id="booking" class="tab-content">
-        <h3 class="section-title">📋 Create New Booking</h3>
-
-        <div class="card">
-            <h4>Guest Information</h4>
-            <div class="form-row">
-                <div>
-                    <label for="guestName">Guest Name *</label>
-                    <input type="text" id="guestName" placeholder="Full name of guest" required>
-                </div>
-                <div>
-                    <label for="guestEmail">Email Address *</label>
-                    <input type="email" id="guestEmail" placeholder="guest@example.com" required>
+                <div class="stat-card">
+                    <h3>Available Tents</h3>
+                    <div class="number" id="available-tents">6</div>
                 </div>
             </div>
 
-            <div class="form-row">
-                <div>
-                    <label for="guestPhone">Phone Number</label>
-                    <input type="text" id="guestPhone" placeholder="+1-555-0000">
-                </div>
-                <div>
-                    <label for="guestCompany">Company/Group</label>
-                    <input type="text" id="guestCompany" placeholder="Organization name">
-                </div>
+            <div style="background: rgba(255,255,255,0.95); padding: 2rem; border-radius: 12px;">
+                <h2 style="color: var(--dark-brown); margin-bottom: 1rem;">Welcome to Lilita Keper Agent Portal</h2>
+                <p style="color: #666; margin-bottom: 1rem;">Manage bookings, contacts, and email campaigns for our luxury Maasai Mara safari experience.</p>
+
+                <h3 style="color: var(--dark-brown); margin-top: 1.5rem; margin-bottom: 1rem;">Our Tents</h3>
+                <ul style="color: #666;">
+                    <li><strong>Ilochoreta Villa</strong> - 3 units, up to 9 guests (King bed, en-suite jacuzzi, private veranda)</li>
+                    <li><strong>Olmarei Villa</strong> - 2 units, up to 8 guests (Family suites, en-suite jacuzzi, large veranda)</li>
+                    <li><strong>Enkaji Villa</strong> - 1 unit, up to 10 guests (6 bedrooms, spacious for groups)</li>
+                </ul>
             </div>
+        </div>
 
-            <h4 style="margin-top: 2rem; margin-bottom: 1rem;">Stay Details</h4>
-
-            <div class="form-row">
-                <div>
-                    <label for="checkIn">Check-In Date *</label>
-                    <input type="date" id="checkIn" required>
+        <!-- BOOKINGS SECTION -->
+        <div id="bookings" class="section">
+            <div class="form-container">
+                <h2>Create Booking</h2>
+                <div class="form-row full">
+                    <input type="text" placeholder="Guest Name" id="booking-name">
                 </div>
-                <div>
-                    <label for="nights">Number of Nights *</label>
-                    <input type="number" id="nights" placeholder="e.g., 3" min="1" required>
+                <div class="form-row full">
+                    <input type="email" placeholder="Guest Email" id="booking-email">
                 </div>
-            </div>
-
-            <div class="form-row">
-                <div>
-                    <label for="guests">Number of Guests *</label>
-                    <input type="number" id="guests" placeholder="e.g., 2" min="1" required>
+                <div class="form-row">
+                    <input type="date" id="booking-checkin">
+                    <input type="date" id="booking-checkout">
                 </div>
-                <div>
-                    <label for="packageType">Package Type</label>
-                    <select id="packageType" style="width: 100%; padding: 0.9rem; border: 2px solid #E0E0E0; border-radius: 6px;">
-                        <option>Game Package (GP)</option>
-                        <option>Full Board (AP)</option>
+                <div class="form-row">
+                    <input type="number" placeholder="Number of Guests" id="booking-guests" min="1">
+                    <select id="booking-tent">
+                        <option value="">Select Tent</option>
+                        <option value="Ilochoreta Villa - Unit 1">Ilochoreta Villa - Unit 1</option>
+                        <option value="Ilochoreta Villa - Unit 2">Ilochoreta Villa - Unit 2</option>
+                        <option value="Ilochoreta Villa - Unit 3">Ilochoreta Villa - Unit 3</option>
+                        <option value="Olmarei Villa - Unit 1">Olmarei Villa - Unit 1</option>
+                        <option value="Olmarei Villa - Unit 2">Olmarei Villa - Unit 2</option>
+                        <option value="Enkaji Villa">Enkaji Villa</option>
                     </select>
                 </div>
+                <div class="form-row full">
+                    <textarea placeholder="Special Requests" id="booking-notes" rows="3"></textarea>
+                </div>
+                <button class="book-btn" onclick="createBooking()">Create Booking & Download Confirmation</button>
+                <div id="booking-status" class="status-message"></div>
             </div>
 
-            <h4 style="margin-top: 2rem; margin-bottom: 1rem;">Special Requests</h4>
-
-            <label for="bookingNotes">Special Requests & Notes</label>
-            <textarea id="bookingNotes" placeholder="Any special requirements, dietary preferences, etc."></textarea>
-
-            <div style="margin-top: 2rem; display: flex; gap: 1rem; flex-wrap: wrap;">
-                <button class="btn" onclick="submitBooking()" style="flex: 1; min-width: 200px;">✅ Submit Booking</button>
-                <button class="btn btn-secondary" onclick="alert('Booking request will be sent to sales@lilitakeper.com for confirmation')" style="flex: 1; min-width: 200px;">ℹ️ How It Works</button>
-            </div>
-        </div>
-
-        <div class="card">
-            <h4>📊 Pricing Reference</h4>
-            <p>Use this quick reference to quote rates to your guests:</p>
-            <div style="margin-top: 1rem; font-size: 0.9rem;">
-                <p><strong>Peak Season (Jul-Sep, Dec-Jan):</strong> Game Package $1,215 (single) / $845 (double)</p>
-                <p><strong>Shoulder Season (Jan-Mar, Jun, Oct-Dec):</strong> Game Package $905 (single) / $655 (double)</p>
-                <p><strong>Green Season (Apr-May):</strong> Game Package $745 (single) / $565 (double)</p>
-                <p style="margin-top: 1rem; font-size: 0.85rem; color: #999;">Download complete rates from the Documents tab</p>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- TAB: CONTRACTS -->
-    <div id="contracts" class="tab-content">
-        <h3 class="section-title">Contracts & Documents</h3>
-
-        <div class="card">
-            <h4>📄 Upload Contract or Document</h4>
-            <div class="file-upload" onclick="document.getElementById('fileInput').click()">
-                <p style="font-size: 2rem; margin-bottom: 0.5rem;">📎</p>
-                <p><strong>Click to upload or drag & drop</strong></p>
-                <p style="color: #999; font-size: 0.9rem;">PDF, DOC, DOCX (Max 10MB)</p>
-                <input type="file" id="fileInput" accept=".pdf,.doc,.docx">
+            <div style="margin-top: 3rem;">
+                <h2 style="color: white; margin-bottom: 1.5rem;">Bookings History</h2>
+                <table class="contacts-table" style="background: white;">
+                    <thead>
+                        <tr>
+                            <th>Guest</th>
+                            <th>Tent</th>
+                            <th>Check-in</th>
+                            <th>Check-out</th>
+                            <th>Guests</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bookings-list">
+                    </tbody>
+                </table>
             </div>
         </div>
 
-        <div class="card">
-            <h4>✅ Your Documents</h4>
-            <div style="list-style: none;">
-                <div style="padding: 1rem; border-bottom: 1px solid #E0E0E0; display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <strong>2026-2027 STO Master Contract</strong>
-                        <p style="color: #999; font-size: 0.9rem;">Uploaded 12 Jan 2026</p>
+        <!-- TENTS SECTION -->
+        <div id="tents" class="section">
+            <div class="tents-grid" id="tents-grid">
+            </div>
+        </div>
+
+        <!-- CONTACTS SECTION -->
+        <div id="contacts" class="section">
+            <div class="form-container">
+                <h2>Manage Contacts</h2>
+                <div class="upload-area" onclick="document.getElementById('csv-upload').click()">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">📁</div>
+                    <p>Click or drag CSV file here</p>
+                    <p style="font-size: 0.9rem; color: #999; margin-top: 0.5rem;">Format: email, firstName, company, website</p>
+                </div>
+                <input type="file" id="csv-upload" accept=".csv" style="display: none;" onchange="handleCSVUpload()">
+                <div id="upload-status" class="status-message"></div>
+            </div>
+
+            <div style="margin-top: 2rem;">
+                <h2 style="color: white; margin-bottom: 1.5rem;">Contacts</h2>
+                <table class="contacts-table" style="background: white;">
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Name</th>
+                            <th>Company</th>
+                            <th>Website</th>
+                        </tr>
+                    </thead>
+                    <tbody id="contacts-list">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- MAIL-MERGE SECTION -->
+        <div id="mailmerge" class="section">
+            <div class="form-container">
+                <h2>Email Campaign</h2>
+                <div class="form-row full">
+                    <label>Campaign Name</label>
+                    <input type="text" id="campaign-name" placeholder="Campaign Name">
+                </div>
+                <div class="form-row full">
+                    <label>Email Subject</label>
+                    <input type="text" id="campaign-subject" placeholder="Subject Line">
+                </div>
+
+                <div class="form-row full">
+                    <label>Select Recipients</label>
+                    <div style="margin-bottom: 1rem;">
+                        <button type="button" class="book-btn" onclick="selectAllContacts()" style="background: #1976d2; margin-bottom: 0.5rem;">Select All</button>
                     </div>
-                    <div style="display: flex; gap: 0.5rem;">
-                        <button class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;">View</button>
-                        <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Sign Now</button>
+                    <table class="contacts-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 30px;"></th>
+                                <th>Email</th>
+                                <th>Name</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mailmerge-contacts">
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="form-row full">
+                    <label>Email Template</label>
+                    <div class="template-variables">
+                        <strong>Available variables:</strong> {FirstName} {Company} {Email}
                     </div>
+                    <textarea class="template-editor" id="email-template" placeholder="Dear {FirstName},&#10;&#10;We have exclusive safari packages available...">Dear {FirstName},
+
+Thank you for your interest in Lilita Keper, a luxury safari experience in the Maasai Mara.
+
+We offer exclusive packages at {Company} rates. Our 6 luxury tented suites provide an intimate window into the African wild.
+
+Best regards,
+Lilita Keper Team</textarea>
                 </div>
-                <div style="padding: 1rem; border-bottom: 1px solid #E0E0E0; display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <strong>Rate Sheet 2026-2027</strong>
-                        <p style="color: #999; font-size: 0.9rem;">Uploaded 12 Jan 2026</p>
-                    </div>
-                    <div style="display: flex; gap: 0.5rem;">
-                        <button class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Download</button>
-                    </div>
-                </div>
+
+                <button class="book-btn" onclick="showMailMergePreview()">Preview & Send Emails</button>
+                <div id="campaign-status" class="status-message"></div>
             </div>
         </div>
 
-        <div class="card">
-            <h4>🔏 Digital Signature</h4>
-            <p style="margin-bottom: 1rem;">Use our integrated digital signature system to sign documents securely.</p>
-            <button class="btn" onclick="alert('Digital signature integration coming soon - powered by Google Sign or DocuSign API')">Sign Document Online</button>
-        </div>
-    </div>
+        <!-- DOCUMENTS SECTION -->
+        <div id="documents" class="section">
+            <div style="background: rgba(255,255,255,0.95); padding: 2rem; border-radius: 12px; max-width: 600px;">
+                <h2 style="color: var(--dark-brown); margin-bottom: 1.5rem;">Documents</h2>
 
-    <!-- TAB: CALENDAR -->
-    <div id="calendar" class="tab-content">
-        <h3 class="section-title">Calendar & Availability</h3>
-
-        <div class="card">
-            <h4>📅 Google Calendar Integration</h4>
-            <p style="margin-bottom: 1rem;">Connect your Google Calendar to sync with Lilita Keper's availability system. We assume 100% availability by default and update in real-time as bookings are made.</p>
-            <button class="btn" onclick="alert('Google Calendar sync - Click to authorize with your Google account')">Connect Google Calendar</button>
-        </div>
-
-        <div class="card">
-            <h4>🗓️ Availability Status</h4>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-top: 1rem;">
-                <div style="padding: 1rem; background: #E5F8F0; border-radius: 8px; text-align: center;">
-                    <p style="font-size: 2rem; margin-bottom: 0.5rem;">100%</p>
-                    <p style="color: var(--dark-green); font-weight: 600;">Available Now</p>
+                <div style="margin-bottom: 1.5rem;">
+                    <h3 style="color: var(--dark-brown); margin-bottom: 0.5rem;">📄 Rate Sheet</h3>
+                    <p style="color: #666; margin-bottom: 1rem;">Download our official 2027 rack rates and terms.</p>
+                    <a href="https://contacts-app-wheat.vercel.app/lilita-2027-agent-rates" target="_blank" style="display: inline-block; padding: 0.75rem 1.5rem; background: var(--baby-brown); color: white; text-decoration: none; border-radius: 6px; font-weight: 600;">Download Rates PDF</a>
                 </div>
-                <div style="padding: 1rem; background: #FFF5E5; border-radius: 8px; text-align: center;">
-                    <p style="font-size: 2rem; margin-bottom: 0.5rem;">8/10</p>
-                    <p style="color: var(--dark-green); font-weight: 600;">Rooms Booked</p>
-                </div>
-                <div style="padding: 1rem; background: #E8D9B8; border-radius: 8px; text-align: center;">
-                    <p style="font-size: 2rem; margin-bottom: 0.5rem;">Next</p>
-                    <p style="color: var(--dark-green); font-weight: 600;">Jan 25, 2026</p>
+
+                <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid #e0e0e0;">
+
+                <div>
+                    <h3 style="color: var(--dark-brown); margin-bottom: 0.5rem;">🏕️ Tent Information</h3>
+                    <p style="color: #666;">See the Tents & Availability section for details on our 6 luxury tented suites.</p>
                 </div>
             </div>
-        </div>
-
-        <div class="card">
-            <h4>📋 Upcoming Bookings</h4>
-            <table class="pricing-table">
-                <tr>
-                    <th>Guest Name</th>
-                    <th>Check-In</th>
-                    <th>Nights</th>
-                    <th>Status</th>
-                </tr>
-                <tr>
-                    <td>Smith Family</td>
-                    <td>Jan 20, 2026</td>
-                    <td>4 nights</td>
-                    <td><span class="badge">Confirmed</span></td>
-                </tr>
-                <tr>
-                    <td>Johnson Group</td>
-                    <td>Jan 25, 2026</td>
-                    <td>7 nights</td>
-                    <td><span class="badge">Pending</span></td>
-                </tr>
-            </table>
-        </div>
-    </div>
-</div>
-
-<!-- ===== SOLUTIONS PAGE (Mail-Merge) ===== -->
-<div id="solutionsPage" class="page">
-    <h2 class="section-title">Agent Solutions & Tools</h2>
-
-    <div class="card">
-        <h3>📧 Mail-Merge System</h3>
-        <p style="margin-bottom: 1rem;">Send personalized bulk emails to your contacts using Gmail integration. Contacts from your uploaded list are automatically available.</p>
-
-        <div class="form-row">
-            <div>
-                <label>Campaign Name</label>
-                <input type="text" id="campaignName" placeholder="e.g., New Year 2026 Campaign">
-            </div>
-            <div>
-                <label>Select Recipients</label>
-                <select id="contactSelect" style="width: 100%; padding: 0.9rem; border: 2px solid #E0E0E0; border-radius: 6px;" onchange="updateRecipientCount()">
-                    <option value="all">All Imported Contacts</option>
-                    <option value="select">Select Specific Contacts</option>
-                </select>
-            </div>
-        </div>
-
-        <div id="selectedContactsDiv" style="display: none; margin-bottom: 1.5rem;">
-            <label>Selected Contacts (Click to toggle)</label>
-            <div id="selectedContactsList" style="border: 1px solid #E0E0E0; border-radius: 6px; max-height: 200px; overflow-y: auto; padding: 1rem;"></div>
-        </div>
-
-        <label>Email Subject</label>
-        <input type="text" id="emailSubject" placeholder="Subject line" style="width: 100%; margin-bottom: 1rem;">
-
-        <label>Email Template (Use {FirstName}, {Company}, {Email} for personalization)</label>
-        <textarea id="emailTemplate" placeholder="Dear {FirstName},&#10;&#10;We're excited to offer you special rates at Lilita Keper...&#10;&#10;Best regards,&#10;Lilita Keper Team" style="min-height: 150px;"></textarea>
-
-        <div style="margin-top: 1rem; display: flex; gap: 1rem; flex-wrap: wrap;">
-            <button class="btn" onclick="previewMailMerge()">👁️ Preview Campaign</button>
-            <button class="btn btn-secondary" onclick="sendMailMerge()">📧 Send via Gmail</button>
-        </div>
-        <div id="mailMergeStatus" style="margin-top: 1rem; display: none; padding: 1rem; border-radius: 6px;"></div>
-    </div>
-
-    <div class="card">
-        <h3>📊 Performance Analytics</h3>
-        <p>Track your bookings, revenue, and performance metrics at a glance.</p>
-        <div style="padding: 2rem; background: #F5F1E8; border-radius: 8px; text-align: center;">
-            <p style="color: #999;">Analytics Dashboard - Coming Soon</p>
         </div>
     </div>
 </div>
 
-<!-- ===== CONTACTS PAGE ===== -->
-<div id="contactsPage" class="page">
-    <h2 class="section-title">Contact Directory</h2>
-
-    <div class="card">
-        <h3>📞 Lilita Keper Contacts</h3>
-
-        <div class="contact-info">
-            <h4>Reception & Reservations</h4>
-            <p><strong>Email:</strong> <a href="mailto:sales@lilitakeper.com">sales@lilitakeper.com</a></p>
-            <p><strong>Phone:</strong> <a href="tel:+254180044355">+254 180 044 355</a></p>
-            <p><strong>Hours:</strong> 24/7 Support</p>
+<!-- ===== MAIL-MERGE PREVIEW MODAL ===== -->
+<div id="preview-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Email Preview</h2>
+            <button class="close-btn" onclick="closeModal()">✕</button>
         </div>
-
-        <div class="contact-info">
-            <h4>Executive Director</h4>
-            <p><strong>Email:</strong> <a href="mailto:ceo@maasaimaratravels.com">ceo@maasaimaratravels.com</a></p>
-            <p><strong>Location:</strong> Enonkishu Conservancy, Maasai Mara</p>
+        <div id="preview-content"></div>
+        <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+            <button class="book-btn" onclick="sendBulkEmail()" style="flex: 1;">Send to Selected</button>
+            <button class="book-btn" onclick="closeModal()" style="flex: 1; background: #999;">Cancel</button>
         </div>
-
-        <div class="contact-info">
-            <h4>Agent Support</h4>
-            <p><strong>Email:</strong> <a href="mailto:agents@lilitakeper.com">agents@lilitakeper.com</a></p>
-            <p><strong>Phone:</strong> <a href="tel:+254101070095">+254 101 070 095</a></p>
-            <p><strong>Hours:</strong> Mon-Fri 8AM-6PM EAT</p>
-        </div>
-    </div>
-
-    <div class="card">
-        <h3>📤 Import Your Contacts</h3>
-        <div class="file-upload" onclick="document.getElementById('contactsInput').click()">
-            <p style="font-size: 2rem; margin-bottom: 0.5rem;">👥</p>
-            <p><strong>Upload Contact List</strong></p>
-            <p style="color: #999; font-size: 0.9rem;">CSV file (Email, FirstName, Company, Phone, Website)</p>
-            <input type="file" id="contactsInput" accept=".csv" onchange="handleContactsUpload(event)">
-        </div>
-        <div id="uploadStatus" style="margin-top: 1rem; color: #999; font-size: 0.9rem;"></div>
-        <p style="margin-top: 1rem; color: #999; font-size: 0.9rem;">Your contacts will be automatically available for mail-merge campaigns.</p>
-    </div>
-
-    <div class="card">
-        <h3>📋 Your Contact List <span id="contactCount" style="color: var(--gold); font-size: 0.9rem;">(0 contacts)</span></h3>
-        <div id="contactsList">
-            <table class="pricing-table">
-                <tr>
-                    <th>First Name</th>
-                    <th>Email</th>
-                    <th>Company</th>
-                    <th>Phone</th>
-                    <th>Website</th>
-                    <th>Action</th>
-                </tr>
-                <tr>
-                    <td colspan="6" style="text-align: center; color: #999; padding: 2rem;">Upload a CSV file to import contacts</td>
-                </tr>
-            </table>
-        </div>
-    </div>
-</div>
-
-<!-- ===== DOCUMENTS PAGE ===== -->
-<div id="documentsPage" class="page">
-    <div class="container">
-        <h2 class="section-title">📄 Contracts & Documents</h2>
-
-        <div class="card">
-            <h3>Upload Contract or Document</h3>
-            <div class="file-upload" onclick="document.getElementById('fileInput').click()">
-                <p style="font-size: 2rem; margin-bottom: 0.5rem;">📎</p>
-                <p><strong>Click to upload or drag & drop</strong></p>
-                <p style="color: #999; font-size: 0.9rem;">PDF, DOC, DOCX (Max 10MB)</p>
-                <input type="file" id="fileInput" accept=".pdf,.doc,.docx">
-            </div>
-        </div>
-
-        <div class="card">
-            <h3>✅ Official Documents & Rates</h3>
-            <div style="list-style: none;">
-                <div style="padding: 1.5rem; border-bottom: 1px solid #E0E0E0; display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <strong>2026-2027 Rack Tariff Sheet</strong>
-                        <p style="color: #999; font-size: 0.9rem;">Official public rates, package details, and inclusions</p>
-                    </div>
-                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                        <a href="https://contacts-app-wheat.vercel.app/lilita-2027-agent-rates" target="_blank" class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem; text-decoration: none; display: inline-block; text-align: center;">📥 Download PDF</a>
-                    </div>
-                </div>
-                <div style="padding: 1.5rem; border-bottom: 1px solid #E0E0E0; display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <strong>Booking Terms & Cancellation Policy</strong>
-                        <p style="color: #999; font-size: 0.9rem;">Payment requirements, booking deposits, and cancellation terms</p>
-                    </div>
-                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                        <button class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="alert('Contact sales@lilitakeper.com for detailed T&Cs')">📄 Request</button>
-                    </div>
-                </div>
-                <div style="padding: 1.5rem; border-bottom: 1px solid #E0E0E0; display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <strong>Agent Partnership Agreement</strong>
-                        <p style="color: #999; font-size: 0.9rem;">Master contract for all partnering agents and tour operators</p>
-                    </div>
-                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                        <button class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="downloadContract('partnership')">📥 Download</button>
-                        <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="alert('Digital signature portal - sign securely online')">✍️ Sign</button>
-                    </div>
-                </div>
-                <div style="padding: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <strong>Supplementary Activities & Transfers</strong>
-                        <p style="color: #999; font-size: 0.9rem;">Additional services: hot air balloons, flights, private transfers, night drives</p>
-                    </div>
-                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                        <a href="https://contacts-app-wheat.vercel.app/lilita-2027-agent-rates" target="_blank" class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem; text-decoration: none; display: inline-block; text-align: center;">📥 See PDF</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <h3>🔏 Digital Signature</h3>
-            <p style="margin-bottom: 1rem;">Sign contracts digitally and securely. Your signature is legally binding and stored in your profile.</p>
-            <button class="btn" onclick="alert('Digital signature integration - powered by Google Sign or DocuSign API')">✍️ Sign Document</button>
-        </div>
-    </div>
-</div>
+        <div id="send-status" class="status-message"></div>
     </div>
 </div>
 
 <script>
-// ===== PAGE NAVIGATION =====
-function switchPage(page) {
-    // Hide all pages
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+// ===== STATE MANAGEMENT =====
+const state = {
+    currentUser: null,
+    currentTab: 'dashboard',
+    contacts: [],
+    bookings: [],
+    campaigns: [],
+    selectedContacts: new Set()
+};
 
-    // Show the selected page
-    const pageElement = document.getElementById(page + 'Page');
-    if (pageElement) {
-        pageElement.classList.add('active');
-    }
-
-    // Update sidebar visibility and main content margin
-    const sidebar = document.getElementById('sidebar');
-    const mainContent = document.getElementById('mainContent');
-
-    if (page === 'login') {
-        sidebar.classList.remove('active');
-        mainContent.classList.remove('with-sidebar');
-    } else {
-        sidebar.classList.add('active');
-        mainContent.classList.add('with-sidebar');
-        updateActiveLink(page);
-    }
+// ===== INITIALIZATION =====
+function init() {
+    loadFromStorage();
+    updateStats();
+    renderTents();
 }
 
-// ===== UPDATE ACTIVE SIDEBAR LINK =====
-function updateActiveLink(page) {
-    document.querySelectorAll('.sidebar-link').forEach(link => link.classList.remove('active'));
+window.addEventListener('load', init);
 
-    const links = {
-        'dashboard': 0,
-        'solutions': 1,
-        'contacts': 2,
-        'documents': 3
+// ===== STORAGE =====
+function saveToStorage() {
+    localStorage.setItem('lilita_state', JSON.stringify({
+        contacts: state.contacts,
+        bookings: state.bookings,
+        campaigns: state.campaigns
+    }));
+}
+
+function loadFromStorage() {
+    const saved = localStorage.getItem('lilita_state');
+    if (saved) {
+        const data = JSON.parse(saved);
+        state.contacts = data.contacts || [];
+        state.bookings = data.bookings || [];
+        state.campaigns = data.campaigns || [];
+    }
+    renderContacts();
+    renderBookings();
+    updateStats();
+}
+
+// ===== AUTH FUNCTIONS =====
+function toggleAuth(type) {
+    document.querySelectorAll('.auth-toggle button').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+
+    document.querySelectorAll('.auth-form').forEach(form => form.style.display = 'none');
+    document.getElementById(type + '-form').style.display = 'block';
+}
+
+function handleLogin() {
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+
+    if (!email || !password) {
+        alert('Please fill all fields');
+        return;
+    }
+
+    state.currentUser = {
+        email: email,
+        name: email.split('@')[0]
     };
 
-    const linkIndex = links[page];
-    if (linkIndex !== undefined) {
-        const sidebarLinks = document.querySelectorAll('.sidebar-link');
-        sidebarLinks[linkIndex].classList.add('active');
-    }
+    showPortal();
 }
 
-// ===== TAB SWITCHING =====
+function handleRegister() {
+    const name = document.getElementById('register-name').value;
+    const email = document.getElementById('register-email').value;
+    const password = document.getElementById('register-password').value;
+    const agency = document.getElementById('register-agency').value;
+
+    if (!name || !email || !password || !agency) {
+        alert('Please fill all fields');
+        return;
+    }
+
+    state.currentUser = {
+        email: email,
+        name: name,
+        agency: agency
+    };
+
+    showPortal();
+}
+
+function handleLogout() {
+    state.currentUser = null;
+    state.selectedContacts.clear();
+    showSection('dashboard');
+    document.getElementById('landing-page').style.display = 'block';
+    document.getElementById('auth-page').style.display = 'none';
+    document.getElementById('portal-page').style.display = 'none';
+}
+
+// ===== PAGE NAVIGATION =====
+function showAuth(type) {
+    document.getElementById('landing-page').style.display = 'none';
+    document.getElementById('auth-page').style.display = 'flex';
+    toggleAuth(type);
+}
+
+function showSection(section) {
+    if (section === 'about') {
+        // About section can be shown on landing
+        alert('Lilita Keper - Luxury Maasai Mara Safari\n\n6 exclusive tented suites\nYear-round game viewing\nIntimate, authentic experience');
+        return;
+    }
+    // Redirect to portal login
+    showAuth('login');
+}
+
+function showPortal() {
+    document.getElementById('landing-page').style.display = 'none';
+    document.getElementById('auth-page').style.display = 'none';
+    document.getElementById('portal-page').style.display = 'flex';
+    switchTab('dashboard');
+}
+
 function switchTab(tab) {
-    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    // Hide all sections
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
 
-    const tabElement = document.getElementById(tab);
-    if (tabElement) {
-        tabElement.classList.add('active');
-    }
+    // Show selected section
+    document.getElementById(tab).classList.add('active');
+    event.target.classList.add('active');
 
-    if (event.target) {
-        event.target.classList.add('active');
-    }
-}
+    // Update title
+    const titles = {
+        dashboard: 'Dashboard',
+        bookings: 'Bookings',
+        tents: 'Tents & Availability',
+        contacts: 'Contacts',
+        mailmerge: 'Mail-Merge Campaigns',
+        documents: 'Documents'
+    };
+    document.getElementById('section-title').textContent = titles[tab];
 
-// ===== AUTHENTICATION =====
-function handleLogin(e) {
-    e.preventDefault();
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-
-    // Demo authentication
-    if (email === 'agent@lilitakeper.com' && password === 'demo123') {
-        localStorage.setItem('agentName', 'Agent Smith');
-        localStorage.setItem('agentEmail', email);
-        document.getElementById('agentName').textContent = 'Agent Smith';
-        document.getElementById('dashboardName').textContent = 'Agent Smith';
-        switchPage('dashboard');
-    } else {
-        document.getElementById('loginError').textContent = '✗ Invalid credentials. Use agent@lilitakeper.com / demo123';
-        document.getElementById('loginError').style.display = 'block';
+    if (tab === 'mailmerge') {
+        renderMailMergeContacts();
     }
 }
 
-function handleRegister(e) {
-    e.preventDefault();
-    const name = document.getElementById('regName').value;
-    const email = document.getElementById('regEmail').value;
+// ===== TENTS =====
+function renderTents() {
+    const tents = [
+        { name: 'Ilochoreta Villa - Unit 1', icon: '🏕️', capacity: 'Up to 3 guests', amenities: 'King bed, En-suite Jacuzzi, Private Veranda' },
+        { name: 'Ilochoreta Villa - Unit 2', icon: '🏕️', capacity: 'Up to 3 guests', amenities: 'King bed, En-suite Jacuzzi, Private Veranda' },
+        { name: 'Ilochoreta Villa - Unit 3', icon: '🏕️', capacity: 'Up to 3 guests', amenities: 'King bed, En-suite Jacuzzi, Private Veranda' },
+        { name: 'Olmarei Villa - Unit 1', icon: '🏡', capacity: 'Up to 4 guests', amenities: 'Family Suite, En-suite Jacuzzi, Large Veranda' },
+        { name: 'Olmarei Villa - Unit 2', icon: '🏡', capacity: 'Up to 4 guests', amenities: 'Family Suite, En-suite Jacuzzi, Large Veranda' },
+        { name: 'Enkaji Villa', icon: '🏰', capacity: 'Up to 10 guests', amenities: '6 Bedrooms, Spacious for Groups' }
+    ];
 
-    localStorage.setItem('agentName', name);
-    localStorage.setItem('agentEmail', email);
-    document.getElementById('agentName').textContent = name;
-    document.getElementById('dashboardName').textContent = name;
+    let html = '';
+    tents.forEach(tent => {
+        const isAvailable = !state.bookings.some(b => b.tent === tent.name && isDateOverlap(new Date(b.checkin), new Date(b.checkout), new Date(), new Date()));
 
-    switchPage('dashboard');
+        html += `
+            <div class="tent-card">
+                <div class="tent-image">${tent.icon}</div>
+                <div class="tent-info">
+                    <h3>${tent.name}</h3>
+                    <div class="tent-capacity">${tent.capacity}</div>
+                    <div class="tent-capacity">${tent.amenities}</div>
+                    <div class="availability-badge ${isAvailable ? 'available' : 'unavailable'}">
+                        ${isAvailable ? '✓ Available' : '✗ Booked'}
+                    </div>
+                    <button class="book-btn" onclick="switchTab('bookings')">Make Booking</button>
+                </div>
+            </div>
+        `;
+    });
+
+    document.getElementById('tents-grid').innerHTML = html;
 }
 
-function logout() {
-    localStorage.removeItem('agentName');
-    localStorage.removeItem('agentEmail');
-    switchPage('login');
+// ===== BOOKINGS =====
+function createBooking() {
+    const name = document.getElementById('booking-name').value;
+    const email = document.getElementById('booking-email').value;
+    const checkin = document.getElementById('booking-checkin').value;
+    const checkout = document.getElementById('booking-checkout').value;
+    const guests = document.getElementById('booking-guests').value;
+    const tent = document.getElementById('booking-tent').value;
+
+    if (!name || !email || !checkin || !checkout || !guests || !tent) {
+        showStatus('booking-status', 'Please fill all fields', 'error');
+        return;
+    }
+
+    const booking = {
+        id: Date.now(),
+        name,
+        email,
+        checkin,
+        checkout,
+        guests,
+        tent,
+        createdAt: new Date().toISOString()
+    };
+
+    state.bookings.push(booking);
+    saveToStorage();
+
+    // Generate and download PDF
+    generateBookingPDF(booking);
+
+    // Clear form
+    document.querySelectorAll('#bookings input, #bookings select, #bookings textarea').forEach(el => el.value = '');
+
+    showStatus('booking-status', '✅ Booking created successfully! PDF downloaded.', 'success');
+    renderBookings();
+    updateStats();
+    renderTents();
 }
 
-// ===== CONTACT MANAGEMENT =====
-function handleContactsUpload(event) {
-    const file = event.target.files[0];
+function generateBookingPDF(booking) {
+    const element = document.createElement('div');
+    element.innerHTML = `
+        <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px;">
+            <h1 style="color: #C9A876; text-align: center;">Lilita Keper</h1>
+            <h2 style="text-align: center; color: #8B6F47;">Booking Confirmation</h2>
+            <hr style="border: none; border-top: 2px solid #C9A876; margin: 20px 0;">
+
+            <h3>Guest Information</h3>
+            <p><strong>Name:</strong> ${booking.name}</p>
+            <p><strong>Email:</strong> ${booking.email}</p>
+
+            <h3>Booking Details</h3>
+            <p><strong>Tent/Villa:</strong> ${booking.tent}</p>
+            <p><strong>Check-in:</strong> ${new Date(booking.checkin).toDateString()}</p>
+            <p><strong>Check-out:</strong> ${new Date(booking.checkout).toDateString()}</p>
+            <p><strong>Number of Guests:</strong> ${booking.guests}</p>
+
+            <hr style="border: none; border-top: 2px solid #C9A876; margin: 20px 0;">
+            <p style="text-align: center; color: #666; font-size: 12px;">
+                Confirmation #${booking.id}<br>
+                Booking Date: ${new Date(booking.createdAt).toLocaleString()}
+            </p>
+        </div>
+    `;
+
+    const opt = {
+        margin: 10,
+        filename: `lilita-booking-${booking.id}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+    };
+
+    html2pdf().set(opt).from(element).save();
+}
+
+function renderBookings() {
+    let html = '';
+    state.bookings.forEach(b => {
+        html += `
+            <tr>
+                <td>${b.name}</td>
+                <td>${b.tent}</td>
+                <td>${new Date(b.checkin).toDateString()}</td>
+                <td>${new Date(b.checkout).toDateString()}</td>
+                <td>${b.guests}</td>
+                <td><button onclick="deleteBooking(${b.id})" style="background: #f44336; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer;">Delete</button></td>
+            </tr>
+        `;
+    });
+    document.getElementById('bookings-list').innerHTML = html;
+}
+
+function deleteBooking(id) {
+    state.bookings = state.bookings.filter(b => b.id !== id);
+    saveToStorage();
+    renderBookings();
+    updateStats();
+    renderTents();
+}
+
+// ===== CONTACTS & CSV =====
+function handleCSVUpload() {
+    const file = document.getElementById('csv-upload').files[0];
     if (!file) return;
 
     const reader = new FileReader();
     reader.onload = (e) => {
         try {
             const csv = e.target.result;
-            const contacts = parseCSV(csv);
+            const lines = csv.split('\n');
+            const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
 
-            if (contacts.length > 0) {
-                localStorage.setItem('agentContacts', JSON.stringify(contacts));
-                displayContacts(contacts);
-                updateMailMergeContacts(contacts);
+            const emailIdx = headers.indexOf('email');
+            const nameIdx = headers.indexOf('firstname');
+            const companyIdx = headers.indexOf('company');
+            const websiteIdx = headers.indexOf('website');
 
-                document.getElementById('uploadStatus').textContent =
-                    `✅ Successfully imported ${contacts.length} contact(s)`;
-                document.getElementById('uploadStatus').style.color = '#00D084';
-
-                setTimeout(() => {
-                    document.getElementById('uploadStatus').textContent = '';
-                }, 3000);
+            if (emailIdx === -1) {
+                showStatus('upload-status', '❌ CSV must have "email" column', 'error');
+                return;
             }
-        } catch (error) {
-            document.getElementById('uploadStatus').textContent = '❌ Error parsing file: ' + error.message;
-            document.getElementById('uploadStatus').style.color = '#FF6B6B';
+
+            state.contacts = [];
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+
+                const fields = lines[i].split(',');
+                const contact = {
+                    email: fields[emailIdx]?.trim() || '',
+                    firstName: fields[nameIdx]?.trim() || '',
+                    company: fields[companyIdx]?.trim() || '',
+                    website: fields[websiteIdx]?.trim() || ''
+                };
+
+                if (contact.email) {
+                    state.contacts.push(contact);
+                }
+            }
+
+            saveToStorage();
+            renderContacts();
+            renderMailMergeContacts();
+            updateStats();
+
+            showStatus('upload-status', `✅ Uploaded ${state.contacts.length} contacts successfully`, 'success');
+        } catch (err) {
+            showStatus('upload-status', `❌ Error parsing CSV: ${err.message}`, 'error');
         }
     };
     reader.readAsText(file);
 }
 
-function parseCSV(csv) {
-    const lines = csv.trim().split('\n');
-    const headers = lines[0].toLowerCase().split(',').map(h => h.trim());
-    const contacts = [];
-
-    for (let i = 1; i < lines.length; i++) {
-        if (lines[i].trim() === '') continue;
-
-        const values = lines[i].split(',').map(v => v.trim());
-        const contact = {};
-
-        headers.forEach((header, index) => {
-            contact[header] = values[index] || '';
-        });
-
-        if (contact.email) {
-            contacts.push(contact);
-        }
-    }
-
-    return contacts;
-}
-
-function displayContacts(contacts) {
-    const table = document.getElementById('contactsList');
-    let html = '<table class="pricing-table"><tr><th>First Name</th><th>Email</th><th>Company</th><th>Phone</th><th>Website</th></tr>';
-
-    contacts.forEach(contact => {
-        html += `<tr>
-            <td>${contact.firstname || contact.first_name || ''}</td>
-            <td><a href="mailto:${contact.email}">${contact.email}</a></td>
-            <td>${contact.company || ''}</td>
-            <td>${contact.phone || ''}</td>
-            <td>${contact.website || 'N/A'}</td>
-        </tr>`;
-    });
-
-    html += '</table>';
-    table.innerHTML = html;
-    document.getElementById('contactCount').textContent = `(${contacts.length} contacts)`;
-}
-
-function updateMailMergeContacts(contacts) {
-    const selectDiv = document.getElementById('selectedContactsDiv');
-    const contactsList = document.getElementById('selectedContactsList');
-
+function renderContacts() {
     let html = '';
-    contacts.forEach((contact, index) => {
-        const firstName = contact.firstname || contact.first_name || 'Contact';
-        html += `<label style="display: block; padding: 0.5rem; margin-bottom: 0.5rem; border-radius: 4px; cursor: pointer; background: var(--light-gold);">
-            <input type="checkbox" value="${index}" style="margin-right: 0.5rem;" checked>
-            ${firstName} (${contact.email})
-        </label>`;
+    state.contacts.forEach(c => {
+        html += `
+            <tr>
+                <td>${c.email}</td>
+                <td>${c.firstName}</td>
+                <td>${c.company}</td>
+                <td>${c.website}</td>
+            </tr>
+        `;
+    });
+    document.getElementById('contacts-list').innerHTML = html;
+}
+
+// ===== MAIL-MERGE =====
+function renderMailMergeContacts() {
+    let html = '';
+    state.contacts.forEach((c, idx) => {
+        const isChecked = state.selectedContacts.has(idx);
+        html += `
+            <tr>
+                <td><input type="checkbox" class="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleContact(${idx})"></td>
+                <td>${c.email}</td>
+                <td>${c.firstName}</td>
+            </tr>
+        `;
+    });
+    document.getElementById('mailmerge-contacts').innerHTML = html;
+}
+
+function toggleContact(idx) {
+    if (state.selectedContacts.has(idx)) {
+        state.selectedContacts.delete(idx);
+    } else {
+        state.selectedContacts.add(idx);
+    }
+}
+
+function selectAllContacts() {
+    if (state.selectedContacts.size === state.contacts.length) {
+        state.selectedContacts.clear();
+    } else {
+        state.contacts.forEach((_, idx) => state.selectedContacts.add(idx));
+    }
+    renderMailMergeContacts();
+}
+
+function showMailMergePreview() {
+    const subject = document.getElementById('campaign-subject').value;
+    const template = document.getElementById('email-template').value;
+
+    if (!subject || !template || state.selectedContacts.size === 0) {
+        alert('Please fill all fields and select at least one contact');
+        return;
+    }
+
+    let preview = '';
+    let count = 0;
+    state.selectedContacts.forEach(idx => {
+        if (count < 3) {
+            const c = state.contacts[idx];
+            const personalized = template
+                .replace(/{FirstName}/g, c.firstName || 'Agent')
+                .replace(/{Company}/g, c.company || 'Company')
+                .replace(/{Email}/g, c.email);
+
+            preview += `
+                <div style="background: #f9f9f9; padding: 1rem; border-radius: 6px; margin-bottom: 1rem;">
+                    <p><strong>To:</strong> ${c.email}</p>
+                    <p><strong>Subject:</strong> ${subject}</p>
+                    <div style="background: white; padding: 1rem; border-radius: 4px; white-space: pre-wrap; font-size: 0.9rem;">
+                        ${personalizedized}
+                    </div>
+                </div>
+            `;
+            count++;
+        }
     });
 
-    contactsList.innerHTML = html || '<p style="color: #999;">No contacts imported yet</p>';
+    preview += `<p style="color: #666; margin-top: 1rem;">...and ${Math.max(0, state.selectedContacts.size - 3)} more recipients</p>`;
+
+    document.getElementById('preview-content').innerHTML = preview;
+    document.getElementById('preview-modal').classList.add('active');
 }
 
-function updateRecipientCount() {
-    const selectValue = document.getElementById('contactSelect').value;
-    const selectDiv = document.getElementById('selectedContactsDiv');
+function sendBulkEmail() {
+    const subject = document.getElementById('campaign-subject').value;
+    const template = document.getElementById('email-template').value;
+    const campaignName = document.getElementById('campaign-name').value || 'Bulk Campaign';
 
-    if (selectValue === 'select') {
-        selectDiv.style.display = 'block';
-    } else {
-        selectDiv.style.display = 'none';
-    }
-}
-
-// ===== MAIL-MERGE FUNCTIONALITY =====
-function previewMailMerge() {
-    const contacts = JSON.parse(localStorage.getItem('agentContacts') || '[]');
-    if (contacts.length === 0) {
-        alert('❌ Please upload contacts first');
+    if (state.selectedContacts.size === 0) {
+        showStatus('send-status', 'No contacts selected', 'error');
         return;
     }
 
-    const template = document.getElementById('emailTemplate').value;
-    const subject = document.getElementById('emailSubject').value;
+    const recipients = Array.from(state.selectedContacts).map(idx => state.contacts[idx]);
 
-    if (!subject || !template) {
-        alert('❌ Please fill in subject and template');
-        return;
-    }
+    showStatus('send-status', '📤 Sending emails...', 'info');
 
-    const firstContact = contacts[0];
-    const firstName = firstContact.firstname || firstContact.first_name || 'Agent';
-    const company = firstContact.company || '';
-    const email = firstContact.email || '';
-
-    const preview = template
-        .replace(/{FirstName}/g, firstName)
-        .replace(/{Company}/g, company)
-        .replace(/{Email}/g, email);
-
-    alert(`📧 Preview for: ${firstName}\n\nSubject: ${subject}\n\n${preview}`);
-}
-
-function sendMailMerge() {
-    const contacts = JSON.parse(localStorage.getItem('agentContacts') || '[]');
-    const selectValue = document.getElementById('contactSelect').value;
-
-    if (contacts.length === 0) {
-        alert('❌ Please upload contacts first');
-        return;
-    }
-
-    const subject = document.getElementById('emailSubject').value;
-    const template = document.getElementById('emailTemplate').value;
-    const campaignName = document.getElementById('campaignName').value;
-
-    if (!subject || !template) {
-        alert('❌ Please fill in subject and template');
-        return;
-    }
-
-    let selectedContacts = contacts;
-    if (selectValue === 'select') {
-        const checkboxes = document.querySelectorAll('#selectedContactsList input[type="checkbox"]:checked');
-        selectedContacts = Array.from(checkboxes).map(cb => contacts[cb.value]);
-    }
-
-    const status = document.getElementById('mailMergeStatus');
-    status.style.display = 'block';
-    status.style.background = '#FFF3CD';
-    status.style.borderLeft = '4px solid #FFC107';
-    status.innerHTML = `⏳ <strong>Sending bulk emails...</strong><br>Recipients: ${selectedContacts.length}<br>Please wait...`;
-
-    // Send emails via backend API
     fetch('/api/send-bulk-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-            recipients: selectedContacts.map(c => ({
-                email: c.email,
-                firstName: c.firstName || c.first_name || '',
-                company: c.company || '',
-                website: c.website || ''
-            })),
-            subject: subject,
-            template: template,
-            campaignName: campaignName
+            recipients,
+            subject,
+            template,
+            campaignName
         })
     })
     .then(res => res.json())
     .then(data => {
         if (data.success) {
-            status.style.background = '#E5F8F0';
-            status.style.borderLeft = '4px solid #00D084';
-            status.innerHTML = `✅ <strong>Campaign Sent Successfully!</strong><br>
-                Campaign: ${data.campaignName}<br>
-                Sent: ${data.sent} email(s)<br>
-                ${data.failed > 0 ? `Failed: ${data.failed}<br>` : ''}
-                Time: ${new Date().toLocaleString()}<br>
-                <br>
-                <strong>Summary:</strong><br>
-                Recipients: ${data.recipients.join('<br>')}`;
+            const campaign = {
+                id: Date.now(),
+                name: campaignName,
+                sent: data.sent,
+                failed: data.failed,
+                createdAt: new Date().toISOString()
+            };
+            state.campaigns.push(campaign);
+            saveToStorage();
+            updateStats();
+
+            showStatus('send-status', `✅ Campaign sent! ${data.sent} emails sent, ${data.failed} failed.`, 'success');
+
+            setTimeout(() => {
+                closeModal();
+                document.querySelectorAll('#mailmerge input, #mailmerge select, #mailmerge textarea').forEach(el => el.value = '');
+                state.selectedContacts.clear();
+                renderMailMergeContacts();
+            }, 2000);
         } else {
-            status.style.background = '#F8D7DA';
-            status.style.borderLeft = '4px solid #DC3545';
-            status.innerHTML = `❌ <strong>Send Failed</strong><br>${data.error || 'Unknown error'}<br><br><em>${data.message || 'Please check configuration and try again'}</em>`;
+            showStatus('send-status', `❌ ${data.error}`, 'error');
         }
     })
     .catch(err => {
-        status.style.background = '#F8D7DA';
-        status.style.borderLeft = '4px solid #DC3545';
-        status.innerHTML = `❌ <strong>Error</strong><br>Failed to send emails: ${err.message}`;
+        showStatus('send-status', `❌ Error: ${err.message}`, 'error');
     });
 }
 
-// ===== CONTRACT DOWNLOADS =====
-function downloadContract(type) {
-    const contracts = {
-        'partnership': 'Lilita_Keper_Agent_Partnership_Agreement_2026-2027.pdf',
-        'rates': 'Lilita_Keper_Rack_Tariff_Sheet_2026-2027.pdf'
-    };
-
-    const filename = contracts[type] || 'Contract.pdf';
-
-    // In real implementation, this would download from server
-    // For now, we'll create a placeholder and guide user to official link
-    alert(`📥 Contract: ${filename}\n\nTo download official documents:\n\n1. Tariff Sheet: https://contacts-app-wheat.vercel.app/lilita-2027-agent-rates\n2. For partnership agreement, contact: agents@lilitakeper.com`);
+// ===== MODAL =====
+function closeModal() {
+    document.getElementById('preview-modal').classList.remove('active');
+    document.getElementById('send-status').innerHTML = '';
 }
 
-// ===== BOOKING FORM =====
-function submitBooking() {
-    const guestName = document.getElementById('guestName')?.value;
-    const guestEmail = document.getElementById('guestEmail')?.value;
-    const checkIn = document.getElementById('checkIn')?.value;
-    const nights = document.getElementById('nights')?.value;
-    const guests = document.getElementById('guests')?.value;
-    const notes = document.getElementById('bookingNotes')?.value;
+// ===== UTILITIES =====
+function showStatus(elementId, message, type) {
+    const el = document.getElementById(elementId);
+    el.textContent = message;
+    el.className = `status-message show ${type}`;
 
-    if (!guestName || !guestEmail || !checkIn || !nights || !guests) {
-        alert('❌ Please fill in all required fields');
-        return;
+    if (type === 'success' || type === 'error') {
+        setTimeout(() => {
+            el.classList.remove('show');
+        }, 5000);
     }
-
-    const booking = {
-        guestName,
-        guestEmail,
-        checkIn,
-        nights,
-        guests,
-        notes,
-        submittedAt: new Date().toISOString()
-    };
-
-    // Store booking
-    const bookings = JSON.parse(localStorage.getItem('agentBookings') || '[]');
-    bookings.push(booking);
-    localStorage.setItem('agentBookings', JSON.stringify(bookings));
-
-    alert(`✅ Booking submitted!\n\nGuest: ${guestName}\nCheck-in: ${checkIn}\nNights: ${nights}\nGuests: ${guests}\n\nConfirmation sent to: ${guestEmail}\n\nContact Lilita Keper: sales@lilitakeper.com`);
-
-    // Clear form
-    document.getElementById('guestName').value = '';
-    document.getElementById('guestEmail').value = '';
-    document.getElementById('checkIn').value = '';
-    document.getElementById('nights').value = '';
-    document.getElementById('guests').value = '';
-    document.getElementById('bookingNotes').value = '';
 }
 
-// ===== INITIALIZATION =====
-window.addEventListener('load', () => {
-    const agentName = localStorage.getItem('agentName');
-    const sidebar = document.getElementById('sidebar');
-    const mainContent = document.getElementById('mainContent');
+function updateStats() {
+    document.getElementById('total-bookings').textContent = state.bookings.length;
+    document.getElementById('total-contacts').textContent = state.contacts.length;
+    document.getElementById('total-campaigns').textContent = state.campaigns.length;
+}
 
-    if (agentName) {
-        document.getElementById('agentName').textContent = agentName;
-        document.getElementById('dashboardName').textContent = agentName;
+function isDateOverlap(start1, end1, start2, end2) {
+    return start1 < end2 && start2 < end1;
+}
 
-        // Load saved contacts
-        const contacts = JSON.parse(localStorage.getItem('agentContacts') || '[]');
-        if (contacts.length > 0) {
-            displayContacts(contacts);
-            updateMailMergeContacts(contacts);
-        }
+// Load contacts for mail-merge when section switches
+function switchTab(tab) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
 
-        switchPage('dashboard');
-    } else {
-        switchPage('login');
-        sidebar.classList.remove('active');
-        mainContent.classList.remove('with-sidebar');
+    document.getElementById(tab).classList.add('active');
+    if (event) event.target.classList.add('active');
+
+    const titles = {
+        dashboard: 'Dashboard',
+        bookings: 'Bookings',
+        tents: 'Tents & Availability',
+        contacts: 'Contacts',
+        mailmerge: 'Mail-Merge Campaigns',
+        documents: 'Documents'
+    };
+    document.getElementById('section-title').textContent = titles[tab];
+
+    if (tab === 'mailmerge') {
+        renderMailMergeContacts();
     }
-});
+    if (tab === 'tents') {
+        renderTents();
+    }
+}
 </script>
 
 </body>
