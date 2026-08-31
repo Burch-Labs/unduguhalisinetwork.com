@@ -411,6 +411,13 @@
             margin-left: 280px;
             padding: 2rem;
             overflow-y: auto;
+            background: linear-gradient(135deg, #FAFAF9 0%, #F5F1E8 100%);
+        }
+
+        @media (min-width: 1400px) {
+            .portal-content {
+                padding: 2rem 3rem;
+            }
         }
 
         .portal-header {
@@ -635,10 +642,11 @@
             backdrop-filter: blur(12px);
             padding: 2.5rem;
             border-radius: 18px;
-            max-width: 600px;
+            max-width: 900px;
             margin: 0 auto;
             box-shadow: 0 12px 40px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.6);
             border: 1px solid rgba(212, 165, 116, 0.25);
+            width: 95%;
         }
 
         .form-container h2 {
@@ -1019,6 +1027,58 @@
 
         .quick-actions button.secondary:hover {
             background: #1565c0;
+        }
+
+        /* ===== DESKTOP OPTIMIZATIONS ===== */
+        @media (min-width: 769px) {
+            .form-container {
+                max-width: 1000px;
+                padding: 3rem;
+            }
+
+            .form-container h2 {
+                font-size: 2rem;
+                margin-bottom: 2rem;
+            }
+
+            /* Two-column layout for Mail-Merge on desktop */
+            #mailmerge .form-container > div:nth-child(2),
+            #mailmerge .form-container > div:nth-child(3) {
+                display: inline-block;
+                width: 48%;
+                vertical-align: top;
+                margin-right: 2%;
+            }
+
+            #mailmerge .form-container > div:nth-child(3) {
+                margin-right: 0;
+            }
+
+            /* Full width for buttons and step 4 */
+            #mailmerge .form-container > div:last-child {
+                width: 100%;
+                display: flex;
+                gap: 1rem;
+            }
+
+            /* Email table better on desktop */
+            .contacts-table {
+                font-size: 0.95rem;
+            }
+
+            .contacts-table th, .contacts-table td {
+                padding: 1rem;
+            }
+
+            /* Dashboard wider on desktop */
+            .dashboard-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            }
+
+            /* Sections better spacing */
+            .section {
+                padding: 2rem 3rem;
+            }
         }
 
         /* ===== MOBILE RESPONSIVE ===== */
@@ -1959,12 +2019,15 @@
 
         <!-- MAIL-MERGE SECTION -->
         <div id="mailmerge" class="section">
-            <div class="form-container">
-                <h2>✉️ Advanced Email Campaign</h2>
+            <div style="background: linear-gradient(135deg, #F9F6F1 0%, #F5F1E8 100%); padding: 2rem; border-radius: 12px; margin-bottom: 2rem;">
+                <h1 style="color: var(--dark-brown); margin: 0 0 0.5rem 0; font-size: 2.5rem;">✉️ Advanced Email Campaign</h1>
+                <p style="color: #666; margin: 0; font-size: 1rem;">Professional email marketing with smart parsing and bulk sending</p>
+            </div>
 
+            <div class="form-container">
                 <!-- Step 1: Add Emails -->
-                <div style="background: #F0F8FF; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; border-left: 4px solid #1976d2;">
-                    <h3 style="color: #1565c0; margin-top: 0;">Step 1: Add Email Recipients</h3>
+                <div style="background: linear-gradient(135deg, #E3F2FD 0%, #F0F8FF 100%); padding: 2rem; border-radius: 12px; margin-bottom: 2rem; border-left: 5px solid #1976d2; box-shadow: 0 4px 12px rgba(25, 118, 210, 0.1);">
+                    <h3 style="color: #1565c0; margin-top: 0; font-size: 1.3rem;">📋 Step 1: Add Email Recipients</h3>
 
                     <!-- Paste Emails -->
                     <div style="margin-bottom: 1.5rem;">
@@ -1987,12 +2050,14 @@
                 </div>
 
                 <!-- Step 2: Review Emails -->
-                <div style="background: #FFF8E1; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; border-left: 4px solid #FF9800;">
-                    <h3 style="color: #F57C00; margin-top: 0;">Step 2: Review Recipients</h3>
-                    <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1rem;">
-                        <span style="font-weight: 600; color: #333;">Emails Loaded: <span id="email-count" style="color: #FF9800; font-size: 1.2rem;">0</span></span>
-                        <button class="book-btn" onclick="browseEmails()" style="background: #FF9800; flex: 1;">👀 Browse & Edit</button>
-                        <button class="book-btn" onclick="clearAllEmails()" style="background: #d32f2f;">🗑️ Clear</button>
+                <div style="background: linear-gradient(135deg, #FFF8E1 0%, #FFF9C4 100%); padding: 2rem; border-radius: 12px; margin-bottom: 2rem; border-left: 5px solid #FF9800; box-shadow: 0 4px 12px rgba(255, 152, 0, 0.1);">
+                    <h3 style="color: #F57C00; margin-top: 0; font-size: 1.3rem;">👀 Step 2: Review Recipients</h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; margin-bottom: 1.5rem;">
+                        <div style="background: white; padding: 0.75rem 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                            <span style="font-weight: 600; color: #333;">📧 Emails Loaded: <span id="email-count" style="color: #FF9800; font-size: 1.1rem; font-weight: 700;">0</span></span>
+                        </div>
+                        <button class="book-btn" onclick="browseEmails()" style="background: #FF9800; padding: 0.75rem 1.5rem;">👀 Browse & Edit</button>
+                        <button class="book-btn" onclick="clearAllEmails()" style="background: #d32f2f; padding: 0.75rem 1.5rem;">🗑️ Clear</button>
                     </div>
                     <table class="contacts-table" id="email-review-table">
                         <thead>
@@ -2011,8 +2076,8 @@
                 </div>
 
                 <!-- Step 3: Campaign Settings -->
-                <div style="background: #E8F5E9; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; border-left: 4px solid #4CAF50;">
-                    <h3 style="color: #2E7D32; margin-top: 0;">Step 3: Campaign Details</h3>
+                <div style="background: linear-gradient(135deg, #E8F5E9 0%, #F1F8E9 100%); padding: 2rem; border-radius: 12px; margin-bottom: 2rem; border-left: 5px solid #4CAF50; box-shadow: 0 4px 12px rgba(76, 175, 80, 0.1);">
+                    <h3 style="color: #2E7D32; margin-top: 0; font-size: 1.3rem;">⚙️ Step 3: Campaign Details</h3>
                     <div class="form-row full">
                         <label>Campaign Name</label>
                         <input type="text" id="campaign-name" placeholder="e.g., Q4 Safari Promo">
@@ -2038,11 +2103,14 @@ Lilita Keper Team</textarea>
                 </div>
 
                 <!-- Step 4: Send -->
-                <div style="display: flex; gap: 1rem;">
-                    <button class="book-btn" onclick="reviewBeforeSend()" style="flex: 1; background: #4CAF50; font-size: 1.1rem; padding: 1rem;">✅ Review & Send</button>
-                    <button class="book-btn" onclick="downloadEmailList()" style="flex: 1; background: #1976d2;">📥 Download List</button>
+                <div style="background: linear-gradient(135deg, #E0F7FA 0%, #E1F5FE 100%); padding: 2rem; border-radius: 12px; border-left: 5px solid #00BCD4; box-shadow: 0 4px 12px rgba(0, 188, 212, 0.1);">
+                    <h3 style="color: #0097A7; margin-top: 0; font-size: 1.3rem;">🚀 Step 4: Send Campaign</h3>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <button class="book-btn" onclick="reviewBeforeSend()" style="flex: 1; min-width: 200px; background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%); font-size: 1.1rem; padding: 1rem; box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);">✅ Review & Send Campaign</button>
+                        <button class="book-btn" onclick="downloadEmailList()" style="flex: 1; min-width: 200px; background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%); font-size: 1rem; padding: 1rem;">📥 Download Email List</button>
+                    </div>
                 </div>
-                <div id="campaign-status" class="status-message"></div>
+                <div id="campaign-status" class="status-message" style="margin-top: 1.5rem;"></div>
             </div>
         </div>
 
