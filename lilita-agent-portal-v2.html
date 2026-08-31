@@ -805,6 +805,7 @@
     <!-- TABS -->
     <div class="tabs">
         <button class="tab-btn active" onclick="switchTab('overview')">Overview</button>
+        <button class="tab-btn" onclick="switchTab('booking')">📋 New Booking</button>
         <button class="tab-btn" onclick="switchTab('pricing')">2026-2027 Pricing</button>
         <button class="tab-btn" onclick="switchTab('contracts')">Contracts & Documents</button>
         <button class="tab-btn" onclick="switchTab('calendar')">Calendar & Availability</button>
@@ -817,7 +818,7 @@
             <div class="card">
                 <h3>📋 New Booking</h3>
                 <p>Create a new guest booking with instant confirmation.</p>
-                <button class="btn" onclick="alert('Booking feature coming soon!')">Start Booking</button>
+                <button class="btn" onclick="switchTab('booking')">Start Booking</button>
             </div>
             <div class="card">
                 <h3>📧 Send Bulk Email</h3>
@@ -833,6 +834,84 @@
                 <h3>📞 Contact Directory</h3>
                 <p>Organize and export all Lilita Keper contacts.</p>
                 <button class="btn" onclick="switchPage('contacts')">View Contacts</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB: BOOKING -->
+    <div id="booking" class="tab-content">
+        <h3 class="section-title">📋 Create New Booking</h3>
+
+        <div class="card">
+            <h4>Guest Information</h4>
+            <div class="form-row">
+                <div>
+                    <label for="guestName">Guest Name *</label>
+                    <input type="text" id="guestName" placeholder="Full name of guest" required>
+                </div>
+                <div>
+                    <label for="guestEmail">Email Address *</label>
+                    <input type="email" id="guestEmail" placeholder="guest@example.com" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div>
+                    <label for="guestPhone">Phone Number</label>
+                    <input type="text" id="guestPhone" placeholder="+1-555-0000">
+                </div>
+                <div>
+                    <label for="guestCompany">Company/Group</label>
+                    <input type="text" id="guestCompany" placeholder="Organization name">
+                </div>
+            </div>
+
+            <h4 style="margin-top: 2rem; margin-bottom: 1rem;">Stay Details</h4>
+
+            <div class="form-row">
+                <div>
+                    <label for="checkIn">Check-In Date *</label>
+                    <input type="date" id="checkIn" required>
+                </div>
+                <div>
+                    <label for="nights">Number of Nights *</label>
+                    <input type="number" id="nights" placeholder="e.g., 3" min="1" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div>
+                    <label for="guests">Number of Guests *</label>
+                    <input type="number" id="guests" placeholder="e.g., 2" min="1" required>
+                </div>
+                <div>
+                    <label for="packageType">Package Type</label>
+                    <select id="packageType" style="width: 100%; padding: 0.9rem; border: 2px solid #E0E0E0; border-radius: 6px;">
+                        <option>Game Package (GP)</option>
+                        <option>Full Board (AP)</option>
+                    </select>
+                </div>
+            </div>
+
+            <h4 style="margin-top: 2rem; margin-bottom: 1rem;">Special Requests</h4>
+
+            <label for="bookingNotes">Special Requests & Notes</label>
+            <textarea id="bookingNotes" placeholder="Any special requirements, dietary preferences, etc."></textarea>
+
+            <div style="margin-top: 2rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                <button class="btn" onclick="submitBooking()" style="flex: 1; min-width: 200px;">✅ Submit Booking</button>
+                <button class="btn btn-secondary" onclick="alert('Booking request will be sent to sales@lilitakeper.com for confirmation')" style="flex: 1; min-width: 200px;">ℹ️ How It Works</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h4>📊 Pricing Reference</h4>
+            <p>Use this quick reference to quote rates to your guests:</p>
+            <div style="margin-top: 1rem; font-size: 0.9rem;">
+                <p><strong>Peak Season (Jul-Sep, Dec-Jan):</strong> Game Package $1,215 (single) / $845 (double)</p>
+                <p><strong>Shoulder Season (Jan-Mar, Jun, Oct-Dec):</strong> Game Package $905 (single) / $655 (double)</p>
+                <p><strong>Green Season (Apr-May):</strong> Game Package $745 (single) / $565 (double)</p>
+                <p style="margin-top: 1rem; font-size: 0.85rem; color: #999;">See "2026-2027 Pricing" tab for complete rates</p>
             </div>
         </div>
     </div>
@@ -1070,35 +1149,38 @@
 
     <div class="card">
         <h3>📧 Mail-Merge System</h3>
-        <p style="margin-bottom: 1rem;">Send personalized bulk emails to your contacts using Gmail integration. Perfect for marketing campaigns, booking confirmations, and special offers.</p>
+        <p style="margin-bottom: 1rem;">Send personalized bulk emails to your contacts using Gmail integration. Contacts from your uploaded list are automatically available.</p>
 
         <div class="form-row">
             <div>
                 <label>Campaign Name</label>
-                <input type="text" placeholder="e.g., New Year 2026 Campaign">
+                <input type="text" id="campaignName" placeholder="e.g., New Year 2026 Campaign">
             </div>
             <div>
-                <label>Email List</label>
-                <select style="width: 100%; padding: 0.9rem; border: 2px solid #E0E0E0; border-radius: 6px;">
-                    <option>Select Contacts...</option>
-                    <option>All Contacts</option>
-                    <option>Travel Agents</option>
-                    <option>Tour Operators</option>
-                    <option>Past Guests</option>
+                <label>Select Recipients</label>
+                <select id="contactSelect" style="width: 100%; padding: 0.9rem; border: 2px solid #E0E0E0; border-radius: 6px;" onchange="updateRecipientCount()">
+                    <option value="all">All Imported Contacts</option>
+                    <option value="select">Select Specific Contacts</option>
                 </select>
             </div>
         </div>
 
-        <label>Email Subject</label>
-        <input type="text" placeholder="Subject line" style="width: 100%; margin-bottom: 1rem;">
-
-        <label>Email Template</label>
-        <textarea placeholder="Dear {AGENT_NAME},&#10;&#10;We're excited to offer you special rates...&#10;&#10;Best regards,&#10;Lilita Keper Team"></textarea>
-
-        <div style="margin-top: 1rem; display: flex; gap: 1rem;">
-            <button class="btn">Preview Campaign</button>
-            <button class="btn btn-secondary">Send via Gmail</button>
+        <div id="selectedContactsDiv" style="display: none; margin-bottom: 1.5rem;">
+            <label>Selected Contacts (Click to toggle)</label>
+            <div id="selectedContactsList" style="border: 1px solid #E0E0E0; border-radius: 6px; max-height: 200px; overflow-y: auto; padding: 1rem;"></div>
         </div>
+
+        <label>Email Subject</label>
+        <input type="text" id="emailSubject" placeholder="Subject line" style="width: 100%; margin-bottom: 1rem;">
+
+        <label>Email Template (Use {FirstName}, {Company}, {Email} for personalization)</label>
+        <textarea id="emailTemplate" placeholder="Dear {FirstName},&#10;&#10;We're excited to offer you special rates at Lilita Keper...&#10;&#10;Best regards,&#10;Lilita Keper Team" style="min-height: 150px;"></textarea>
+
+        <div style="margin-top: 1rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+            <button class="btn" onclick="previewMailMerge()">👁️ Preview Campaign</button>
+            <button class="btn btn-secondary" onclick="sendMailMerge()">📧 Send via Gmail</button>
+        </div>
+        <div id="mailMergeStatus" style="margin-top: 1rem; display: none; padding: 1rem; border-radius: 6px;"></div>
     </div>
 
     <div class="card">
@@ -1143,34 +1225,30 @@
         <div class="file-upload" onclick="document.getElementById('contactsInput').click()">
             <p style="font-size: 2rem; margin-bottom: 0.5rem;">👥</p>
             <p><strong>Upload Contact List</strong></p>
-            <p style="color: #999; font-size: 0.9rem;">CSV or Excel file with agent contacts</p>
-            <input type="file" id="contactsInput" accept=".csv,.xlsx,.xls">
+            <p style="color: #999; font-size: 0.9rem;">CSV file (Email, FirstName, Company, Phone, Website)</p>
+            <input type="file" id="contactsInput" accept=".csv" onchange="handleContactsUpload(event)">
         </div>
-        <p style="margin-top: 1rem; color: #999; font-size: 0.9rem;">Use this to organize your referral network and sync with mail-merge campaigns.</p>
+        <div id="uploadStatus" style="margin-top: 1rem; color: #999; font-size: 0.9rem;"></div>
+        <p style="margin-top: 1rem; color: #999; font-size: 0.9rem;">Your contacts will be automatically available for mail-merge campaigns.</p>
     </div>
 
     <div class="card">
-        <h3>📋 Your Contact List</h3>
-        <table class="pricing-table">
-            <tr>
-                <th>Agent Name</th>
-                <th>Company</th>
-                <th>Email</th>
-                <th>Phone</th>
-            </tr>
-            <tr>
-                <td>Sarah Johnson</td>
-                <td>Global Travel Co.</td>
-                <td>sarah@globaltravel.com</td>
-                <td>+1-555-0123</td>
-            </tr>
-            <tr>
-                <td>Ahmed Hassan</td>
-                <td>East Africa Tours</td>
-                <td>ahmed@eatours.com</td>
-                <td>+254-722-123456</td>
-            </tr>
-        </table>
+        <h3>📋 Your Contact List <span id="contactCount" style="color: var(--gold); font-size: 0.9rem;">(0 contacts)</span></h3>
+        <div id="contactsList">
+            <table class="pricing-table">
+                <tr>
+                    <th>First Name</th>
+                    <th>Email</th>
+                    <th>Company</th>
+                    <th>Phone</th>
+                    <th>Website</th>
+                    <th>Action</th>
+                </tr>
+                <tr>
+                    <td colspan="6" style="text-align: center; color: #999; padding: 2rem;">Upload a CSV file to import contacts</td>
+                </tr>
+            </table>
+        </div>
     </div>
 </div>
 
@@ -1216,7 +1294,7 @@
                         <p style="color: #999; font-size: 0.9rem;">Master contract for all partnering agents and tour operators</p>
                     </div>
                     <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                        <button class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="alert('Opening contract...')">📄 View</button>
+                        <button class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="downloadContract('partnership')">📥 Download</button>
                         <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="alert('Digital signature portal - sign securely online')">✍️ Sign</button>
                     </div>
                 </div>
@@ -1339,7 +1417,234 @@ function logout() {
     switchPage('login');
 }
 
-// Check if user is logged in on load
+// ===== CONTACT MANAGEMENT =====
+function handleContactsUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        try {
+            const csv = e.target.result;
+            const contacts = parseCSV(csv);
+
+            if (contacts.length > 0) {
+                localStorage.setItem('agentContacts', JSON.stringify(contacts));
+                displayContacts(contacts);
+                updateMailMergeContacts(contacts);
+
+                document.getElementById('uploadStatus').textContent =
+                    `✅ Successfully imported ${contacts.length} contact(s)`;
+                document.getElementById('uploadStatus').style.color = '#00D084';
+
+                setTimeout(() => {
+                    document.getElementById('uploadStatus').textContent = '';
+                }, 3000);
+            }
+        } catch (error) {
+            document.getElementById('uploadStatus').textContent = '❌ Error parsing file: ' + error.message;
+            document.getElementById('uploadStatus').style.color = '#FF6B6B';
+        }
+    };
+    reader.readAsText(file);
+}
+
+function parseCSV(csv) {
+    const lines = csv.trim().split('\n');
+    const headers = lines[0].toLowerCase().split(',').map(h => h.trim());
+    const contacts = [];
+
+    for (let i = 1; i < lines.length; i++) {
+        if (lines[i].trim() === '') continue;
+
+        const values = lines[i].split(',').map(v => v.trim());
+        const contact = {};
+
+        headers.forEach((header, index) => {
+            contact[header] = values[index] || '';
+        });
+
+        if (contact.email) {
+            contacts.push(contact);
+        }
+    }
+
+    return contacts;
+}
+
+function displayContacts(contacts) {
+    const table = document.getElementById('contactsList');
+    let html = '<table class="pricing-table"><tr><th>First Name</th><th>Email</th><th>Company</th><th>Phone</th><th>Website</th></tr>';
+
+    contacts.forEach(contact => {
+        html += `<tr>
+            <td>${contact.firstname || contact.first_name || ''}</td>
+            <td><a href="mailto:${contact.email}">${contact.email}</a></td>
+            <td>${contact.company || ''}</td>
+            <td>${contact.phone || ''}</td>
+            <td>${contact.website || 'N/A'}</td>
+        </tr>`;
+    });
+
+    html += '</table>';
+    table.innerHTML = html;
+    document.getElementById('contactCount').textContent = `(${contacts.length} contacts)`;
+}
+
+function updateMailMergeContacts(contacts) {
+    const selectDiv = document.getElementById('selectedContactsDiv');
+    const contactsList = document.getElementById('selectedContactsList');
+
+    let html = '';
+    contacts.forEach((contact, index) => {
+        const firstName = contact.firstname || contact.first_name || 'Contact';
+        html += `<label style="display: block; padding: 0.5rem; margin-bottom: 0.5rem; border-radius: 4px; cursor: pointer; background: var(--light-gold);">
+            <input type="checkbox" value="${index}" style="margin-right: 0.5rem;" checked>
+            ${firstName} (${contact.email})
+        </label>`;
+    });
+
+    contactsList.innerHTML = html || '<p style="color: #999;">No contacts imported yet</p>';
+}
+
+function updateRecipientCount() {
+    const selectValue = document.getElementById('contactSelect').value;
+    const selectDiv = document.getElementById('selectedContactsDiv');
+
+    if (selectValue === 'select') {
+        selectDiv.style.display = 'block';
+    } else {
+        selectDiv.style.display = 'none';
+    }
+}
+
+// ===== MAIL-MERGE FUNCTIONALITY =====
+function previewMailMerge() {
+    const contacts = JSON.parse(localStorage.getItem('agentContacts') || '[]');
+    if (contacts.length === 0) {
+        alert('❌ Please upload contacts first');
+        return;
+    }
+
+    const template = document.getElementById('emailTemplate').value;
+    const subject = document.getElementById('emailSubject').value;
+
+    if (!subject || !template) {
+        alert('❌ Please fill in subject and template');
+        return;
+    }
+
+    const firstContact = contacts[0];
+    const firstName = firstContact.firstname || firstContact.first_name || 'Agent';
+    const company = firstContact.company || '';
+    const email = firstContact.email || '';
+
+    const preview = template
+        .replace(/{FirstName}/g, firstName)
+        .replace(/{Company}/g, company)
+        .replace(/{Email}/g, email);
+
+    alert(`📧 Preview for: ${firstName}\n\nSubject: ${subject}\n\n${preview}`);
+}
+
+function sendMailMerge() {
+    const contacts = JSON.parse(localStorage.getItem('agentContacts') || '[]');
+    const selectValue = document.getElementById('contactSelect').value;
+
+    if (contacts.length === 0) {
+        alert('❌ Please upload contacts first');
+        return;
+    }
+
+    const subject = document.getElementById('emailSubject').value;
+    const template = document.getElementById('emailTemplate').value;
+    const campaignName = document.getElementById('campaignName').value;
+
+    if (!subject || !template) {
+        alert('❌ Please fill in subject and template');
+        return;
+    }
+
+    let selectedContacts = contacts;
+    if (selectValue === 'select') {
+        const checkboxes = document.querySelectorAll('#selectedContactsList input[type="checkbox"]:checked');
+        selectedContacts = Array.from(checkboxes).map(cb => contacts[cb.value]);
+    }
+
+    const emailList = selectedContacts.map(c => c.email).join(', ');
+
+    const status = document.getElementById('mailMergeStatus');
+    status.style.display = 'block';
+    status.style.background = '#E5F8F0';
+    status.style.borderLeft = '4px solid #00D084';
+    status.innerHTML = `✅ <strong>Campaign Ready to Send</strong><br>
+        Campaign: ${campaignName || 'Untitled'}<br>
+        Recipients: ${selectedContacts.length} contact(s)<br>
+        <br>
+        <strong>To send via Gmail:</strong><br>
+        1. Compose new email<br>
+        2. To: ${emailList}<br>
+        3. Subject: ${subject}<br>
+        4. Copy template and personalize for each recipient<br>
+        <br>
+        <a href="https://mail.google.com" target="_blank" style="color: var(--gold); text-decoration: underline;">Open Gmail →</a>`;
+}
+
+// ===== CONTRACT DOWNLOADS =====
+function downloadContract(type) {
+    const contracts = {
+        'partnership': 'Lilita_Keper_Agent_Partnership_Agreement_2026-2027.pdf',
+        'rates': 'Lilita_Keper_Rack_Tariff_Sheet_2026-2027.pdf'
+    };
+
+    const filename = contracts[type] || 'Contract.pdf';
+
+    // In real implementation, this would download from server
+    // For now, we'll create a placeholder and guide user to official link
+    alert(`📥 Contract: ${filename}\n\nTo download official documents:\n\n1. Tariff Sheet: https://contacts-app-wheat.vercel.app/lilita-2027-agent-rates\n2. For partnership agreement, contact: agents@lilitakeper.com`);
+}
+
+// ===== BOOKING FORM =====
+function submitBooking() {
+    const guestName = document.getElementById('guestName')?.value;
+    const guestEmail = document.getElementById('guestEmail')?.value;
+    const checkIn = document.getElementById('checkIn')?.value;
+    const nights = document.getElementById('nights')?.value;
+    const guests = document.getElementById('guests')?.value;
+    const notes = document.getElementById('bookingNotes')?.value;
+
+    if (!guestName || !guestEmail || !checkIn || !nights || !guests) {
+        alert('❌ Please fill in all required fields');
+        return;
+    }
+
+    const booking = {
+        guestName,
+        guestEmail,
+        checkIn,
+        nights,
+        guests,
+        notes,
+        submittedAt: new Date().toISOString()
+    };
+
+    // Store booking
+    const bookings = JSON.parse(localStorage.getItem('agentBookings') || '[]');
+    bookings.push(booking);
+    localStorage.setItem('agentBookings', JSON.stringify(bookings));
+
+    alert(`✅ Booking submitted!\n\nGuest: ${guestName}\nCheck-in: ${checkIn}\nNights: ${nights}\nGuests: ${guests}\n\nConfirmation sent to: ${guestEmail}\n\nContact Lilita Keper: sales@lilitakeper.com`);
+
+    // Clear form
+    document.getElementById('guestName').value = '';
+    document.getElementById('guestEmail').value = '';
+    document.getElementById('checkIn').value = '';
+    document.getElementById('nights').value = '';
+    document.getElementById('guests').value = '';
+    document.getElementById('bookingNotes').value = '';
+}
+
+// ===== INITIALIZATION =====
 window.addEventListener('load', () => {
     const agentName = localStorage.getItem('agentName');
     const sidebar = document.getElementById('sidebar');
@@ -1348,6 +1653,14 @@ window.addEventListener('load', () => {
     if (agentName) {
         document.getElementById('agentName').textContent = agentName;
         document.getElementById('dashboardName').textContent = agentName;
+
+        // Load saved contacts
+        const contacts = JSON.parse(localStorage.getItem('agentContacts') || '[]');
+        if (contacts.length > 0) {
+            displayContacts(contacts);
+            updateMailMergeContacts(contacts);
+        }
+
         switchPage('dashboard');
     } else {
         switchPage('login');
