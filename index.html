@@ -137,14 +137,25 @@
 
         .auth-page.hidden {
             display: none !important;
-            z-index: -1;
-            visibility: hidden;
+            z-index: -1000 !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
         }
 
-        .landing-page.hidden,
+        .landing-page.hidden {
+            display: none !important;
+            z-index: -1000 !important;
+            visibility: hidden !important;
+        }
+
+        .portal-page {
+            z-index: 100;
+        }
+
         .portal-page.hidden {
             display: none !important;
-            visibility: hidden;
+            z-index: -1000 !important;
+            visibility: hidden !important;
         }
 
         .auth-container {
