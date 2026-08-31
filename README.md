@@ -66,16 +66,20 @@ npm run dev
 
 ## 🦁 Lilita Keper Agent Portal - Hackathon Submission
 
-**All Things Agentic Hackathon 2026** - Autonomous Booking Management System
+**All Things Agentic Hackathon 2026** - Autonomous Booking Management System with Google Gemini AI
 
 ### 📚 Quick Navigation
 
-**Start Here:**
+**START HERE - HACKATHON SUBMISSION:**
 - 🎯 [HACKATHON.md](./HACKATHON.md) - Complete submission overview & executive summary
+- 🤖 [GOOGLE_AI_INTEGRATION.md](./GOOGLE_AI_INTEGRATION.md) - **Gemini 3.5+, Vision, NLP, Speech, Translation, Vertex AI**
 - 🎬 [DEMO_VIDEO_SCRIPT.md](./DEMO_VIDEO_SCRIPT.md) - 5-minute production-ready demo script
 - 📊 [PROCESS_FLOW_A_Z.html](./PROCESS_FLOW_A_Z.html) - Interactive A-Z workflow diagram (26 steps, 8 phases)
+- 🏗️ [ARCHITECTURE_DIAGRAM.html](./ARCHITECTURE_DIAGRAM.html) - System architecture with Google Cloud Stack
 
 **Live Portal:** https://lilita-agent-portal-881829848506.us-central1.run.app
+
+**🎯 Hackathon Requirement:** ✅ **Gemini 2.0 Flash + 1.5 Pro + 6 Google AI Services**
 
 ---
 
