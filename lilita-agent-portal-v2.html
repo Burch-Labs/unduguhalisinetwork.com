@@ -23,9 +23,13 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--cream);
+            background-color: #1a1a1a;
+            background-image:
+                linear-gradient(135deg, rgba(27, 77, 62, 0.9) 0%, rgba(61, 40, 23, 0.9) 50%, rgba(20, 20, 20, 0.95) 100%);
+            background-attachment: fixed;
             color: var(--text-dark);
             line-height: 1.6;
+            min-height: 100vh;
         }
 
         /* ===== LAYOUT WITH SIDEBAR ===== */
@@ -804,11 +808,10 @@
 
     <!-- TABS -->
     <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('overview')">Overview</button>
-        <button class="tab-btn" onclick="switchTab('booking')">📋 New Booking</button>
-        <button class="tab-btn" onclick="switchTab('pricing')">2026-2027 Pricing</button>
-        <button class="tab-btn" onclick="switchTab('contracts')">Contracts & Documents</button>
-        <button class="tab-btn" onclick="switchTab('calendar')">Calendar & Availability</button>
+        <button class="tab-btn active" onclick="switchTab('overview')">📊 Overview</button>
+        <button class="tab-btn" onclick="switchTab('booking')">📋 Book Now</button>
+        <button class="tab-btn" onclick="switchTab('contracts')">📄 Documents</button>
+        <button class="tab-btn" onclick="switchTab('calendar')">📅 Availability</button>
     </div>
 
     <!-- TAB: OVERVIEW -->
@@ -911,137 +914,11 @@
                 <p><strong>Peak Season (Jul-Sep, Dec-Jan):</strong> Game Package $1,215 (single) / $845 (double)</p>
                 <p><strong>Shoulder Season (Jan-Mar, Jun, Oct-Dec):</strong> Game Package $905 (single) / $655 (double)</p>
                 <p><strong>Green Season (Apr-May):</strong> Game Package $745 (single) / $565 (double)</p>
-                <p style="margin-top: 1rem; font-size: 0.85rem; color: #999;">See "2026-2027 Pricing" tab for complete rates</p>
+                <p style="margin-top: 1rem; font-size: 0.85rem; color: #999;">Download complete rates from the Documents tab</p>
             </div>
         </div>
     </div>
 
-    <!-- TAB: PRICING -->
-    <div id="pricing" class="tab-content">
-        <h3 class="section-title">2026-2027 Rack Rates (USD per person, per night)</h3>
-        <p style="margin-bottom: 1.5rem; color: var(--text-dark); font-size: 0.95rem;">Direct Public Rack Rates quoted as per official tariff sheet</p>
-
-        <div class="card">
-            <h4>Peak & Festive Season (Jul-Sep 2026, Dec-Jan 2027)</h4>
-            <table class="pricing-table">
-                <tr>
-                    <th>Package</th>
-                    <th>Single Occupant</th>
-                    <th>Double Sharing</th>
-                </tr>
-                <tr>
-                    <td>Game Package (GP)</td>
-                    <td>$1,215</td>
-                    <td>$845</td>
-                </tr>
-                <tr>
-                    <td>Full Board (AP)</td>
-                    <td>$945</td>
-                    <td>$615</td>
-                </tr>
-            </table>
-        </div>
-
-        <div class="card">
-            <h4>Shoulder Season (Jan-Mar, Jun, Oct-Dec)</h4>
-            <table class="pricing-table">
-                <tr>
-                    <th>Package</th>
-                    <th>Single Occupant</th>
-                    <th>Double Sharing</th>
-                </tr>
-                <tr>
-                    <td>Game Package (GP)</td>
-                    <td>$905</td>
-                    <td>$655</td>
-                </tr>
-                <tr>
-                    <td>Full Board (AP)</td>
-                    <td>$645</td>
-                    <td>$395</td>
-                </tr>
-            </table>
-        </div>
-
-        <div class="card">
-            <h4>Green Season (Apr-May 2026)</h4>
-            <table class="pricing-table">
-                <tr>
-                    <th>Package</th>
-                    <th>Single Occupant</th>
-                    <th>Double Sharing</th>
-                </tr>
-                <tr>
-                    <td>Game Package (GP)</td>
-                    <td>$745</td>
-                    <td>$565</td>
-                </tr>
-                <tr>
-                    <td>Full Board (AP)</td>
-                    <td>$475</td>
-                    <td>$295</td>
-                </tr>
-            </table>
-        </div>
-
-        <div class="card">
-            <h4>Package Definitions</h4>
-            <div style="margin-top: 1rem;">
-                <p><strong>Full Board (AP):</strong> Luxury villa stay, all gourmet meals, complimentary filtered water, tea/coffee, high-speed Wi-Fi, full camp infrastructure access, camp activities (stargazing, ranger talks, yoga, wild shamba tour), and evening childminding.</p>
-                <p style="margin-top: 0.8rem;"><strong>Game Package (GP):</strong> All Full Board inclusions + daily selected house beverages, 5-piece daily laundry, shared daily 4x4 game drives with certified guides, and transfers. 3+ night stays include complimentary night game drives, sunset sundowners, and bush breakfasts.</p>
-            </div>
-        </div>
-
-        <div class="card">
-            <h4>✈️ Supplementary Activities & Services</h4>
-            <table class="pricing-table">
-                <tr>
-                    <th>Activity / Transfer</th>
-                    <th>Adult Rate</th>
-                    <th>Child Rate</th>
-                </tr>
-                <tr>
-                    <td>Dawn Hot Air Balloon Safari (incl. breakfast)</td>
-                    <td>$530</td>
-                    <td>$430</td>
-                </tr>
-                <tr>
-                    <td>Nairobi – Mara Flight (One-Way)</td>
-                    <td>$270</td>
-                    <td>$205</td>
-                </tr>
-                <tr>
-                    <td>Nairobi – Mara Flight (Return)</td>
-                    <td>$360</td>
-                    <td>$270</td>
-                </tr>
-                <tr>
-                    <td>Private 4x4 Cruiser Upgrade (per vehicle/day)</td>
-                    <td colspan="2">$400</td>
-                </tr>
-                <tr>
-                    <td>Private Airstrip Transfer (Ngerende)</td>
-                    <td colspan="2">$100 per car</td>
-                </tr>
-                <tr>
-                    <td>Enonkishu Night Game Drive Entry Fee</td>
-                    <td>$150</td>
-                    <td>$85</td>
-                </tr>
-            </table>
-        </div>
-
-        <div class="card">
-            <h4>📥 Complete Tariff Sheet</h4>
-            <p style="margin-bottom: 1rem;">Download the full official 2026-2027 Rack Tariff Sheet with villa configurations, package inclusions, and booking policies.</p>
-            <a href="https://contacts-app-wheat.vercel.app/lilita-2027-agent-rates" target="_blank" class="btn" style="display: inline-block; text-decoration: none; text-align: center;">📥 Download Full PDF</a>
-        </div>
-
-        <div class="card">
-            <h4>📅 2028 Pricing (Coming Soon)</h4>
-            <p style="color: var(--dark-green); font-style: italic;">2028 rates will be updated and published by Q4 2027. Current 2026-2027 rates apply for all bookings.</p>
-        </div>
-    </div>
 
     <!-- TAB: CONTRACTS -->
     <div id="contracts" class="tab-content">
