@@ -1448,23 +1448,52 @@ function sendMailMerge() {
         selectedContacts = Array.from(checkboxes).map(cb => contacts[cb.value]);
     }
 
-    const emailList = selectedContacts.map(c => c.email).join(', ');
-
     const status = document.getElementById('mailMergeStatus');
     status.style.display = 'block';
-    status.style.background = '#E5F8F0';
-    status.style.borderLeft = '4px solid #00D084';
-    status.innerHTML = `✅ <strong>Campaign Ready to Send</strong><br>
-        Campaign: ${campaignName || 'Untitled'}<br>
-        Recipients: ${selectedContacts.length} contact(s)<br>
-        <br>
-        <strong>To send via Gmail:</strong><br>
-        1. Compose new email<br>
-        2. To: ${emailList}<br>
-        3. Subject: ${subject}<br>
-        4. Copy template and personalize for each recipient<br>
-        <br>
-        <a href="https://mail.google.com" target="_blank" style="color: var(--gold); text-decoration: underline;">Open Gmail →</a>`;
+    status.style.background = '#FFF3CD';
+    status.style.borderLeft = '4px solid #FFC107';
+    status.innerHTML = `⏳ <strong>Sending bulk emails...</strong><br>Recipients: ${selectedContacts.length}<br>Please wait...`;
+
+    // Send emails via backend API
+    fetch('/api/send-bulk-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            recipients: selectedContacts.map(c => ({
+                email: c.email,
+                firstName: c.firstName || c.first_name || '',
+                company: c.company || '',
+                website: c.website || ''
+            })),
+            subject: subject,
+            template: template,
+            campaignName: campaignName
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            status.style.background = '#E5F8F0';
+            status.style.borderLeft = '4px solid #00D084';
+            status.innerHTML = `✅ <strong>Campaign Sent Successfully!</strong><br>
+                Campaign: ${data.campaignName}<br>
+                Sent: ${data.sent} email(s)<br>
+                ${data.failed > 0 ? `Failed: ${data.failed}<br>` : ''}
+                Time: ${new Date().toLocaleString()}<br>
+                <br>
+                <strong>Summary:</strong><br>
+                Recipients: ${data.recipients.join('<br>')}`;
+        } else {
+            status.style.background = '#F8D7DA';
+            status.style.borderLeft = '4px solid #DC3545';
+            status.innerHTML = `❌ <strong>Send Failed</strong><br>${data.error || 'Unknown error'}<br><br><em>${data.message || 'Please check configuration and try again'}</em>`;
+        }
+    })
+    .catch(err => {
+        status.style.background = '#F8D7DA';
+        status.style.borderLeft = '4px solid #DC3545';
+        status.innerHTML = `❌ <strong>Error</strong><br>Failed to send emails: ${err.message}`;
+    });
 }
 
 // ===== CONTRACT DOWNLOADS =====
