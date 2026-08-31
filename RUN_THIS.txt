@@ -1,0 +1,39 @@
+DEPLOYMENT COMMAND - Run this in Google Cloud Shell:
+
+====================================================================
+
+# STEP 1: Navigate and setup
+cd ~/burch-platform
+
+# STEP 2: Build Docker image locally
+docker build -t gcr.io/sparksnairobi-burch-app-prod/lilita-agent-portal:latest .
+
+# STEP 3: Configure Docker for pushing
+gcloud auth configure-docker gcr.io
+
+# STEP 4: Push image to Container Registry
+docker push gcr.io/sparksnairobi-burch-app-prod/lilita-agent-portal:latest
+
+# STEP 5: Deploy to Cloud Run
+gcloud run deploy lilita-agent-portal \
+  --image gcr.io/sparksnairobi-burch-app-prod/lilita-agent-portal:latest \
+  --platform managed \
+  --region us-central1 \
+  --allow-unauthenticated \
+  --port 8080 \
+  --memory 512Mi \
+  --cpu 1
+
+# STEP 6: Get your URL
+gcloud run services describe lilita-agent-portal \
+  --region us-central1 \
+  --format='value(status.url)'
+
+====================================================================
+
+When you see "Service [lilita-agent-portal] revision [xxxxx-uc] has been deployed"
+and your URL appears, the deployment is COMPLETE! 🎉
+
+Test with:
+- Email: agent@lilitakeper.com
+- Password: demo123
