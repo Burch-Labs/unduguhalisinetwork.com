@@ -64,6 +64,124 @@ npm run dev
 
 ---
 
+## 🦁 Lilita Keper Agent Portal - Hackathon Submission
+
+**All Things Agentic Hackathon 2026** - Autonomous Booking Management System
+
+### 📚 Quick Navigation
+
+**Start Here:**
+- 🎯 [HACKATHON.md](./HACKATHON.md) - Complete submission overview & executive summary
+- 🎬 [DEMO_VIDEO_SCRIPT.md](./DEMO_VIDEO_SCRIPT.md) - 5-minute production-ready demo script
+- 📊 [PROCESS_FLOW_A_Z.html](./PROCESS_FLOW_A_Z.html) - Interactive A-Z workflow diagram (26 steps, 8 phases)
+
+**Live Portal:** https://lilita-agent-portal-881829848506.us-central1.run.app
+
+---
+
+## 📖 Complete Documentation Index
+
+### 🎯 **HACKATHON & PRESENTATION MATERIALS**
+| Resource | Purpose |
+|----------|---------|
+| [HACKATHON.md](./HACKATHON.md) | Executive summary, business impact, technical highlights |
+| [DEMO_VIDEO_SCRIPT.md](./DEMO_VIDEO_SCRIPT.md) | 5-minute read-aloud demo script with screen cues |
+| [PROCESS_FLOW_A_Z.html](./PROCESS_FLOW_A_Z.html) | Interactive visual workflow (A→Z, 26 steps, 19 autonomous) |
+| [FEATURES_COMPLETE.md](./FEATURES_COMPLETE.md) | Complete feature list with pricing & capabilities |
+
+### 🎨 **FRONTEND**
+| Resource | Content |
+|----------|---------|
+| [index.html](./index.html) | Landing page with interactive route navigation |
+| `apps/web/` | Next.js frontend application |
+| `apps/web/components/` | React components (auth, bookings, partner portal) |
+| [DESIGN.md](./docs/DESIGN.md) | UI/UX guidelines and component specifications |
+| Baby Brown Branding | Luxury safari aesthetic (baby brown #8B7355, dark green #2D5A3D) |
+
+### ⚙️ **BACKEND**
+| Resource | Content |
+|----------|---------|
+| `apps/web/api/` | API routes and handlers |
+| `apps/actions/` | Server actions and business logic |
+| [API.md](./API.md) | API endpoint documentation |
+| [ENGINEERING.md](./ENGINEERING.md) | Backend architecture & patterns |
+| Email Service | Resend API integration for bulk campaigns |
+| Payment Processing | M-Pesa + Flutterwave payment handlers |
+
+### 🗄️ **DATABASE**
+| Resource | Content |
+|----------|---------|
+| `apps/database/` | Prisma schema and migrations |
+| [DATABASE.md](./DATABASE.md) | Database structure & relationships |
+| `apps/database/schema.prisma` | Complete data model |
+| `apps/database/scripts/` | Seed data & database utilities |
+| PostgreSQL 14+ | Production database with Neon support |
+
+### 🚀 **DEPLOYMENT**
+| Resource | Purpose |
+|----------|---------|
+| [CLOUD_RUN_DEPLOYMENT.md](./CLOUD_RUN_DEPLOYMENT.md) | **Primary:** Google Cloud Run setup (current production) |
+| [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) | General deployment strategies |
+| [DEPLOYMENT_STEPS.md](./DEPLOYMENT_STEPS.md) | Step-by-step deployment walkthrough |
+| [QUICK_DEPLOY.md](./QUICK_DEPLOY.md) | Fast deployment checklist |
+| [SELF_HOSTING_GUIDE.md](./SELF_HOSTING_GUIDE.md) | Self-hosted VPS/Docker deployment |
+| [RENDER_DEPLOYMENT.md](./RENDER_DEPLOYMENT.md) | Render.com deployment guide |
+| [DOWNLOAD_INSTRUCTIONS.md](./DOWNLOAD_INSTRUCTIONS.md) | Offline/custom hosting |
+| Docker | Containerized deployment ready |
+| Google Cloud Console | Monitoring, logging, auto-scaling |
+
+### 🧪 **TESTING & QA**
+| Resource | Content |
+|----------|---------|
+| [FINAL_TESTING_CHECKLIST.md](./FINAL_TESTING_CHECKLIST.md) | Complete testing matrix (15 categories) |
+| [TESTING_AND_DEPLOYMENT.md](./TESTING_AND_DEPLOYMENT.md) | QA procedures and validation steps |
+
+### 📋 **CONFIGURATION & SETUP**
+| Resource | Content |
+|----------|---------|
+| [ENVIRONMENT.md](./ENVIRONMENT.md) | Environment variables reference |
+| [SETUP_GUIDE.md](./SETUP_GUIDE.md) | Initial project setup |
+| [CREDENTIALS_TEMPLATE.txt](./CREDENTIALS_TEMPLATE.txt) | Template for required API keys |
+| `.env.example` | Environment template |
+| `.env.test` | Test environment configuration |
+
+### 🔐 **SECURITY**
+| Resource | Content |
+|----------|---------|
+| [SECURITY.md](./SECURITY.md) | Security best practices & checklist |
+| [SECURITY_CHECKLIST.md](./SECURITY_CHECKLIST.md) | Comprehensive security audit |
+| HTTPS Enforced | Production deployment requires HTTPS |
+| Input Sanitization | XSS & SQL injection prevention |
+
+### 📊 **BUSINESS & STRATEGY**
+| Resource | Content |
+|----------|---------|
+| [VISION.md](./VISION.md) | Product vision & long-term roadmap |
+| [BUSINESS_MODEL.md](./BUSINESS_MODEL.md) | Revenue model & unit economics |
+| [ROADMAP.md](./ROADMAP.md) | Feature roadmap Q3–Q4 2026 |
+| [SUCCESS_METRICS.md](./SUCCESS_METRICS.md) | KPIs and measurement framework |
+| [PRODUCT_REQUIREMENTS.md](./PRODUCT_REQUIREMENTS.md) | Detailed product requirements |
+| [LAUNCH_CHECKLIST.md](./LAUNCH_CHECKLIST.md) | Pre-launch verification |
+
+### 👥 **TEAM & OPERATIONS**
+| Resource | Content |
+|----------|---------|
+| [AI-TEAM.md](./AI-TEAM.md) | AI agent roles and responsibilities |
+| [AGENT-MANAGEMENT.md](./AGENT-MANAGEMENT.md) | Agent deployment & lifecycle |
+| [CONTRIBUTING.md](./CONTRIBUTING.md) | Contribution guidelines |
+
+### 📚 **ADDITIONAL RESOURCES**
+| Resource | Content |
+|----------|---------|
+| [ARCHITECTURE.md](./ARCHITECTURE.md) | System architecture overview |
+| [TECH_STACK.md](./TECH_STACK.md) | Technology stack details |
+| [PROJECT_PLAN.md](./PROJECT_PLAN.md) | Development timeline |
+| [CHANGELOG.md](./CHANGELOG.md) | Version history & updates |
+| [FIXES_SUMMARY.md](./FIXES_SUMMARY.md) | Recent bug fixes & improvements |
+| [DEPLOYMENT_AUDIT_REPORT.md](./DEPLOYMENT_AUDIT_REPORT.md) | Post-deployment audit |
+
+---
+
 ## 🌐 Navigation Index
 
 **Start here:** Open [INDEX.html](./INDEX.html) in a browser for interactive navigation of all routes.
