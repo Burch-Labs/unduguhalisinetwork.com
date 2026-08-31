@@ -12,6 +12,9 @@ RUN npm install --legacy-peer-deps
 COPY server.js .
 COPY index.html .
 
+# Copy public assets (logos, images, etc)
+COPY apps/web/public/ ./public/
+
 # Set environment
 ENV NODE_ENV=production
 ENV PORT=8080

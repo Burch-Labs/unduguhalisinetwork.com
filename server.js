@@ -4,7 +4,11 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 8080;
 
+// Serve static files from root directory
 app.use(express.static(path.join(__dirname)));
+
+// Serve public assets (logos, images, etc)
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/health', (req, res) => {
     res.json({ status: 'healthy', service: 'Lilita Keper Portal' });
