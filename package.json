@@ -1,19 +1,22 @@
 {
-  "name": "burch-platform",
-  "private": true,
+  "name": "lilita-agent-portal",
   "version": "1.0.0",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
+  "description": "Lilita Keper Agent Portal - Masai Mara Luxury Safari",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "cd apps/web && npm run dev",
-    "build": "cd apps/web && npm run build"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [
+    "lilita",
+    "keper",
+    "agent",
+    "portal",
+    "safari"
+  ],
+  "author": "Lilita Keper",
+  "license": "ISC",
   "dependencies": {
-    "caniuse-lite": "1.0.30001806",
-    "express": "^4.18.2",
-    "resend": "^6.17.2"
+    "express": "^4.18.2"
   }
 }
