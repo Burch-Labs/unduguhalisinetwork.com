@@ -10,7 +10,7 @@ RUN npm install --legacy-peer-deps
 
 # Copy application files
 COPY server.js .
-COPY *.html .
+COPY index.html .
 
 # Set environment
 ENV NODE_ENV=production
