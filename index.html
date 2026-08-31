@@ -697,6 +697,48 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        .price-display {
+            margin: 10px 0;
+            font-size: 0.9rem;
+            padding: 8px;
+            background: #F5F1E8;
+            border-radius: 4px;
+            border-left: 3px solid #8B6F47;
+        }
+
+        .tariff-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: white;
+        }
+
+        .tariff-table th, .tariff-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .tariff-table th {
+            background: #8B6F47;
+            color: white;
+            font-weight: bold;
+        }
+
+        .tariff-table tr:hover {
+            background: #F5F1E8;
+        }
+
+        .sto-badge {
+            display: inline-block;
+            background: #4CAF50;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 0.85rem;
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body>
@@ -806,6 +848,14 @@
                 <div class="stat-card">
                     <h3>Total Bookings</h3>
                     <div class="number" id="total-bookings">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Revenue</h3>
+                    <div class="number" id="total-revenue">$0.00</div>
+                </div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);">
+                    <h3 style="color: white;">Your Commission (10%)</h3>
+                    <div class="number" id="total-commission" style="color: #76FF03;">$0.00</div>
                 </div>
                 <div class="stat-card">
                     <h3>Contacts</h3>
@@ -975,20 +1025,117 @@ Lilita Keper Team</textarea>
 
         <!-- DOCUMENTS SECTION -->
         <div id="documents" class="section">
-            <div style="background: rgba(255,255,255,0.95); padding: 2rem; border-radius: 12px; max-width: 600px;">
-                <h2 style="color: var(--dark-brown); margin-bottom: 1.5rem;">Documents</h2>
+            <div style="background: rgba(255,255,255,0.95); padding: 2rem; border-radius: 12px;">
+                <h2 style="color: var(--dark-brown); margin-bottom: 1.5rem;">💰 Tariff & Documents</h2>
+
+                <h3 style="color: var(--dark-brown); margin-bottom: 1rem;">2026-2027 Season Rates (All-Inclusive)</h3>
+                <p style="color: #666; margin-bottom: 1rem; font-size: 0.9rem;"><strong>All rates are per person per night</strong></p>
+
+                <table class="tariff-table">
+                    <thead>
+                        <tr>
+                            <th>Season</th>
+                            <th>Dates</th>
+                            <th>Single Occupant</th>
+                            <th>Double Sharing</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Green Season</strong></td>
+                            <td>Apr 1 - May 31, 2026</td>
+                            <td>$475</td>
+                            <td>$295</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Shoulder Season</strong></td>
+                            <td>Jan 4 - Mar 31, Jun 1-30, Oct 1 - Dec 20, Jan 4 - Mar 31, 2027</td>
+                            <td>$645</td>
+                            <td>$395</td>
+                        </tr>
+                        <tr style="background: #FFF3CD;">
+                            <td><strong>Peak & Festive Season</strong></td>
+                            <td>Jul 1 - Sep 30, Dec 21 - Jan 3, 2027</td>
+                            <td>$945</td>
+                            <td>$615</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div style="margin-top: 1.5rem; padding: 1rem; background: #E8F5E9; border-radius: 6px; border-left: 4px solid #4CAF50;">
+                    <h4 style="color: #2E7D32; margin-bottom: 0.5rem;">🎯 STO (Straight Ticketable Office) Rates</h4>
+                    <p style="color: #555; font-size: 0.9rem;">All rates listed above are <strong>Rack Rates</strong>. STO rates receive a <strong>20% discount</strong> on the rack rates shown.</p>
+                    <p style="color: #555; font-size: 0.9rem; margin-top: 0.5rem;"><strong>Example:</strong> If Shoulder Season Double is $395 (Rack), STO rate = $316/person/night</p>
+                </div>
+
+                <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid #e0e0e0;">
 
                 <div style="margin-bottom: 1.5rem;">
-                    <h3 style="color: var(--dark-brown); margin-bottom: 0.5rem;">📄 Rate Sheet</h3>
-                    <p style="color: #666; margin-bottom: 1rem;">Download our official 2027 rack rates and terms.</p>
-                    <a href="https://contacts-app-wheat.vercel.app/lilita-2027-agent-rates" target="_blank" style="display: inline-block; padding: 0.75rem 1.5rem; background: var(--baby-brown); color: white; text-decoration: none; border-radius: 6px; font-weight: 600;">Download Rates PDF</a>
+                    <h3 style="color: var(--dark-brown); margin-bottom: 0.5rem;">📄 Complete Rate Sheet</h3>
+                    <p style="color: #666; margin-bottom: 1rem;">Download our official 2027 rack rates PDF and detailed terms.</p>
+                    <a href="https://contacts-app-wheat.vercel.app/lilita-2027-agent-rates" target="_blank" style="display: inline-block; padding: 0.75rem 1.5rem; background: var(--baby-brown); color: white; text-decoration: none; border-radius: 6px; font-weight: 600;">📥 Download Rates PDF</a>
                 </div>
 
                 <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid #e0e0e0;">
 
                 <div>
                     <h3 style="color: var(--dark-brown); margin-bottom: 0.5rem;">🏕️ Tent Information</h3>
-                    <p style="color: #666;">See the Tents & Availability section for details on our 6 luxury tented suites.</p>
+                    <p style="color: #666;">See the "Tents & Availability" section for details on our 6 luxury tented suites and real-time availability.</p>
+                </div>
+
+                <hr style="margin: 2rem 0; border: none; border-top: 2px solid var(--dark-brown);">
+
+                <h3 style="color: var(--dark-brown); margin-bottom: 1rem; margin-top: 2rem;">📜 Terms & Conditions (Rack & STO)</h3>
+
+                <div style="background: #FFF8DC; padding: 1.5rem; border-radius: 6px; border-left: 4px solid #D4AF37;">
+                    <h4 style="color: #8B6F47; margin-bottom: 1rem;">Lilita Keper Luxury Safari Lodge - Booking Terms</h4>
+
+                    <div style="font-size: 0.85rem; line-height: 1.8; color: #333;">
+                        <p><strong>1. RACK RATES vs STO RATES</strong></p>
+                        <p>Rack rates are the published full rates. STO (Straight Ticketable Office) rates offer a 20% discount on all rack rates listed above, applicable for travel agents booking directly.</p>
+
+                        <p style="margin-top: 1rem;"><strong>2. BOOKING CONFIRMATION</strong></p>
+                        <p>All bookings must be confirmed with a 30% deposit within 7 days. Final balance due 60 days before arrival.</p>
+
+                        <p style="margin-top: 1rem;"><strong>3. CANCELLATION POLICY</strong></p>
+                        <p>• Cancellation 90+ days before arrival: Full refund minus $100 administrative fee<br>
+                        • Cancellation 60-89 days: 50% refund<br>
+                        • Cancellation 30-59 days: 25% refund<br>
+                        • Cancellation less than 30 days: No refund</p>
+
+                        <p style="margin-top: 1rem;"><strong>4. INCLUSIONS (All-Inclusive Package)</strong></p>
+                        <p>• Accommodation in luxury tent/villa<br>
+                        • All meals (breakfast, lunch, dinner)<br>
+                        • Selected premium beverages<br>
+                        • Game drives and wildlife activities<br>
+                        • Airport transfers<br>
+                        • WiFi access</p>
+
+                        <p style="margin-top: 1rem;"><strong>5. EXCLUSIONS</strong></p>
+                        <p>• International flights<br>
+                        • Travel insurance (strongly recommended)<br>
+                        • Personal expenses and tips<br>
+                        • Additional activities beyond standard offerings</p>
+
+                        <p style="margin-top: 1rem;"><strong>6. SPECIAL REQUESTS</strong></p>
+                        <p>Special dietary requirements, celebrations, or custom arrangements should be noted at booking and are subject to confirmation.</p>
+
+                        <p style="margin-top: 1rem;"><strong>7. MINIMUM STAY</strong></p>
+                        <p>Peak season bookings require minimum 3-night stay. Off-season minimum 2 nights available.</p>
+
+                        <p style="margin-top: 1rem;"><strong>8. GROUP BOOKINGS</strong></p>
+                        <p>Groups of 8+ may qualify for additional discounts. Contact sales for quote.</p>
+
+                        <p style="margin-top: 1rem;"><strong>9. STO 20% DISCOUNT TERMS</strong></p>
+                        <p>STO discount applies to published rack rates only. Not valid with other promotions. Valid for bookings made through registered travel agents. Proof of agent credentials may be required.</p>
+
+                        <p style="margin-top: 1rem;"><strong>10. FORCE MAJEURE</strong></p>
+                        <p>In case of unforeseen circumstances (natural disasters, pandemics, etc.), we will work with guests on alternative dates or provide full refunds.</p>
+
+                        <p style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #ccc;">
+                            <em>For questions about rates or terms, contact our reservations team or your travel agent.</em>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1158,6 +1305,61 @@ function switchTab(tab) {
     }
 }
 
+// ===== TARIFF SHEET =====
+const tariff = {
+    'Green Season': {
+        dates: 'Apr 1 - May 31, 2026',
+        rates: {
+            singleAP: 475,
+            doubleAP: 295,
+            singleGP: 745,
+            doubleGP: 565
+        }
+    },
+    'Shoulder Season': {
+        dates: 'Jan 4 - Mar 31 & Jun 1-30 & Oct 1 - Dec 20 & Jan 4 - Mar 31, 2027',
+        rates: {
+            singleAP: 645,
+            doubleAP: 395,
+            singleGP: 905,
+            doubleGP: 655
+        }
+    },
+    'Peak & Festive Season': {
+        dates: 'Jul 1 - Sep 30 & Dec 21 - Jan 3, 2027',
+        rates: {
+            singleAP: 945,
+            doubleAP: 615,
+            singleGP: 1215,
+            doubleGP: 845
+        }
+    }
+};
+
+function getSeason(date) {
+    const d = new Date(date);
+    const month = d.getMonth() + 1;
+    const day = d.getDate();
+    const dateStr = `${month}-${day}`;
+
+    // Peak & Festive: Jul-Sep, Dec 21 - Jan 3
+    if ((month >= 7 && month <= 9) || (month === 12 && day >= 21) || (month === 1 && day <= 3)) {
+        return 'Peak & Festive Season';
+    }
+    // Green: Apr-May
+    if (month >= 4 && month <= 5) {
+        return 'Green Season';
+    }
+    // Shoulder: Jan-Mar, Jun, Oct-Dec (except peak dates)
+    return 'Shoulder Season';
+}
+
+function getRatePerPerson(date, occupancy = 'double') {
+    const season = getSeason(date);
+    const rateType = occupancy === 'single' ? 'doubleAP' : 'doubleAP'; // Using AP (All-Inclusive)
+    return tariff[season].rates[rateType];
+}
+
 // ===== TENTS =====
 function renderTents() {
     const tents = [
@@ -1172,6 +1374,8 @@ function renderTents() {
     let html = '';
     tents.forEach(tent => {
         const isAvailable = !state.bookings.some(b => b.tent === tent.name && isDateOverlap(new Date(b.checkin), new Date(b.checkout), new Date(), new Date()));
+        const rackRate = getRatePerPerson(new Date());
+        const stoRate = (rackRate * 0.8).toFixed(2);
 
         html += `
             <div class="tent-card">
@@ -1180,6 +1384,10 @@ function renderTents() {
                     <h3>${tent.name}</h3>
                     <div class="tent-capacity">${tent.capacity}</div>
                     <div class="tent-capacity">${tent.amenities}</div>
+                    <div class="price-display">
+                        <div><strong>Rack:</strong> $${rackRate}/person/night</div>
+                        <div style="color: #4CAF50;"><strong>STO:</strong> $${stoRate}/person/night (20% off)</div>
+                    </div>
                     <div class="availability-badge ${isAvailable ? 'available' : 'unavailable'}">
                         ${isAvailable ? '✓ Available' : '✗ Booked'}
                     </div>
@@ -1198,13 +1406,29 @@ function createBooking() {
     const email = document.getElementById('booking-email').value;
     const checkin = document.getElementById('booking-checkin').value;
     const checkout = document.getElementById('booking-checkout').value;
-    const guests = document.getElementById('booking-guests').value;
+    const guests = parseInt(document.getElementById('booking-guests').value);
     const tent = document.getElementById('booking-tent').value;
 
     if (!name || !email || !checkin || !checkout || !guests || !tent) {
         showStatus('booking-status', 'Please fill all fields', 'error');
         return;
     }
+
+    // Calculate nights and rates
+    const checkinDate = new Date(checkin);
+    const checkoutDate = new Date(checkout);
+    const nights = Math.ceil((checkoutDate - checkinDate) / (1000 * 60 * 60 * 24));
+
+    if (nights <= 0) {
+        showStatus('booking-status', 'Checkout date must be after check-in', 'error');
+        return;
+    }
+
+    const rackRatePerPerson = getRatePerPerson(checkin);
+    const stoRatePerPerson = (rackRatePerPerson * 0.8).toFixed(2);
+    const rackTotal = rackRatePerPerson * guests * nights;
+    const stoTotal = stoRatePerPerson * guests * nights;
+    const commission = (rackTotal * 0.1).toFixed(2);
 
     const booking = {
         id: Date.now(),
@@ -1214,6 +1438,12 @@ function createBooking() {
         checkout,
         guests,
         tent,
+        nights,
+        rackRatePerPerson,
+        stoRatePerPerson,
+        rackTotal: rackTotal.toFixed(2),
+        stoTotal: stoTotal.toFixed(2),
+        commission,
         createdAt: new Date().toISOString()
     };
 
@@ -1236,7 +1466,7 @@ function generateBookingPDF(booking) {
     const element = document.createElement('div');
     element.innerHTML = `
         <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px;">
-            <h1 style="color: #C9A876; text-align: center;">Lilita Keper</h1>
+            <h1 style="color: #C9A876; text-align: center;">🦁 LILITA KEPER</h1>
             <h2 style="text-align: center; color: #8B6F47;">Booking Confirmation</h2>
             <hr style="border: none; border-top: 2px solid #C9A876; margin: 20px 0;">
 
@@ -1249,11 +1479,22 @@ function generateBookingPDF(booking) {
             <p><strong>Check-in:</strong> ${new Date(booking.checkin).toDateString()}</p>
             <p><strong>Check-out:</strong> ${new Date(booking.checkout).toDateString()}</p>
             <p><strong>Number of Guests:</strong> ${booking.guests}</p>
+            <p><strong>Number of Nights:</strong> ${booking.nights}</p>
+
+            <h3>Pricing (per person/night)</h3>
+            <p><strong>Rack Rate:</strong> $${booking.rackRatePerPerson}</p>
+            <p><strong>STO Rate (20% off):</strong> $${booking.stoRatePerPerson}</p>
+
+            <h3>Total Cost</h3>
+            <p><strong>Rack Total:</strong> $${booking.rackTotal}</p>
+            <p><strong>STO Total:</strong> $${booking.stoTotal}</p>
+            <p style="color: #8B6F47; font-weight: bold;"><strong>Commission (10%):</strong> $${booking.commission}</p>
 
             <hr style="border: none; border-top: 2px solid #C9A876; margin: 20px 0;">
             <p style="text-align: center; color: #666; font-size: 12px;">
                 Confirmation #${booking.id}<br>
-                Booking Date: ${new Date(booking.createdAt).toLocaleString()}
+                Booking Date: ${new Date(booking.createdAt).toLocaleString()}<br>
+                <em>Thank you for choosing Lilita Keper Luxury Safari Lodge!</em>
             </p>
         </div>
     `;
@@ -1510,6 +1751,19 @@ function updateStats() {
     document.getElementById('total-bookings').textContent = state.bookings.length;
     document.getElementById('total-contacts').textContent = state.contacts.length;
     document.getElementById('total-campaigns').textContent = state.campaigns.length;
+
+    // Calculate total revenue and commission
+    let totalRevenue = 0;
+    let totalCommission = 0;
+    state.bookings.forEach(b => {
+        totalRevenue += parseFloat(b.rackTotal || 0);
+        totalCommission += parseFloat(b.commission || 0);
+    });
+
+    const revElem = document.getElementById('total-revenue');
+    const commElem = document.getElementById('total-commission');
+    if (revElem) revElem.textContent = `$${totalRevenue.toFixed(2)}`;
+    if (commElem) commElem.textContent = `$${totalCommission.toFixed(2)}`;
 }
 
 function isDateOverlap(start1, end1, start2, end2) {
