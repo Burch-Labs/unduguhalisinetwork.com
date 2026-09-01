@@ -1,10 +1,11 @@
 @echo off
-REM Daily Hotel Rate Scraper - ScrapingBee Automated Version
-REM This script runs the automated scraper and can be scheduled in Windows Task Scheduler
+REM Daily Hotel Rate Entry Script
+REM Runs daily_rates.py to collect competitor hotel rates
+REM Schedule this in Windows Task Scheduler to run daily at 8 AM
 
 echo.
 echo ========================================
-echo Hotel Rate Scraper - Automated
+echo DAILY HOTEL RATE ENTRY
 echo Time: %date% %time%
 echo ========================================
 echo.
@@ -20,30 +21,19 @@ if errorlevel 1 (
     exit /b 1
 )
 
-REM Check if required packages are installed
-python -c "import requests" >nul 2>&1
-if errorlevel 1 (
-    echo Installing required packages...
-    pip install requests
-)
-
-REM Run the scraper
-echo Running automated scraper...
-python hotel_rate_scraper_automated.py
+REM Run the daily rates script
+echo Running daily rate entry...
+python daily_rates.py
 
 if errorlevel 1 (
-    echo ERROR: Scraper failed
+    echo ERROR: Script failed
+    pause
     exit /b 1
 )
 
 echo.
-echo Scraper completed successfully!
-echo Data saved to competitor_rates.csv
+echo Rates saved successfully to competitor_rates.csv
 echo.
-
-REM Optionally start dashboard
-REM Uncomment the line below to open Streamlit dashboard after scraping
-REM start http://localhost:8501
-REM streamlit run dashboard_fixed.py
+pause
 
 exit /b 0
