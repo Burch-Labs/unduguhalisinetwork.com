@@ -1,0 +1,7 @@
+{
+  "scrapingbee_api_key": "your_api_key_here",
+  "schedule": {
+    "time": "08:00",
+    "frequency": "daily"
+  }
+}
