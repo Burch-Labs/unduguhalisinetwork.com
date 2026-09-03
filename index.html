@@ -2018,6 +2018,7 @@
             <div class="menu-item" onclick="switchTab('documents'); closeSidebarMobile();">📄 Documents</div>
             <div class="menu-item" onclick="switchTab('tents'); closeSidebarMobile();">📅 Availability</div>
             <div class="menu-item" onclick="switchTab('contacts'); closeSidebarMobile();">👥 Contacts</div>
+            <div class="menu-item" onclick="switchTab('signatures'); closeSidebarMobile();">📧 Signatures</div>
             <div class="menu-item" onclick="switchTab('mailmerge'); closeSidebarMobile();">✉️ Mail-Merge</div>
         </div>
 
@@ -2334,11 +2335,23 @@
         <!-- CONTACTS SECTION -->
         <div id="contacts" class="section">
             <div class="form-container">
-                <h2>Manage Contacts</h2>
-                <div class="upload-area" onclick="document.getElementById('csv-upload').click()">
+                <h2>📥 Add Contacts</h2>
+                <p style="color: #666; margin-bottom: 1rem;">Bulk import contacts with optional categorization and agent classification</p>
+
+                <!-- Paste Text Option -->
+                <div style="margin-bottom: 1.5rem; padding: 1.5rem; background: #F9F6F1; border-radius: 8px;">
+                    <label style="font-weight: 600; color: var(--dark-brown);">📋 Paste Multiple Contacts</label>
+                    <p style="font-size: 0.85rem; color: #666; margin: 0.5rem 0;">Each line: Email, FirstName, Company, Category, AgentType<br>(Category and AgentType are optional)</p>
+                    <textarea id="bulk-contacts-paste" placeholder="jane@company.com, Jane Doe, Sights Beyond, Leisure, International Agent&#10;john@company.com, John Smith, 61 Travel" style="width: 100%; height: 100px; padding: 1rem; border: 2px solid #ddd; border-radius: 6px; font-family: monospace; font-size: 0.9rem;"></textarea>
+                    <button class="book-btn" onclick="bulkAddContacts()" style="margin-top: 0.75rem; background: #2E7D32;">➕ Add from Pasted Text</button>
+                </div>
+
+                <!-- CSV Upload Option -->
+                <div style="text-align: center; margin: 1.5rem 0; color: #999;">— OR —</div>
+                <div class="upload-area" onclick="document.getElementById('csv-upload').click()" style="margin-bottom: 1rem;">
                     <div style="font-size: 2rem; margin-bottom: 0.5rem;">📁</div>
                     <p>Click or drag CSV file here</p>
-                    <p style="font-size: 0.9rem; color: #999; margin-top: 0.5rem;">Format: email, firstName, company, website</p>
+                    <p style="font-size: 0.9rem; color: #999; margin-top: 0.5rem;">Format: email, firstName, company, category, agentType</p>
                 </div>
                 <input type="file" id="csv-upload" accept=".csv" style="display: none;" onchange="handleCSVUpload()">
                 <div id="upload-status" class="status-message"></div>
@@ -2349,12 +2362,37 @@
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
                         <h2 style="color: var(--dark-brown); margin: 0;">👥 Contacts Directory</h2>
                         <div class="contacts-stat-item" style="margin: 0;">
-                            <span id="contact-count">0</span> contacts loaded
+                            <span id="contact-count">0</span> contacts
                         </div>
                     </div>
 
-                    <div class="contacts-filter">
-                        <input type="text" id="contacts-search" placeholder="🔍 Search by name, company, or email..." onkeyup="filterContacts()">
+                    <!-- Filters Section -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                        <div>
+                            <label style="font-size: 0.85rem; color: #666; font-weight: 600;">🔍 Search</label>
+                            <input type="text" id="contacts-search" placeholder="Name, company, or email..." onkeyup="filterContacts()" style="width: 100%; padding: 0.6rem; border: 2px solid #E8DFD5; border-radius: 6px;">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.85rem; color: #666; font-weight: 600;">📂 Account Category</label>
+                            <select id="contacts-category-filter" onchange="filterContacts()" style="width: 100%; padding: 0.6rem; border: 2px solid #E8DFD5; border-radius: 6px;">
+                                <option value="">All Categories</option>
+                                <option value="Leisure">Leisure</option>
+                                <option value="Corporate">Corporate</option>
+                                <option value="Government">Government</option>
+                                <option value="Embassy">Embassy</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size: 0.85rem; color: #666; font-weight: 600;">🤝 Agent Type</label>
+                            <select id="contacts-agent-filter" onchange="filterContacts()" style="width: 100%; padding: 0.6rem; border: 2px solid #E8DFD5; border-radius: 6px;">
+                                <option value="">All Agent Types</option>
+                                <option value="Local Agent">Local Agent</option>
+                                <option value="International Agent">International Agent</option>
+                            </select>
+                        </div>
+                        <div style="display: flex; align-items: flex-end; gap: 0.5rem;">
+                            <button class="secondary" onclick="clearContactFilters()" style="flex: 1; background: #ccc;">Clear Filters</button>
+                        </div>
                     </div>
 
                     <div class="quick-actions">
@@ -2372,6 +2410,8 @@
                                 <th>Email</th>
                                 <th>Name</th>
                                 <th>Company</th>
+                                <th>📂 Category</th>
+                                <th>🤝 Agent Type</th>
                                 <th style="color: #FFD700;">🌐 Website</th>
                             </tr>
                         </thead>
@@ -2382,36 +2422,109 @@
             </div>
         </div>
 
-        <!-- MAIL-MERGE SECTION -->
-        <div id="mailmerge" class="section">
+        <!-- SIGNATURES SECTION -->
+        <div id="signatures" class="section">
             <div style="background: linear-gradient(135deg, #F9F6F1 0%, #F5F1E8 100%); padding: 2rem; border-radius: 12px; margin-bottom: 2rem;">
-                <h1 style="color: var(--dark-brown); margin: 0 0 0.5rem 0; font-size: 2.5rem;">✉️ Advanced Email Campaign</h1>
-                <p style="color: #666; margin: 0; font-size: 1rem;">Professional email marketing with smart parsing and bulk sending</p>
+                <h1 style="color: var(--dark-brown); margin: 0 0 0.5rem 0; font-size: 2.5rem;">📧 Email Signatures</h1>
+                <p style="color: #666; margin: 0; font-size: 1rem;">Save and reuse professional email signatures with personalization</p>
             </div>
 
             <div class="form-container">
-                <!-- Step 1: Add Emails -->
+                <!-- Add Signature -->
                 <div style="background: linear-gradient(135deg, #E3F2FD 0%, #F0F8FF 100%); padding: 2rem; border-radius: 12px; margin-bottom: 2rem; border-left: 5px solid #1976d2; box-shadow: 0 4px 12px rgba(25, 118, 210, 0.1);">
-                    <h3 style="color: #1565c0; margin-top: 0; font-size: 1.3rem;">📋 Step 1: Add Email Recipients</h3>
-
-                    <!-- Paste Emails -->
-                    <div style="margin-bottom: 1.5rem;">
-                        <label style="font-weight: 600; color: #333;">📋 Paste Emails</label>
-                        <p style="font-size: 0.85rem; color: #666; margin: 0.5rem 0;">Paste emails in any format: john@example.com, John Smith <john@example.com>, or john.smith@example.com</p>
-                        <textarea id="paste-emails" placeholder="Paste email addresses here (one per line or comma-separated)..." style="width: 100%; height: 120px; padding: 1rem; border: 2px solid #ddd; border-radius: 6px; font-family: 'Courier New', monospace; font-size: 0.9rem;" onkeyup="validatePastedEmails()"></textarea>
-                        <button class="book-btn" onclick="parseAndAddEmails()" style="margin-top: 0.75rem; background: #1976d2;">➕ Parse & Add Emails</button>
+                    <h3 style="color: #1565c0; margin-top: 0; font-size: 1.3rem;">➕ Create New Signature</h3>
+                    <div class="form-row full">
+                        <label>Label (for reference)</label>
+                        <input type="text" id="sig-label" placeholder="e.g., Rehema — Sales">
                     </div>
-
-                    <!-- OR Upload CSV -->
-                    <div style="text-align: center; margin: 1.5rem 0; color: #999;">— OR —</div>
-                    <div style="margin-bottom: 1.5rem;">
-                        <label style="font-weight: 600; color: #333;">📁 Upload CSV File</label>
-                        <p style="font-size: 0.85rem; color: #666; margin: 0.5rem 0;">Upload CSV with columns: Email, FirstName, Company (optional)</p>
-                        <div style="display: flex; gap: 1rem; align-items: center;">
-                            <input type="file" id="csv-file-mailmerge" accept=".csv" onchange="handleCSVUploadMailMerge()" style="flex: 1; padding: 0.75rem; border: 2px solid #ddd; border-radius: 6px;">
-                            <button class="book-btn" onclick="document.getElementById('csv-file-mailmerge').click()" style="background: #1976d2;">📤 Upload</button>
+                    <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div>
+                            <label>Full Name</label>
+                            <input type="text" id="sig-name" placeholder="e.g., Jane Doe">
+                        </div>
+                        <div>
+                            <label>Title</label>
+                            <input type="text" id="sig-title" placeholder="e.g., Sales Manager">
                         </div>
                     </div>
+                    <div class="form-row full">
+                        <label>Signature Text</label>
+                        <p style="font-size: 0.85rem; color: #666; margin: 0.5rem 0 0 0;">This is the exact text that will be added to emails</p>
+                        <textarea id="sig-block" rows="4" placeholder="Kind regards,&#10;&#10;Jane Doe&#10;Lilita Keper — Luxury Safari&#10;jane@lilita.com&#10;+254 20 226 5000" style="width: 100%; padding: 1rem; border: 2px solid #ddd; border-radius: 6px; font-family: 'Courier New', monospace;"></textarea>
+                    </div>
+                    <button class="book-btn" onclick="addSignature()" style="background: #1976d2;">Save Signature</button>
+                </div>
+
+                <!-- Saved Signatures -->
+                <div style="background: linear-gradient(135deg, #FFF8E1 0%, #FFF9C4 100%); padding: 2rem; border-radius: 12px; border-left: 5px solid #FF9800; box-shadow: 0 4px 12px rgba(255, 152, 0, 0.1);">
+                    <h3 style="color: #F57C00; margin-top: 0; font-size: 1.3rem;">📋 Your Signatures</h3>
+                    <div id="signatures-list" style="margin-top: 1rem;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIL-MERGE SECTION -->
+        <div id="mailmerge" class="section">
+            <div style="background: linear-gradient(135deg, #F9F6F1 0%, #F5F1E8 100%); padding: 2rem; border-radius: 12px; margin-bottom: 2rem;">
+                <h1 style="color: var(--dark-brown); margin: 0 0 0.5rem 0; font-size: 2.5rem;">✉️ Mail-Merge Campaign</h1>
+                <p style="color: #666; margin: 0; font-size: 1rem;">Send personalized emails to selected contacts with filtering by category and agent type</p>
+            </div>
+
+            <div class="form-container">
+                <!-- Step 1: Select Recipients from Contacts -->
+                <div style="background: linear-gradient(135deg, #E3F2FD 0%, #F0F8FF 100%); padding: 2rem; border-radius: 12px; margin-bottom: 2rem; border-left: 5px solid #1976d2; box-shadow: 0 4px 12px rgba(25, 118, 210, 0.1);">
+                    <h3 style="color: #1565c0; margin-top: 0; font-size: 1.3rem;">📋 Step 1: Select Recipients</h3>
+                    <p style="color: #666; margin: 0.5rem 0 1.5rem 0; font-size: 0.9rem;">Use filters to narrow down your contact list, then select who to email</p>
+
+                    <!-- Filter Options -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                        <div>
+                            <label style="font-size: 0.85rem; color: #666; font-weight: 600;">🔍 Search</label>
+                            <input type="text" id="mailmerge-search" placeholder="Name, company..." onkeyup="renderMailMergeContacts()" style="width: 100%; padding: 0.6rem; border: 2px solid #E8DFD5; border-radius: 6px;">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.85rem; color: #666; font-weight: 600;">📂 Account Category</label>
+                            <select id="mailmerge-category-filter" onchange="renderMailMergeContacts()" style="width: 100%; padding: 0.6rem; border: 2px solid #E8DFD5; border-radius: 6px;">
+                                <option value="">All Categories</option>
+                                <option value="Leisure">Leisure</option>
+                                <option value="Corporate">Corporate</option>
+                                <option value="Government">Government</option>
+                                <option value="Embassy">Embassy</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size: 0.85rem; color: #666; font-weight: 600;">🤝 Agent Type</label>
+                            <select id="mailmerge-agent-filter" onchange="renderMailMergeContacts()" style="width: 100%; padding: 0.6rem; border: 2px solid #E8DFD5; border-radius: 6px;">
+                                <option value="">All Agent Types</option>
+                                <option value="Local Agent">Local Agent</option>
+                                <option value="International Agent">International Agent</option>
+                            </select>
+                        </div>
+                        <div style="display: flex; align-items: flex-end; gap: 0.5rem;">
+                            <button class="secondary" onclick="clearMailMergeFilters()" style="flex: 1; background: #ccc;">Clear</button>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                        <button class="book-btn" onclick="selectAllMailMergeContacts(true)" style="background: #4CAF50;">✓ Select All Filtered</button>
+                        <button class="secondary" onclick="selectAllMailMergeContacts(false)">Select None</button>
+                    </div>
+
+                    <table class="contacts-table" style="background: white; font-size: 0.9rem;">
+                        <thead>
+                            <tr style="background: linear-gradient(135deg, #8B6F47 0%, #6B5539 100%); color: white;">
+                                <th style="width: 40px;"><input type="checkbox" id="mailmerge-select-all" onchange="toggleSelectAllMailMerge(this)"></th>
+                                <th>Email</th>
+                                <th>Name</th>
+                                <th>Company</th>
+                                <th>Category</th>
+                                <th>Agent Type</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mailmerge-contacts">
+                            <tr><td colspan="6" style="text-align: center; color: #999; padding: 2rem;">No contacts available</td></tr>
+                        </tbody>
+                    </table>
                 </div>
 
                 <!-- Step 2: Review Emails -->
@@ -2440,9 +2553,9 @@
                     </table>
                 </div>
 
-                <!-- Step 3: Campaign Settings -->
+                <!-- Step 2: Message Details -->
                 <div style="background: linear-gradient(135deg, #E8F5E9 0%, #F1F8E9 100%); padding: 2rem; border-radius: 12px; margin-bottom: 2rem; border-left: 5px solid #4CAF50; box-shadow: 0 4px 12px rgba(76, 175, 80, 0.1);">
-                    <h3 style="color: #2E7D32; margin-top: 0; font-size: 1.3rem;">⚙️ Step 3: Campaign Details</h3>
+                    <h3 style="color: #2E7D32; margin-top: 0; font-size: 1.3rem;">⚙️ Step 2: Message Details</h3>
                     <div class="form-row full">
                         <label>Campaign Name</label>
                         <input type="text" id="campaign-name" placeholder="e.g., Q4 Safari Promo">
@@ -2452,24 +2565,45 @@
                         <input type="text" id="campaign-subject" placeholder="e.g., Exclusive Safari Package - Lilita Keper">
                     </div>
                     <div class="form-row full">
-                        <label>Email Template</label>
-                        <div class="template-variables">
-                            <strong>Variables:</strong> {FirstName} {Company} {Email} - Use these to personalize
+                        <label>Email Body</label>
+                        <div style="margin-bottom: 0.75rem; padding: 0.75rem; background: #F1F8E9; border-radius: 6px; border-left: 3px solid #4CAF50;">
+                            <strong style="color: #2E7D32;">Personalization Variables:</strong>
+                            <div style="font-size: 0.85rem; color: #555; margin-top: 0.5rem; line-height: 1.6;">
+                                {{name}} = Contact's first name<br>
+                                {{company}} = Contact's company<br>
+                                {{email}} = Contact's email
+                            </div>
                         </div>
-                        <textarea class="template-editor" id="email-template" placeholder="Dear {FirstName},...">Dear {FirstName},
+                        <textarea class="template-editor" id="email-template" placeholder="Dear {{name}},...">Dear {{name}},
 
 Thank you for your interest in Lilita Keper, a luxury safari experience in the Maasai Mara.
 
-We offer exclusive packages tailored for {Company}. Our 6 luxury tented suites provide an intimate window into the African wild.
+We offer exclusive packages tailored for {{company}}. Our 6 luxury tented suites provide an intimate window into the African wild.
+
+We'd love to discuss how we can create an unforgettable experience for you.
 
 Best regards,
 Lilita Keper Team</textarea>
                     </div>
                 </div>
 
+                <!-- Step 3: Select Signature -->
+                <div style="background: linear-gradient(135deg, #FFF8E1 0%, #FFF9C4 100%); padding: 2rem; border-radius: 12px; margin-bottom: 2rem; border-left: 5px solid #FF9800; box-shadow: 0 4px 12px rgba(255, 152, 0, 0.1);">
+                    <h3 style="color: #F57C00; margin-top: 0; font-size: 1.3rem;">📧 Step 3: Choose Signature (Optional)</h3>
+                    <div class="form-row full">
+                        <label>Select a Signature to Append</label>
+                        <select id="mailmerge-signature" onchange="renderSignaturePreview()" style="padding: 0.75rem; border: 2px solid #ddd; border-radius: 6px; width: 100%;">
+                            <option value="">— No signature —</option>
+                        </select>
+                    </div>
+                    <div id="signature-preview" style="margin-top: 1rem; padding: 1rem; background: white; border: 1px solid #E8DFD5; border-radius: 6px; min-height: 60px; font-family: 'Courier New', monospace; white-space: pre-wrap; font-size: 0.85rem; color: #555;"></div>
+                    <p style="font-size: 0.8rem; color: #666; margin-top: 1rem;"><a href="javascript:switchTab('signatures')" style="color: #1976d2; text-decoration: underline;">💾 Manage signatures</a></p>
+                </div>
+
                 <!-- Step 4: Send -->
                 <div style="background: linear-gradient(135deg, #E0F7FA 0%, #E1F5FE 100%); padding: 2rem; border-radius: 12px; border-left: 5px solid #00BCD4; box-shadow: 0 4px 12px rgba(0, 188, 212, 0.1);">
                     <h3 style="color: #0097A7; margin-top: 0; font-size: 1.3rem;">🚀 Step 4: Send Campaign</h3>
+                    <p style="color: #666; margin: 0.5rem 0 1.5rem 0; font-size: 0.9rem;">Review your message before sending to ensure all personalization is correct</p>
                     <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
                         <button class="book-btn" onclick="reviewBeforeSend()" style="flex: 1; min-width: 200px; background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%); font-size: 1.1rem; padding: 1rem; box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);">✅ Review & Send Campaign</button>
                         <button class="book-btn" onclick="downloadEmailList()" style="flex: 1; min-width: 200px; background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%); font-size: 1rem; padding: 1rem;">📥 Download Email List</button>
@@ -2576,7 +2710,10 @@ const state = {
     mailMergeEmails: [],  // Advanced mail-merge emails
     selectedMailMergeEmails: new Set(),  // Selected for sending
     provisionalCounter: 0,  // Counter for WB numbers
-    confirmedCounter: 0  // Counter for confirmed bookings
+    confirmedCounter: 0,  // Counter for confirmed bookings
+    signatures: [],  // Saved signatures for mail-merge
+    contactCategories: ['Leisure', 'Corporate', 'Government', 'Embassy'],  // Contact account types
+    agentTypes: ['Local Agent', 'International Agent']  // Agent classification
 };
 
 // ===== INITIALIZATION =====
@@ -2587,6 +2724,8 @@ function init() {
     switchRateMode(false);  // Initialize with non-resident rates
     initializeMobileMenu();  // Setup mobile navigation
     loadMailMergeEmails();  // Load saved mail-merge emails
+    populateSignatureDropdown();  // Populate signature selector
+    renderMailMergeContacts();  // Render initial contact list
 }
 
 window.addEventListener('load', init);
@@ -2598,7 +2737,8 @@ function saveToStorage() {
         bookings: state.bookings,
         campaigns: state.campaigns,
         provisionalCounter: state.provisionalCounter,
-        confirmedCounter: state.confirmedCounter
+        confirmedCounter: state.confirmedCounter,
+        signatures: state.signatures
     }));
 }
 
@@ -2611,10 +2751,12 @@ function loadFromStorage() {
         state.campaigns = data.campaigns || [];
         state.provisionalCounter = data.provisionalCounter || 0;
         state.confirmedCounter = data.confirmedCounter || 0;
+        state.signatures = data.signatures || [];
     }
     renderContacts();
     renderBookings();
     updateStats();
+    renderSignatures();
 }
 
 // ===== AUTH FUNCTIONS =====
@@ -2723,12 +2865,17 @@ function switchTab(tab) {
         provisional: 'Provisional Bookings & Extensions',
         tents: 'Availability',
         contacts: 'Contacts',
-        mailmerge: 'Mail-Merge',
+        signatures: 'Email Signatures',
+        mailmerge: 'Mail-Merge Campaign',
         documents: 'Documents',
         rates: 'Rates',
         contracts: 'Contracts'
     };
     document.getElementById('section-title').textContent = titles[tab] || tab;
+
+    if (tab === 'signatures') {
+        renderSignatures();
+    }
 
     if (tab === 'mailmerge') {
         renderMailMergeContacts();
@@ -3636,10 +3783,12 @@ function handleCSVUpload() {
             const lines = csv.split('\n');
             const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
 
-            const emailIdx = headers.indexOf('email');
-            const nameIdx = headers.indexOf('firstname');
-            const companyIdx = headers.indexOf('company');
-            const websiteIdx = headers.indexOf('website');
+            const emailIdx = headers.findIndex(h => h.includes('email'));
+            const nameIdx = headers.findIndex(h => h.includes('name') || h.includes('firstname'));
+            const companyIdx = headers.findIndex(h => h.includes('company'));
+            const websiteIdx = headers.findIndex(h => h.includes('website'));
+            const categoryIdx = headers.findIndex(h => h.includes('category'));
+            const agentIdx = headers.findIndex(h => h.includes('agent'));
 
             if (emailIdx === -1) {
                 showStatus('upload-status', '❌ CSV must have "email" column', 'error');
@@ -3655,7 +3804,9 @@ function handleCSVUpload() {
                     email: fields[emailIdx]?.trim() || '',
                     firstName: fields[nameIdx]?.trim() || '',
                     company: fields[companyIdx]?.trim() || '',
-                    website: fields[websiteIdx]?.trim() || ''
+                    website: fields[websiteIdx]?.trim() || '',
+                    category: fields[categoryIdx]?.trim() || '',
+                    agentType: fields[agentIdx]?.trim() || ''
                 };
 
                 if (contact.email) {
@@ -3678,13 +3829,17 @@ function handleCSVUpload() {
 
 function renderContacts() {
     const searchTerm = document.getElementById('contacts-search')?.value.toLowerCase() || '';
+    const categoryFilter = document.getElementById('contacts-category-filter')?.value || '';
+    const agentFilter = document.getElementById('contacts-agent-filter')?.value || '';
 
     let filtered = state.contacts.filter(c => {
         const matchSearch = !searchTerm ||
             c.email.toLowerCase().includes(searchTerm) ||
             c.firstName.toLowerCase().includes(searchTerm) ||
             (c.company || '').toLowerCase().includes(searchTerm);
-        return matchSearch;
+        const matchCategory = !categoryFilter || c.category === categoryFilter;
+        const matchAgent = !agentFilter || c.agentType === agentFilter;
+        return matchSearch && matchCategory && matchAgent;
     });
 
     let html = '';
@@ -3702,17 +3857,65 @@ function renderContacts() {
                 <td><strong>${c.email}</strong></td>
                 <td>${c.firstName}</td>
                 <td>${c.company || '—'}</td>
+                <td><span style="font-size: 0.8rem; background: #E8DFD5; padding: 0.25rem 0.5rem; border-radius: 3px; color: #6F5C47;">${c.category || '—'}</span></td>
+                <td><span style="font-size: 0.8rem; background: #F0EDE5; padding: 0.25rem 0.5rem; border-radius: 3px; color: #6F5C47;">${c.agentType || '—'}</span></td>
                 <td>${websiteLink}</td>
             </tr>
         `;
     });
 
-    document.getElementById('contacts-list').innerHTML = html;
+    document.getElementById('contacts-list').innerHTML = html || '<tr><td colspan="7" style="text-align: center; color: #999; padding: 2rem;">No contacts match the filters</td></tr>';
     document.getElementById('contact-count').textContent = filtered.length;
 }
 
 function filterContacts() {
     renderContacts();
+}
+
+function clearContactFilters() {
+    document.getElementById('contacts-search').value = '';
+    document.getElementById('contacts-category-filter').value = '';
+    document.getElementById('contacts-agent-filter').value = '';
+    renderContacts();
+}
+
+function bulkAddContacts() {
+    const text = document.getElementById('bulk-contacts-paste').value.trim();
+    if (!text) {
+        showStatus('upload-status', 'Please paste contact data', 'error');
+        return;
+    }
+
+    const lines = text.split('\n').filter(l => l.trim());
+    let added = 0;
+
+    lines.forEach(line => {
+        const parts = line.split(',').map(p => p.trim());
+        if (parts.length >= 2) {
+            const email = parts[0];
+            const firstName = parts[1];
+            const company = parts[2] || '';
+            const category = parts[3] || '';
+            const agentType = parts[4] || '';
+
+            if (email && email.includes('@') && !state.contacts.some(c => c.email === email)) {
+                state.contacts.push({
+                    email,
+                    firstName,
+                    company,
+                    website: '',
+                    category: category || '',
+                    agentType: agentType || ''
+                });
+                added++;
+            }
+        }
+    });
+
+    document.getElementById('bulk-contacts-paste').value = '';
+    saveToStorage();
+    renderContacts();
+    showStatus('upload-status', `✅ Added ${added} contact(s)`, 'success');
 }
 
 function toggleContactSelection(idx) {
@@ -3780,18 +3983,71 @@ function exportContactsToCSV() {
 
 // ===== MAIL-MERGE =====
 function renderMailMergeContacts() {
+    const searchTerm = document.getElementById('mailmerge-search')?.value.toLowerCase() || '';
+    const categoryFilter = document.getElementById('mailmerge-category-filter')?.value || '';
+    const agentFilter = document.getElementById('mailmerge-agent-filter')?.value || '';
+
+    let filtered = state.contacts.filter(c => {
+        const matchSearch = !searchTerm ||
+            c.email.toLowerCase().includes(searchTerm) ||
+            c.firstName.toLowerCase().includes(searchTerm) ||
+            (c.company || '').toLowerCase().includes(searchTerm);
+        const matchCategory = !categoryFilter || c.category === categoryFilter;
+        const matchAgent = !agentFilter || c.agentType === agentFilter;
+        return matchSearch && matchCategory && matchAgent;
+    });
+
     let html = '';
-    state.contacts.forEach((c, idx) => {
+    filtered.forEach((c, idx) => {
         const isChecked = state.selectedContacts.has(idx);
         html += `
             <tr>
-                <td><input type="checkbox" class="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleContact(${idx})"></td>
+                <td style="text-align: center;"><input type="checkbox" class="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleContact(${idx})"></td>
                 <td>${c.email}</td>
                 <td>${c.firstName}</td>
+                <td>${c.company || '—'}</td>
+                <td><span style="font-size: 0.8rem; background: #E8DFD5; padding: 0.25rem 0.5rem; border-radius: 3px;">${c.category || '—'}</span></td>
+                <td><span style="font-size: 0.8rem; background: #F0EDE5; padding: 0.25rem 0.5rem; border-radius: 3px;">${c.agentType || '—'}</span></td>
             </tr>
         `;
     });
-    document.getElementById('mailmerge-contacts').innerHTML = html;
+
+    document.getElementById('mailmerge-contacts').innerHTML = html || '<tr><td colspan="6" style="text-align: center; color: #999; padding: 2rem;">No contacts match the filters</td></tr>';
+}
+
+function clearMailMergeFilters() {
+    document.getElementById('mailmerge-search').value = '';
+    document.getElementById('mailmerge-category-filter').value = '';
+    document.getElementById('mailmerge-agent-filter').value = '';
+    renderMailMergeContacts();
+}
+
+function selectAllMailMergeContacts(checked) {
+    const searchTerm = document.getElementById('mailmerge-search')?.value.toLowerCase() || '';
+    const categoryFilter = document.getElementById('mailmerge-category-filter')?.value || '';
+    const agentFilter = document.getElementById('mailmerge-agent-filter')?.value || '';
+
+    state.contacts.forEach((c, idx) => {
+        const matchSearch = !searchTerm ||
+            c.email.toLowerCase().includes(searchTerm) ||
+            c.firstName.toLowerCase().includes(searchTerm) ||
+            (c.company || '').toLowerCase().includes(searchTerm);
+        const matchCategory = !categoryFilter || c.category === categoryFilter;
+        const matchAgent = !agentFilter || c.agentType === agentFilter;
+
+        if (matchSearch && matchCategory && matchAgent) {
+            if (checked) {
+                state.selectedContacts.add(idx);
+            } else {
+                state.selectedContacts.delete(idx);
+            }
+        }
+    });
+    renderMailMergeContacts();
+}
+
+function toggleSelectAllMailMerge(checkbox) {
+    selectAllMailMergeContacts(checkbox.checked);
 }
 
 function toggleContact(idx) {
@@ -3803,10 +4059,10 @@ function toggleContact(idx) {
 }
 
 function selectAllContacts() {
-    if (state.selectedContacts.size === state.contacts.length) {
-        state.selectedContacts.clear();
-    } else {
+    if (state.selectedContacts.size === 0) {
         state.contacts.forEach((_, idx) => state.selectedContacts.add(idx));
+    } else {
+        state.selectedContacts.clear();
     }
     renderMailMergeContacts();
 }
@@ -3953,6 +4209,102 @@ function browseEmails() {
     alert(`Browse: You have ${state.mailMergeEmails.length} emails ready.\n\nPreview:\n${state.mailMergeEmails.slice(0, 5).map(e => `${e.firstName} (${e.email})`).join('\n')}${state.mailMergeEmails.length > 5 ? `\n... and ${state.mailMergeEmails.length - 5} more` : ''}`);
 }
 
+// ===== SIGNATURES =====
+function addSignature() {
+    const label = document.getElementById('sig-label')?.value.trim() || '';
+    const name = document.getElementById('sig-name')?.value.trim() || '';
+    const title = document.getElementById('sig-title')?.value.trim() || '';
+    const block = document.getElementById('sig-block')?.value.trim() || '';
+
+    if (!label || !block) {
+        showStatus('', 'Label and signature text are required', 'error');
+        return;
+    }
+
+    state.signatures.push({
+        id: Date.now(),
+        label,
+        name,
+        title,
+        block
+    });
+
+    document.getElementById('sig-label').value = '';
+    document.getElementById('sig-name').value = '';
+    document.getElementById('sig-title').value = '';
+    document.getElementById('sig-block').value = '';
+
+    saveToStorage();
+    renderSignatures();
+    populateSignatureDropdown();
+    showStatus('', '✅ Signature saved', 'success');
+}
+
+function renderSignatures() {
+    const container = document.getElementById('signatures-list');
+    if (!state.signatures || state.signatures.length === 0) {
+        container.innerHTML = '<div style="color: #999; text-align: center; padding: 2rem;">No signatures saved yet</div>';
+        return;
+    }
+
+    let html = '';
+    state.signatures.forEach(sig => {
+        html += `
+            <div style="border: 1px solid #E8DFD5; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; background: #FFFBF7;">
+                <div style="display: flex; justify-content: space-between; align-items: start; gap: 1rem;">
+                    <div style="flex: 1;">
+                        <h4 style="color: var(--dark-brown); margin: 0 0 0.5rem 0;">${sig.label}</h4>
+                        ${sig.name ? `<p style="color: #666; font-size: 0.9rem; margin: 0.25rem 0;"><strong>${sig.name}</strong></p>` : ''}
+                        ${sig.title ? `<p style="color: #666; font-size: 0.9rem; margin: 0.25rem 0;">${sig.title}</p>` : ''}
+                        <pre style="background: white; border: 1px solid #E8DFD5; padding: 0.75rem; border-radius: 4px; font-size: 0.8rem; color: #555; margin: 0.75rem 0 0 0; white-space: pre-wrap; word-wrap: break-word;">${sig.block}</pre>
+                    </div>
+                    <button class="book-btn" onclick="deleteSignature(${sig.id})" style="background: #d32f2f; padding: 0.5rem 1rem; font-size: 0.9rem;">🗑️ Delete</button>
+                </div>
+            </div>
+        `;
+    });
+    container.innerHTML = html;
+}
+
+function deleteSignature(id) {
+    if (confirm('Delete this signature?')) {
+        state.signatures = state.signatures.filter(s => s.id !== id);
+        saveToStorage();
+        renderSignatures();
+        populateSignatureDropdown();
+    }
+}
+
+function populateSignatureDropdown() {
+    const select = document.getElementById('mailmerge-signature');
+    if (!select) return;
+    const current = select.value;
+    select.innerHTML = '<option value="">— No signature —</option>';
+    if (state.signatures && state.signatures.length > 0) {
+        state.signatures.forEach(sig => {
+            select.innerHTML += `<option value="${sig.id}">${sig.label}</option>`;
+        });
+    }
+    select.value = current;
+}
+
+function renderSignaturePreview() {
+    const select = document.getElementById('mailmerge-signature');
+    const preview = document.getElementById('signature-preview');
+    if (!select || !preview) return;
+
+    const sigId = select.value;
+    if (!sigId) {
+        preview.textContent = '';
+        return;
+    }
+
+    const sig = state.signatures.find(s => s.id === parseInt(sigId));
+    if (sig) {
+        preview.textContent = sig.block;
+    }
+}
+
 function downloadEmailList() {
     if (state.mailMergeEmails.length === 0) {
         showStatus('campaign-status', 'No emails to download', 'error');
@@ -3986,60 +4338,89 @@ function reviewBeforeSend() {
     const campaign = document.getElementById('campaign-name').value.trim();
     const subject = document.getElementById('campaign-subject').value.trim();
     const template = document.getElementById('email-template').value.trim();
+    const sigId = document.getElementById('mailmerge-signature')?.value || '';
 
     if (!campaign || !subject || !template) {
         showStatus('campaign-status', 'Please fill in campaign name, subject, and template', 'error');
         return;
     }
 
-    if (state.mailMergeEmails.length === 0) {
-        showStatus('campaign-status', 'Please add emails first', 'error');
+    if (state.selectedContacts.size === 0) {
+        showStatus('campaign-status', 'Please select at least one contact', 'error');
         return;
     }
 
-    const toSend = state.selectedMailMergeEmails.size > 0
-        ? Array.from(state.selectedMailMergeEmails).map(idx => state.mailMergeEmails[idx])
-        : state.mailMergeEmails;
+    const toSend = Array.from(state.selectedContacts).map(idx => state.contacts[idx]);
+    const signature = sigId ? state.signatures.find(s => s.id === parseInt(sigId)) : null;
 
-    const preview = toSend.slice(0, 3).map((e, i) => {
+    const preview = toSend.slice(0, 3).map((c, i) => {
         let body = template
-            .replace(/{FirstName}/g, e.firstName)
-            .replace(/{Company}/g, e.company)
-            .replace(/{Email}/g, e.email);
-        return `\nEmail ${i+1} to ${e.firstName} <${e.email}>:\n${body.substring(0, 100)}...`;
-    }).join('\n');
+            .replace(/{{name}}/gi, c.firstName)
+            .replace(/{{company}}/gi, c.company)
+            .replace(/{{email}}/gi, c.email);
+        if (signature) {
+            body += '\n\n' + signature.block;
+        }
+        return `Email ${i+1} to ${c.firstName} <${c.email}>:\n${body.substring(0, 150)}...`;
+    }).join('\n---\n');
 
-    const confirmMsg = `Send campaign "${campaign}" to ${toSend.length} emails?\n${preview}\n\nClick OK to confirm.`;
+    const confirmMsg = `Send campaign "${campaign}" to ${toSend.length} contact(s)?\n\n${preview}\n\nClick OK to confirm.`;
 
     if (confirm(confirmMsg)) {
-        sendMailMergeCampaign(campaign, subject, template, toSend);
+        sendMailMergeCampaign(campaign, subject, template, toSend, signature);
     }
 }
 
-function sendMailMergeCampaign(campaign, subject, template, recipients) {
-    showStatus('campaign-status', '📤 Sending emails...', 'info');
+function sendMailMergeCampaign(campaign, subject, template, recipients, signature) {
+    showStatus('campaign-status', '📤 Preparing personalized emails...', 'info');
+
+    // Process each email with personalization
+    const emails = recipients.map(contact => {
+        let body = template
+            .replace(/{{name}}/gi, contact.firstName)
+            .replace(/{{company}}/gi, contact.company || '')
+            .replace(/{{email}}/gi, contact.email);
+
+        if (signature) {
+            body += '\n\n' + signature.block;
+        }
+
+        let personSubject = subject
+            .replace(/{{name}}/gi, contact.firstName)
+            .replace(/{{company}}/gi, contact.company || '')
+            .replace(/{{email}}/gi, contact.email);
+
+        return {
+            email: contact.email,
+            firstName: contact.firstName,
+            company: contact.company || '',
+            body,
+            subject: personSubject
+        };
+    });
 
     fetch('/api/send-bulk-email', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
-            recipients: recipients.map(e => ({
-                email: e.email,
-                firstName: e.firstName,
-                company: e.company
-            })),
+            recipients: emails,
             subject,
             template,
-            campaignName: campaign
+            campaignName: campaign,
+            personalized: true
         })
     })
     .then(res => res.json())
     .then(data => {
         if (data.success) {
-            showStatus('campaign-status', `✅ Campaign sent! ${data.sent} emails delivered.`, 'success');
-            state.mailMergeEmails = [];
-            state.selectedMailMergeEmails.clear();
-            updateEmailReviewTable();
+            showStatus('campaign-status', `✅ Campaign sent! ${emails.length} personalized emails delivered.`, 'success');
+            state.selectedContacts.clear();
+            renderMailMergeContacts();
+            document.getElementById('campaign-name').value = '';
+            document.getElementById('campaign-subject').value = '';
+            document.getElementById('email-template').value = '';
+            document.getElementById('mailmerge-signature').value = '';
+            renderSignaturePreview();
         } else {
             showStatus('campaign-status', `❌ Error: ${data.error}`, 'error');
         }
