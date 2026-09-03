@@ -3056,9 +3056,9 @@ function switchRateMode(isResident) {
 // ===== TENTS =====
 function renderTents() {
     const tents = [
-        { name: 'Ilochoreta Villa - Unit 1', icon: '🏕️', capacity: 'Up to 3 guests', amenities: 'King bed, En-suite Jacuzzi, Private Veranda' },
-        { name: 'Ilochoreta Villa - Unit 2', icon: '🏕️', capacity: 'Up to 3 guests', amenities: 'King bed, En-suite Jacuzzi, Private Veranda' },
-        { name: 'Ilochoreta Villa - Unit 3', icon: '🏕️', capacity: 'Up to 3 guests', amenities: 'King bed, En-suite Jacuzzi, Private Veranda' },
+        { name: 'Ilochoreta Villa - Unit 1', image: '/images/rooms/ilochoreta-villa-unit-1.jpg', capacity: 'Up to 3 guests', amenities: 'King bed, En-suite Jacuzzi, Private Veranda' },
+        { name: 'Ilochoreta Villa - Unit 2', image: '/images/rooms/ilochoreta-villa-unit-2.jpg', capacity: 'Up to 3 guests', amenities: 'King bed, En-suite Jacuzzi, Private Veranda' },
+        { name: 'Ilochoreta Villa - Unit 3', image: '/images/rooms/ilochoreta-villa-unit-3.jpg', capacity: 'Up to 3 guests', amenities: 'King bed, En-suite Jacuzzi, Private Veranda' },
         { name: 'Olmarei Villa - Unit 1', icon: '🏡', capacity: 'Up to 4 guests', amenities: 'Family Suite, En-suite Jacuzzi, Large Veranda' },
         { name: 'Olmarei Villa - Unit 2', icon: '🏡', capacity: 'Up to 4 guests', amenities: 'Family Suite, En-suite Jacuzzi, Large Veranda' },
         { name: 'Enkaji Villa', icon: '🏰', capacity: 'Up to 10 guests', amenities: '6 Bedrooms, Spacious for Groups' }
@@ -3070,9 +3070,13 @@ function renderTents() {
         const rackRate = getRatePerPerson(new Date());
         const stoRate = (rackRate * 0.8).toFixed(2);
 
+        const imageContent = tent.image
+            ? `<img src="${tent.image}" alt="${tent.name}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px 8px 0 0;">`
+            : `<div style="font-size: 3rem; display: flex; align-items: center; justify-content: center;">${tent.icon}</div>`;
+
         html += `
             <div class="tent-card">
-                <div class="tent-image">${tent.icon}</div>
+                <div class="tent-image">${imageContent}</div>
                 <div class="tent-info">
                     <h3>${tent.name}</h3>
                     <div class="tent-capacity">${tent.capacity}</div>
