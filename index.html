@@ -2355,6 +2355,18 @@
                 </div>
                 <input type="file" id="csv-upload" accept=".csv" style="display: none;" onchange="handleCSVUpload()">
                 <div id="upload-status" class="status-message"></div>
+
+                <!-- Update/Edit Contacts Section -->
+                <div style="margin-top: 2rem; padding: 1.5rem; background: #E8F5E9; border-left: 5px solid #4CAF50; border-radius: 8px;">
+                    <h3 style="color: #2E7D32; margin-top: 0;">✏️ Update Existing Contacts</h3>
+                    <p style="font-size: 0.85rem; color: #555; margin: 0.5rem 0;">Paste contact data to update existing records (matched by email). Format: Email, FirstName, Company, Category, AgentType</p>
+                    <textarea id="bulk-update-paste" placeholder="jane@company.com, Jane Doe, Updated Company, Corporate, International Agent&#10;john@company.com, John Smith, 61 Travel, Leisure, Local Agent" style="width: 100%; height: 80px; padding: 1rem; border: 2px solid #81C784; border-radius: 6px; font-family: monospace; font-size: 0.9rem;"></textarea>
+                    <div style="display: flex; gap: 0.5rem; margin-top: 0.75rem;">
+                        <button class="book-btn" onclick="bulkUpdateContacts()" style="background: #4CAF50; flex: 1;">🔄 Update Contacts</button>
+                        <button class="secondary" onclick="exportAllContactsForEdit()" style="background: #1976d2; flex: 1;">📋 Copy All Contacts</button>
+                    </div>
+                    <p id="update-status" style="font-size: 0.8rem; color: #666; margin-top: 0.5rem;"></p>
+                </div>
             </div>
 
             <!-- MASTER LIST & PROTECTION SECTION -->
@@ -3958,6 +3970,52 @@ function bulkAddContacts() {
     saveToStorage();
     renderContacts();
     showStatus('upload-status', `✅ Added ${added} contact(s)`, 'success');
+}
+
+function bulkUpdateContacts() {
+    const text = document.getElementById('bulk-update-paste').value.trim();
+    if (!text) {
+        document.getElementById('update-status').textContent = '❌ Please paste contact data to update';
+        return;
+    }
+
+    const lines = text.split('\n').filter(l => l.trim());
+    let updated = 0;
+
+    lines.forEach(line => {
+        const parts = line.split(',').map(p => p.trim());
+        if (parts.length >= 1) {
+            const email = parts[0];
+            const contact = state.contacts.find(c => c.email === email);
+
+            if (contact) {
+                if (parts[1]) contact.firstName = parts[1];
+                if (parts[2]) contact.company = parts[2];
+                if (parts[3]) contact.category = parts[3];
+                if (parts[4]) contact.agentType = parts[4];
+                updated++;
+            }
+        }
+    });
+
+    document.getElementById('bulk-update-paste').value = '';
+    saveToStorage();
+    renderContacts();
+    document.getElementById('update-status').textContent = `✅ Updated ${updated} contact(s)`;
+}
+
+function exportAllContactsForEdit() {
+    if (state.contacts.length === 0) {
+        document.getElementById('update-status').textContent = '❌ No contacts to export';
+        return;
+    }
+
+    const csv = state.contacts.map(c =>
+        `${c.email}, ${c.firstName}, ${c.company}, ${c.category}, ${c.agentType}`
+    ).join('\n');
+
+    document.getElementById('bulk-update-paste').value = csv;
+    document.getElementById('update-status').textContent = `✅ Copied ${state.contacts.length} contact(s) - now you can edit and update them!`;
 }
 
 function toggleContactSelection(idx) {
