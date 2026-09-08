@@ -53,20 +53,7 @@ jobs:
             --image gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.SERVICE_NAME }}:${{ github.sha }} \
             --platform managed \
             --region ${{ env.GCP_REGION }} \
-            --allow-unauthenticated \
-            --set-env-vars \
-            DATABASE_URL=${{ secrets.GCP_DATABASE_URL }},\
-            NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }},\
-            NEXTAUTH_URL=${{ secrets.GCP_NEXTAUTH_URL }},\
-            RESEND_API_KEY=${{ secrets.RESEND_API_KEY }},\
-            ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }},\
-            MPESA_CONSUMER_KEY=${{ secrets.MPESA_CONSUMER_KEY }},\
-            MPESA_CONSUMER_SECRET=${{ secrets.MPESA_CONSUMER_SECRET }},\
-            MPESA_PASSKEY=${{ secrets.MPESA_PASSKEY }},\
-            MPESA_SHORTCODE=${{ secrets.MPESA_SHORTCODE }},\
-            FLUTTERWAVE_SECRET_KEY=${{ secrets.FLUTTERWAVE_SECRET_KEY }},\
-            FLUTTERWAVE_SECRET_HASH=${{ secrets.FLUTTERWAVE_SECRET_HASH }} \
-            --add-cloudsql-instances ${{ secrets.GCP_CLOUDSQL_CONNECTION }}
+            --allow-unauthenticated
 
       - name: Get Cloud Run URL
         run: |
