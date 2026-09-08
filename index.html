@@ -2357,6 +2357,34 @@
                 <div id="upload-status" class="status-message"></div>
             </div>
 
+            <!-- MASTER LIST & PROTECTION SECTION -->
+            <div style="margin-top: 2rem; padding: 1.5rem; background: linear-gradient(135deg, #FFF8E1 0%, #FFF9C4 100%); border-left: 5px solid #FF9800; border-radius: 8px; margin-bottom: 2rem;">
+                <h3 style="color: #F57C00; margin: 0 0 1rem 0;">🔒 Master List & Delete Protection</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                    <div>
+                        <label style="font-size: 0.85rem; color: #666; font-weight: 600;">Quick Add to Master List</label>
+                        <p style="font-size: 0.8rem; color: #555; margin: 0.5rem 0;">Add contacts outside activities — automatically protected from deletion</p>
+                        <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                            <input type="text" id="master-name" placeholder="Name" style="flex: 1; padding: 0.5rem; border: 2px solid #E8DFD5; border-radius: 6px; font-size: 0.9rem;">
+                            <input type="email" id="master-email" placeholder="Email" style="flex: 1; padding: 0.5rem; border: 2px solid #E8DFD5; border-radius: 6px; font-size: 0.9rem;">
+                        </div>
+                        <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                            <input type="text" id="master-company" placeholder="Company" style="flex: 1; padding: 0.5rem; border: 2px solid #E8DFD5; border-radius: 6px; font-size: 0.9rem;">
+                            <button class="book-btn" onclick="addMasterContact()" style="background: #FF9800; padding: 0.5rem 1rem;">Add to Master List</button>
+                        </div>
+                    </div>
+                    <div style="border-left: 1px solid #FFE0B2; padding-left: 1rem;">
+                        <label style="font-size: 0.85rem; color: #666; font-weight: 600;">Master Delete Code</label>
+                        <p style="font-size: 0.8rem; color: #555; margin: 0.5rem 0;">Required to delete protected contacts from Master List</p>
+                        <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                            <input type="password" id="master-code-input" placeholder="Set a code..." style="flex: 1; padding: 0.5rem; border: 2px solid #E8DFD5; border-radius: 6px; font-size: 0.9rem;">
+                            <button class="book-btn" onclick="saveMasterCode()" style="background: #1976d2; padding: 0.5rem 1rem;">Set Code</button>
+                        </div>
+                        <p id="master-code-status" style="font-size: 0.8rem; color: #666; margin-top: 0.25rem;"></p>
+                    </div>
+                </div>
+            </div>
+
             <div style="margin-top: 2rem;">
                 <div style="background: rgba(255,255,255,0.95); padding: 2rem; border-radius: 12px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
@@ -2412,7 +2440,7 @@
                                 <th>Company</th>
                                 <th>📂 Category</th>
                                 <th>🤝 Agent Type</th>
-                                <th style="color: #FFD700;">🌐 Website</th>
+                                <th style="color: #FFD700;">Status / Website</th>
                             </tr>
                         </thead>
                         <tbody id="contacts-list">
@@ -2713,7 +2741,9 @@ const state = {
     confirmedCounter: 0,  // Counter for confirmed bookings
     signatures: [],  // Saved signatures for mail-merge
     contactCategories: ['Leisure', 'Corporate', 'Government', 'Embassy'],  // Contact account types
-    agentTypes: ['Local Agent', 'International Agent']  // Agent classification
+    agentTypes: ['Local Agent', 'International Agent'],  // Agent classification
+    masterDeleteCode: '',  // Master code to delete protected contacts
+    selectedMailMergeContacts: new Set()  // For bulk selection in mail-merge
 };
 
 // ===== INITIALIZATION =====
@@ -2738,7 +2768,8 @@ function saveToStorage() {
         campaigns: state.campaigns,
         provisionalCounter: state.provisionalCounter,
         confirmedCounter: state.confirmedCounter,
-        signatures: state.signatures
+        signatures: state.signatures,
+        masterDeleteCode: state.masterDeleteCode
     }));
 }
 
@@ -2752,6 +2783,7 @@ function loadFromStorage() {
         state.provisionalCounter = data.provisionalCounter || 0;
         state.confirmedCounter = data.confirmedCounter || 0;
         state.signatures = data.signatures || [];
+        state.masterDeleteCode = data.masterDeleteCode || '';
     }
     renderContacts();
     renderBookings();
@@ -3853,22 +3885,28 @@ function renderContacts() {
             ? `<a href="${c.website.startsWith('http') ? c.website : 'https://' + c.website}" target="_blank" class="website-link">${c.website}</a>`
             : '<span style="color: #999;">—</span>';
 
+        const lockStatus = c.locked ? '🔒 Protected' : (c.sent ? '✓ Sent' : '');
+        const lockIcon = c.locked || c.sent ? '🔒 ' : '';
+
         html += `
             <tr>
                 <td style="text-align: center;">
                     <input type="checkbox" class="select-all-checkbox" ${isChecked ? 'checked' : ''} onchange="toggleContactSelection(${idx})">
                 </td>
                 <td><strong>${c.email}</strong></td>
-                <td>${c.firstName}</td>
+                <td>${lockIcon}${c.firstName}</td>
                 <td>${c.company || '—'}</td>
                 <td><span style="font-size: 0.8rem; background: #E8DFD5; padding: 0.25rem 0.5rem; border-radius: 3px; color: #6F5C47;">${c.category || '—'}</span></td>
                 <td><span style="font-size: 0.8rem; background: #F0EDE5; padding: 0.25rem 0.5rem; border-radius: 3px; color: #6F5C47;">${c.agentType || '—'}</span></td>
-                <td>${websiteLink}</td>
+                <td style="text-align: center;">
+                    ${lockStatus ? `<span style="font-size: 0.75rem; color: #FF9800; font-weight: 600;">${lockStatus}</span>` : websiteLink}
+                    <button class="secondary" onclick="deleteContact('${c.email}')" style="background: #e74c3c; color: white; border: none; padding: 0.3rem 0.6rem; font-size: 0.75rem; margin-left: 0.5rem; cursor: pointer;">Delete</button>
+                </td>
             </tr>
         `;
     });
 
-    document.getElementById('contacts-list').innerHTML = html || '<tr><td colspan="7" style="text-align: center; color: #999; padding: 2rem;">No contacts match the filters</td></tr>';
+    document.getElementById('contacts-list').innerHTML = html || '<tr><td colspan="8" style="text-align: center; color: #999; padding: 2rem;">No contacts match the filters</td></tr>';
     document.getElementById('contact-count').textContent = filtered.length;
 }
 
@@ -3983,6 +4021,84 @@ function exportContactsToCSV() {
     a.download = `lilita-contacts-${new Date().toISOString().split('T')[0]}.csv`;
     a.click();
     window.URL.revokeObjectURL(url);
+}
+
+function addMasterContact() {
+    const name = document.getElementById('master-name').value.trim();
+    const email = document.getElementById('master-email').value.trim();
+    const company = document.getElementById('master-company').value.trim();
+
+    if (!name || !email || !email.includes('@')) {
+        alert('Please fill in name and valid email');
+        return;
+    }
+
+    if (state.contacts.some(c => c.email === email)) {
+        alert('Contact with this email already exists');
+        return;
+    }
+
+    state.contacts.push({
+        email,
+        firstName: name,
+        company,
+        website: '',
+        category: '',
+        agentType: '',
+        locked: true,  // Master List contacts are protected
+        notes: 'Added to Master List'
+    });
+
+    document.getElementById('master-name').value = '';
+    document.getElementById('master-email').value = '';
+    document.getElementById('master-company').value = '';
+
+    saveToStorage();
+    renderContacts();
+    alert('✅ Contact added to Master List and protected from deletion');
+}
+
+function saveMasterCode() {
+    const code = document.getElementById('master-code-input').value.trim();
+    if (!code) {
+        alert('Please enter a code');
+        return;
+    }
+
+    state.masterDeleteCode = code;
+    document.getElementById('master-code-input').value = '';
+    document.getElementById('master-code-status').textContent = '✅ Master Delete Code set';
+
+    saveToStorage();
+    setTimeout(() => {
+        document.getElementById('master-code-status').textContent = '';
+    }, 3000);
+}
+
+function deleteContact(email) {
+    const contact = state.contacts.find(c => c.email === email);
+    if (!contact) return;
+
+    if (contact.locked || contact.sent) {
+        if (!state.masterDeleteCode) {
+            alert('🔒 This contact is protected from deletion. Set a Master Delete Code first.');
+            return;
+        }
+
+        const reason = contact.locked ? 'in Master List' : 'marked as Sent';
+        const entered = prompt(`🔒 "${contact.firstName}" is ${reason} and protected from deletion.\n\nEnter Master Delete Code to remove:`);
+
+        if (entered === null) return;
+        if (entered !== state.masterDeleteCode) {
+            alert('❌ Incorrect code — deletion cancelled');
+            return;
+        }
+    }
+
+    state.contacts = state.contacts.filter(c => c.email !== email);
+    saveToStorage();
+    renderContacts();
+    alert('Contact removed');
 }
 
 // ===== MAIL-MERGE =====
